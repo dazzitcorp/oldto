@@ -202,7 +202,7 @@ def parse_corner(title):
     m = PARSE_CORNER_OF_X_AND_Y_RE.match(title)
     if m:
         parse_capture = ('parse_corner', m.group(1).strip(), m.group(2).strip())
-        search_term = f'{parse_capture[1]} and {parse_capture[2]} ontario toronto canada'
+        search_term = f'{parse_capture[1]} and {parse_capture[2]}, toronto, ontario, canada'
         return (GOOGLE, search_term, parse_capture, INTERSECTION_TYPE)
     m = SPLIT_ON_CORNER_RE.match(title)
     if m:
@@ -216,17 +216,17 @@ def parse_corner(title):
             if caps:
                 second_street = caps[0]  # get the street closest to corner fragment
                 parse_capture = ('parse_corner', first_street, second_street)
-                search_term = f'{first_street} and {second_street} ontario toronto canada'
+                search_term = f'{first_street} and {second_street}, toronto, ontario, canada'
                 return (GOOGLE, search_term, parse_capture, INTERSECTION_TYPE)
     m = X_AT_Y_RE.match(title)  # Spadina, at Yonge, southeast corner
     if m:
         parse_capture = ('parse_corner', m.group(1).strip(), m.group(2).strip())
-        search_term = f'{parse_capture[1]} and {parse_capture[2]} ontario toronto canada'
+        search_term = f'{parse_capture[1]} and {parse_capture[2]}, toronto, ontario, canada'
         return (GOOGLE, search_term, parse_capture, INTERSECTION_TYPE)
     m = CORNER_OF_X_AND_Y.match(title)
     if m:
         parse_capture = ('parse_corner', m.group(1).strip(), m.group(2).strip())
-        search_term = f'{parse_capture[1]} and {parse_capture[2]} ontario toronto canada'
+        search_term = f'{parse_capture[1]} and {parse_capture[2]}, toronto, ontario, canada'
         return (GOOGLE, search_term, parse_capture, INTERSECTION_TYPE)
     return None
 
@@ -240,7 +240,7 @@ def parse_direction_from(title):
         street1 = m.group(1).strip()
         street2 = m.group(2).strip()
         search_results = ('looking', street1, street2)
-        search_term = f'{street1} and {street2} ontario toronto canada'
+        search_term = f'{street1} and {street2}, toronto, ontario, canada'
         LOG.debug(f'parse_direction_from_pattern|search_term:{search_term}|title:{title}')
         return (GOOGLE, search_term, search_results, INTERSECTION_TYPE)
     return None
@@ -249,7 +249,7 @@ def parse_direction_from(title):
 def parse_exact_address(regex, title):
     m = regex.match(title.lower())
     if m:
-        search_term = f'{m.group(1)} {m.group(2)} ontario toronto canada'
+        search_term = f'{m.group(1)} {m.group(2)}, toronto, ontario, canada'
         LOG.debug(f'parse_exact_address|search_term:{search_term}|title:{title}')
         return (GOOGLE, search_term, ('exact_address', m.group(1), m.group(2)), ADDRESS_TYPE)
     return None
@@ -260,7 +260,7 @@ def parse_streets_joined_by_and(title):
     if m:
         street1, street2 = m.group(1).strip(), m.group(2).strip()
         parse_results = ('streets_joined_by_and', street1, street2)
-        search_term = f'{street1} and {street2} ontario toronto canada'
+        search_term = f'{street1} and {street2}, toronto, ontario, canada'
         LOG.debug(f'parse_streets_joined_by_and|search_term:{search_term}|title:{title}')
         return (GOOGLE,
                 search_term,
@@ -285,7 +285,7 @@ def parse_two_streets(standalone_street_re, title):
         LOG.debug(f'matched 3+ streets: {matches}; using first two.')
 
     street1, street2 = matches[:2]
-    search_term = f'{street1} and {street2} ontario toronto canada'
+    search_term = f'{street1} and {street2}, toronto, ontario, canada'
     LOG.debug(f'parse_two_streets|search_term:{search_term}|title:{title}')
     return (GOOGLE, search_term, ('two streets', street1, street2), INTERSECTION_TYPE)
 
