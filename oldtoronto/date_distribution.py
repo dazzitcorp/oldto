@@ -19,21 +19,21 @@ from utils import generators
 
 LOG = logging.getLogger(__name__)
 
-INPUT_FILENAME = 'data/images.ndjson'
-JSON_OUTPUT = 'data/by-decade.json'
+INPUT_FILENAME = "data/images.ndjson"
+JSON_OUTPUT = "data/by-decade.json"
 
 # These regular expressions are applied in order to dates until none of them match.
 # If any matches, the date is replaced with the first capture group.
 CLEANER_RES = [
-    re.compile('^(?:ca.|circa)\s*(.*)'),  # remove leading "ca", e.g. 'ca. June 1922'
-    re.compile('^(.*)\?$'),  # remove trailing ?, e.g '1948-?'
-    re.compile('^[\[(\{](.*)'),  # remove surrounding braces, e.g. '[1890]'
-    re.compile('^(.*)[\]\}).]$'),  # remove surrounding braces, e.g. '[1890]'
-    re.compile('^\s+(.*)'),  # leading whitespace
-    re.compile('(.*)\s+$'),  # trailing whitespace
-    re.compile(r'.*originally created (.*)'),
+    re.compile("^(?:ca.|circa)\s*(.*)"),  # remove leading "ca", e.g. 'ca. June 1922'
+    re.compile("^(.*)\?$"),  # remove trailing ?, e.g '1948-?'
+    re.compile("^[\[(\{](.*)"),  # remove surrounding braces, e.g. '[1890]'
+    re.compile("^(.*)[\]\}).]$"),  # remove surrounding braces, e.g. '[1890]'
+    re.compile("^\s+(.*)"),  # leading whitespace
+    re.compile("(.*)\s+$"),  # trailing whitespace
+    re.compile(r".*originally created (.*)"),
     # meaningful keywords that we just ignore for now.
-    re.compile('^(?:spring|summer|fall|winter) (.*)')
+    re.compile("^(?:spring|summer|fall|winter) (.*)"),
 ]
 
 
@@ -47,36 +47,38 @@ def _year_range(m):
 PARSERS = [
     (
         # e.g. '193-'; becomes '1930/1939'
-        re.compile(r'^(\d\d\d)-?$'),
-        lambda m: (m.group(1) + '0', m.group(1) + '9')
+        re.compile(r"^(\d\d\d)-?$"),
+        lambda m: (m.group(1) + "0", m.group(1) + "9"),
     ),
     (
         # e.g. 'between 1900 and 1910'
-        re.compile(r'^be+t+we+n (\d{4})\??\s*(?:ana*d|or|-)\s*(\d{4})$'), _year_range
+        re.compile(r"^be+t+we+n (\d{4})\??\s*(?:ana*d|or|-)\s*(\d{4})$"),
+        _year_range,
     ),
     (
         # e.g. '1945-1952', '1945 or 1946', '1940 to 1950'
-        re.compile(r'^(\d{4})\s*(?:-|to|or)\s*(\d{4})$'), _year_range
+        re.compile(r"^(\d{4})\s*(?:-|to|or)\s*(\d{4})$"),
+        _year_range,
     ),
     (
         # e.g. '1945-52'
-        re.compile(r'^(\d{2})(\d{2})-(\d{2})$'),
-        lambda m: (m.group(1) + m.group(2), m.group(1) + m.group(3))
+        re.compile(r"^(\d{2})(\d{2})-(\d{2})$"),
+        lambda m: (m.group(1) + m.group(2), m.group(1) + m.group(3)),
     ),
     (
         # e.g. 'before 1900'
-        re.compile(r'^before (\d{4})'),
-        lambda m: (None, m.group(1))
+        re.compile(r"^before (\d{4})"),
+        lambda m: (None, m.group(1)),
     ),
     (
         # e.g. 'after 1900'
-        re.compile(r'^after (\d{4})'),
-        lambda m: (m.group(1), None)
+        re.compile(r"^after (\d{4})"),
+        lambda m: (m.group(1), None),
     ),
     (
         # June 15-19, 1948
-        re.compile(r'[A-z][a-z]+ \d\d\-\d\d, (\d{4})$'),
-        lambda m: (m.group(1), m.group(1))
+        re.compile(r"[A-z][a-z]+ \d\d\-\d\d, (\d{4})$"),
+        lambda m: (m.group(1), m.group(1)),
     ),
 ]
 
@@ -128,11 +130,11 @@ def parse_year(date_string):
 
 def _find_loose_date(date_string):
     """Look for four digit numbers in the string. If there's only one, return it."""
-    if re.search(r'digit', date_string):
+    if re.search(r"digit", date_string):
         # Might be something like "digitized 2010", which we want to avoid.
         return None
     # find all the (unique) four digit numbers in the date_string.
-    matches = set(re.findall(r'\b\d{4}\b', date_string))
+    matches = set(re.findall(r"\b\d{4}\b", date_string))
     if len(matches) != 1:
         return None
     year = list(matches)[0]
@@ -143,12 +145,12 @@ def _find_loose_date(date_string):
 
 def get_parsed_date(row):
     """Returns either an int year or None for an image record."""
-    input_years = row.get('date', '').strip()
+    input_years = row.get("date", "").strip()
     return parse_year(input_years)
 
 
 def write_as_json_to_file(dictionary, filename):
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         json.dump(dictionary, f)
 
 
@@ -158,31 +160,31 @@ def main(input_filename, json_output):
     num_total = 0
     by_decade = defaultdict(int)
     for row in generators.read_ndjson_file(input_filename):
-        ds = row.get('date')
+        ds = row.get("date")
         if not ds:
             continue
         num_total += 1
         d = get_parsed_date(row)
         if not d:
-            LOG.debug('Unable to parse date for %10s: %s' % (row['uniqueID'], ds))
+            LOG.debug("Unable to parse date for %10s: %s" % (row["uniqueID"], ds))
         else:
             num_parsed += 1
             year = int(d[0] or d[1])  # ignore the range for now.
             by_decade[year // 10] += 1
 
-    LOG.info('Parsed %d/%d dates (%.2f%%)' % (
-        num_parsed, num_total, 100.0 * num_parsed / num_total))
+    LOG.info(
+        "Parsed %d/%d dates (%.2f%%)"
+        % (num_parsed, num_total, 100.0 * num_parsed / num_total)
+    )
     counts_by_decade = [
-        {
-            'decade': '%d0' % decade,
-            'count': by_decade[decade]
-        } for decade in sorted(by_decade.keys())
+        {"decade": "%d0" % decade, "count": by_decade[decade]}
+        for decade in sorted(by_decade.keys())
     ]
     write_as_json_to_file(counts_by_decade, json_output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     assert len(sys.argv) <= 2
-    log_file = sys.argv[1] if len(sys.argv) == 2 else __file__ + '.log'
+    log_file = sys.argv[1] if len(sys.argv) == 2 else __file__ + ".log"
     configure_logging(log_file)
     main(INPUT_FILENAME, JSON_OUTPUT)

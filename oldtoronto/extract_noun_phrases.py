@@ -27,18 +27,18 @@ def get_all_titles(images_ndjson):
     with open(images_ndjson) as f:
         for line in f:
             row = json.loads(line)
-            title = row.get('title')
+            title = row.get("title")
             if title:
                 titles.append(title)
     return titles
 
 
-noun_pat = re.compile(r'\b(?:[A-Z][A-Za-z.\']* ?)+')
+noun_pat = re.compile(r"\b(?:[A-Z][A-Za-z.\']* ?)+")
 
 
 def has_multiple_caps(noun):
     """Does a noun phrase contain multiple capital letters?"""
-    return re.match(r'[A-Z].*[A-Z]', noun)
+    return re.match(r"[A-Z].*[A-Z]", noun)
 
 
 def extract_nouns(title):
@@ -56,7 +56,7 @@ def extract_nouns(title):
 # Usually this is based on having "Street" in the name, but we also include a few
 # special cases like "The Esplanade"
 is_street_pat = re.compile(
-    r'''\b(
+    r"""\b(
         Street|St\.?|
         Avenue|Ave\.?|
         Road|Rd\.?|
@@ -75,23 +75,25 @@ is_street_pat = re.compile(
             (?:E|W|N|S)\.?|  # either "E" or "E."
             Extension)
         )?$
-    ''', re.X)
+    """,
+    re.X,
+)
 
 # Exclude some problematic noun phrases
 STREET_BLACKLIST = {
-    'Street North',
-    'Street West',
-    'Avenue West',
+    "Street North",
+    "Street West",
+    "Avenue West",
     "Eaton's College Street",
-    "Eaton's Queen Street"
+    "Eaton's Queen Street",
 }
 # Some unusually-named streets
 STREET_WHITELIST = {
-    'Ridge Drive Park',
-    'Indian Grove',
-    'Lake Front',
-    'Lake Promenade',
-    'Yarmouth Gardens',
+    "Ridge Drive Park",
+    "Indian Grove",
+    "Lake Front",
+    "Lake Promenade",
+    "Yarmouth Gardens",
     # To add:
     # 'Ashton Manor',
     # 'High Park Gardens'
@@ -107,18 +109,24 @@ def is_street(noun):
     return is_street_pat.search(noun) is not None
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='extract pois or streets from images.ndjson and'
-                                     'print to stdout')
-    parser.add_argument('--noun_type', type=str,
-                        help='pois|streets,  what type of noun to extract')
-    parser.add_argument('--cutoff', type=int, default=1)
-    parser.add_argument('--input', type=str, default='data/toronto-archives/images.ndjson',
-                        help='path to images.ndjson file to extract from')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="extract pois or streets from images.ndjson and" "print to stdout"
+    )
+    parser.add_argument(
+        "--noun_type", type=str, help="pois|streets,  what type of noun to extract"
+    )
+    parser.add_argument("--cutoff", type=int, default=1)
+    parser.add_argument(
+        "--input",
+        type=str,
+        default="data/toronto-archives/images.ndjson",
+        help="path to images.ndjson file to extract from",
+    )
 
     args = parser.parse_args()
-    assert args.noun_type in ['pois', 'streets']
-    want_streets = args.noun_type == 'streets'
+    assert args.noun_type in ["pois", "streets"]
+    want_streets = args.noun_type == "streets"
 
     counts = Counter()
     examples = defaultdict(lambda: reservoir.UniformSampling(size=5))
@@ -133,9 +141,9 @@ if __name__ == '__main__':
                 counts[noun] += 1
                 examples[noun].addOne(title)
 
-    print('Count\tName\tExample1\tExample2\tExample3\tExample4\tExample5')
+    print("Count\tName\tExample1\tExample2\tExample3\tExample4\tExample5")
     for k, v in counts.most_common():
         if v < args.cutoff:
             break
-        examples_tsv = '\t'.join(examples[k].get())
-        print('%d\t%s\t%s' % (v, k, examples_tsv))
+        examples_tsv = "\t".join(examples[k].get())
+        print("%d\t%s\t%s" % (v, k, examples_tsv))

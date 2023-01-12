@@ -13,8 +13,8 @@ Usage:
 import fileinput
 import json
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for line in fileinput.input():
         record = json.loads(line)
-        if 'uniqueID' in record:
-            print(record['uniqueID'])
+        if "uniqueID" in record:
+            print(record["uniqueID"])

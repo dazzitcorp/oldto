@@ -19,40 +19,43 @@ import fetcher
 
 
 def lines_from_html(html):
-    lines = html.split('\n')
-    lines = [line for line in lines
-             if 'webcat/systems/toronto.arch/resource' in line and 'citation' in line]
+    lines = html.split("\n")
+    lines = [
+        line
+        for line in lines
+        if "webcat/systems/toronto.arch/resource" in line and "citation" in line
+    ]
     return lines
 
 
 def extract_from_line(line):
-    m = re.search(r'^ *\+ \'(.*)\';|', line)
+    m = re.search(r"^ *\+ \'(.*)\';|", line)
     html = urllib.parse.unquote(m.group(1))
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
 
     tags = {}
-    for row in soup.select('.cartData'):
-        label = row['id']
+    for row in soup.select(".cartData"):
+        label = row["id"]
         data = row.text
         tags[label] = data
 
     return tags
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     f = fetcher.Fetcher()
 
-    out = open('data/images.ndjson', 'w')
+    out = open("data/images.ndjson", "w")
 
-    for url in open('results.txt'):
+    for url in open("results.txt"):
         url = url.strip()
         print(url)
         if not f.is_url_in_cache(url):
             continue
 
-        html = f.fetch_url_from_cache(url).decode('utf8')
+        html = f.fetch_url_from_cache(url).decode("utf8")
         lines = lines_from_html(html)
         for line in lines:
             tags = extract_from_line(line)
             out.write(json.dumps(tags))
-            out.write('\n')
+            out.write("\n")

@@ -12,16 +12,16 @@ import requests
 
 import fetcher
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     f = fetcher.Fetcher()
-    os.makedirs('images', exist_ok=True)
+    os.makedirs("images", exist_ok=True)
 
     for i, line in enumerate(fileinput.input()):
         image = json.loads(line)
-        url = image.get('imageLink')
+        url = image.get("imageLink")
         if not url:
             continue
-        path = os.path.join('images', os.path.basename(url))
+        path = os.path.join("images", os.path.basename(url))
         if os.path.exists(path):
             continue
         try:
@@ -31,6 +31,6 @@ if __name__ == '__main__':
                 continue  # sadly, some images are just missing
             raise
 
-        open(path, 'wb').write(content)
+        open(path, "wb").write(content)
         if i > 0 and i % 20 == 0:
-            print('Fetched %d images' % i)
+            print("Fetched %d images" % i)

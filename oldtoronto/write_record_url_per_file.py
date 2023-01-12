@@ -17,17 +17,17 @@ import sys
 from toronto_archives import get_citation_hierarchy
 
 
-INPUT_FILE = 'data/images.ndjson'
+INPUT_FILE = "data/images.ndjson"
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     seen_prefixes = set()
 
     for line in open(INPUT_FILE):
         image = json.loads(line)
-        uniqueId = image.get('uniqueID')
+        uniqueId = image.get("uniqueID")
         if not uniqueId:
             continue
-        citations = image['citations']
+        citations = image["citations"]
         hierarchy = get_citation_hierarchy(citations)
         if len(hierarchy) == 0:
             sys.stderr.write('No hierarchy for "%s"\n' % citations)

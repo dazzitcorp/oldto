@@ -4,13 +4,13 @@ import os
 
 
 def configure_logging(log_file):
-    logger = logging.getLogger('')
+    logger = logging.getLogger("")
 
     # create file handler which logs even debug messages
     logger.setLevel(logging.DEBUG)
 
-    timestamp = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
-    timestamped_log_file = f'{log_file}.{timestamp}'
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
+    timestamped_log_file = f"{log_file}.{timestamp}"
 
     # create file handler which logs even debug messages
     filehandler = logging.FileHandler(timestamped_log_file)
@@ -20,7 +20,7 @@ def configure_logging(log_file):
     console_handler.setLevel(logging.INFO)
 
     # create formatter and add it to the handlers
-    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
     filehandler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
 

@@ -18,53 +18,49 @@ def merge_entries(entries):
     # If only one source thinks the record is locatable, use that.
     located = [e for e in entries if e[1]]
 
-    rows_with_notes = [e[2] for e in entries if e[2]['user_notes']]
+    rows_with_notes = [e[2] for e in entries if e[2]["user_notes"]]
     if len(rows_with_notes) == 0:
-        note = ''
+        note = ""
     elif len(rows_with_notes) == 1:
-        note = rows_with_notes[0]['user_notes']
+        note = rows_with_notes[0]["user_notes"]
     else:
-        note = '\n'.join('%s: %s' % (row['source'], row['user_notes']) for row in rows_with_notes)
+        note = "\n".join(
+            "%s: %s" % (row["source"], row["user_notes"]) for row in rows_with_notes
+        )
 
     if len(located) == 0:
-        entries[0][2]['user_notes'] = note
+        entries[0][2]["user_notes"] = note
         return entries[0]
 
     elif len(located) == 1:
-        located[0][2]['user_notes'] = note
+        located[0][2]["user_notes"] = note
         return located[0]
 
     # We've got multiple locations. Average them?
-    avg_lat = sum(float(e[2]['Lat']) for e in located) / len(located)
-    avg_lng = sum(float(e[2]['Lng']) for e in located) / len(located)
-    geometry = {
-        'type': 'Point',
-        'coordinates': [avg_lng, avg_lat]
-    }
+    avg_lat = sum(float(e[2]["Lat"]) for e in located) / len(located)
+    avg_lng = sum(float(e[2]["Lng"]) for e in located) / len(located)
+    geometry = {"type": "Point", "coordinates": [avg_lng, avg_lat]}
 
-    located[0][2]['user_notes'] = note
+    located[0][2]["user_notes"] = note
     return (located[0][0], geometry, located[0][2])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     id_to_data = defaultdict(list)
 
-    for row in csv.DictReader(open('locatable-turk/truth-combined.csv')):
-        id_ = row['uniqueID']
-        is_locatable = row['geolocatable'] == 'Locatable'
+    for row in csv.DictReader(open("locatable-turk/truth-combined.csv")):
+        id_ = row["uniqueID"]
+        is_locatable = row["geolocatable"] == "Locatable"
 
         geometry = None
         if is_locatable:
-            (lng, lat) = (float(row['Lng']), float(row['Lat']))
-            geometry = {
-                'type': 'Point',
-                'coordinates': [lng, lat]
-            }
+            (lng, lat) = (float(row["Lng"]), float(row["Lat"]))
+            geometry = {"type": "Point", "coordinates": [lng, lat]}
 
         date = None
-        if row['datable'] == 'yes':
-            start = row['date_start']
-            end = row['date_end']
+        if row["datable"] == "yes":
+            start = row["date_start"]
+            end = row["date_end"]
             if start and not end:
                 date = start
             elif end and not start:
@@ -74,9 +70,9 @@ if __name__ == '__main__':
                 if start == end:
                     date = start
                 else:
-                    date = '%s/%s' % (start, end)
+                    date = "%s/%s" % (start, end)
             else:
-                raise ValueError('Empty start/end for %s' % id_)
+                raise ValueError("Empty start/end for %s" % id_)
 
         id_to_data[id_].append((date, geometry, row))
 
@@ -89,19 +85,18 @@ if __name__ == '__main__':
 
         date, geometry, row = entry
 
-        features.append({
-            'type': 'Feature',
-            'geometry': geometry,
-            'id': id_,
-            'properties': {
-                'date': date,
-                'title': row['title'],
-                'geocoding_notes': row['user_notes'],
-                'source': row['source']
+        features.append(
+            {
+                "type": "Feature",
+                "geometry": geometry,
+                "id": id_,
+                "properties": {
+                    "date": date,
+                    "title": row["title"],
+                    "geocoding_notes": row["user_notes"],
+                    "source": row["source"],
+                },
             }
-        })
+        )
 
-    print(json.dumps({
-        'type': 'FeatureCollection',
-        'features': features
-    }))
+    print(json.dumps({"type": "FeatureCollection", "features": features}))

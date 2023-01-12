@@ -40,60 +40,53 @@ import untangle
 
 # Prioritize features with these tags, e.g. "leisure=park".
 GOOD_TAGS = {
-    'leisure': {
-        'park',
-        'stadium',
-        'playground'
+    "leisure": {"park", "stadium", "playground"},
+    "subway": set("yes"),
+    "place": {"islet", "island"},
+    "tourism": {
+        "museum",
+        "zoo",
+        "hotel",
+        "old_hotel",
+        "attraction",
+        "artwork",
+        "gallery",
+        "theme_park",
     },
-    'subway': set('yes'),
-    'place': {
-        'islet',
-        'island'
+    "building": set("yes"),
+    "amenity": {
+        "building",
+        "place_of_worship",
+        "library",
+        "university",
+        "school",
+        "townhall",
+        "charity",
+        "marketplace",
     },
-    'tourism': {
-        'museum',
-        'zoo',
-        'hotel',
-        'old_hotel',
-        'attraction',
-        'artwork',
-        'gallery',
-        'theme_park'
-    },
-    'building': set('yes'),
-    'amenity': {
-        'building',
-        'place_of_worship',
-        'library',
-        'university',
-        'school',
-        'townhall',
-        'charity',
-        'marketplace',
-    }
 }
 
 # Low value = non-specific
 TAG_SCORES = {
-    'leisure': 3,
-    'subway': 2,
-    'place': 1,
-    'tourism': 4,
-    'building': 5,
-    'amenity': 6
+    "leisure": 3,
+    "subway": 2,
+    "place": 1,
+    "tourism": 4,
+    "building": 5,
+    "amenity": 6,
 }
 
 # This list was made by hand by looking at terms which matched image titles.
-BLACKLIST = set(open('data/poi-blacklist.txt').read().splitlines())
+BLACKLIST = set(open("data/poi-blacklist.txt").read().splitlines())
 
 
-OUTPUT_FILE = 'data/toronto-pois.osm.csv'
+OUTPUT_FILE = "data/toronto-pois.osm.csv"
 
-root = untangle.parse('toronto+names.osm')
+root = untangle.parse("toronto+names.osm")
 
 
 def strip_parens(name):
-    return re.sub(r' \(.*\)', '', name)
+    return re.sub(r" \(.*\)", "", name)
 
 
 def untorontoify(term):
@@ -102,23 +95,23 @@ def untorontoify(term):
     Useful if the name in OSM is something like "Union Square (Toronto)"
     or "Toronto City Hall".
     """
-    return re.sub(r'^Toronto ', '', re.sub(r' \(Toronto\)', '', term))
+    return re.sub(r"^Toronto ", "", re.sub(r" \(Toronto\)", "", term))
 
 
 blacklist_places = set()  # additional features to blacklist, found in data.
 features = []
 for el in root.osm.node:
-    osm_id = el['id']
-    lat = el['lat']
-    lng = el['lon']
+    osm_id = el["id"]
+    lat = el["lat"]
+    lng = el["lon"]
 
     tags = {}
     score = 0
     for node in el.children:
-        k = node['k']
-        v = node['v']
+        k = node["k"]
+        v = node["v"]
         tags[k] = v
-    name = tags.get('name')
+    name = tags.get("name")
     if not name:
         continue
 
@@ -135,58 +128,62 @@ for el in root.osm.node:
     if name.lower() in BLACKLIST:
         continue
 
-    names = [x for x in [name, tags.get('loc_name', tags.get('old_name'))] if x]
+    names = [x for x in [name, tags.get("loc_name", tags.get("old_name"))] if x]
 
-    wiki = tags.get('wikipedia', '')
+    wiki = tags.get("wikipedia", "")
     if wiki:
         score += 1  # A wiki link is a sign that this feature is important.
 
-    if wiki and wiki[:3] == 'en:':
+    if wiki and wiki[:3] == "en:":
         names.append(wiki[3:])  # grab another name from the Wikipedia article
 
-    if wiki == 'en:Exhibition Place':
+    if wiki == "en:Exhibition Place":
         # This monkey patch gets us ~800 additional geocodes.
-        names += ['CNE', 'C. N. E.', 'C.N.E.', 'Canadian National Exhibition']
+        names += ["CNE", "C. N. E.", "C.N.E.", "Canadian National Exhibition"]
 
     # These are large, non-specific areas.
-    if tags.get('place') in {'suburb', 'neighbourhood', 'town'}:
+    if tags.get("place") in {"suburb", "neighbourhood", "town"}:
         blacklist_places.add(name)
 
     # Roads should be handled via addresses or cross streets.
     # But sometimes squares are labeled as "highway=pedestrian", e.g. Nathan Phillips Square.
-    if tags.get('highway') and not tags.get('area') == 'yes':
+    if tags.get("highway") and not tags.get("area") == "yes":
         continue
 
     # Try removing "Toronto" from our set of names.
     names = set(names + [untorontoify(n) for n in names])
 
     for name in names:
-        if (len(name) > 4 and re.match(r'^[-A-Za-z .]+$', name)) or name == 'CNE':
-            features.append((name, osm_id, lat, lng, score, tags['name'], wiki))
+        if (len(name) > 4 and re.match(r"^[-A-Za-z .]+$", name)) or name == "CNE":
+            features.append((name, osm_id, lat, lng, score, tags["name"], wiki))
 
             # Try removing parenthesies, at a 50% score penalty.
             # This keeps "Berczy Park" outranking "Berczy (Wycliffe) Park"
             no_parens_name = strip_parens(name)
             if no_parens_name != name:
-                features.append((
-                    no_parens_name, osm_id, lat, lng, 0.5 * score, tags['name'], wiki))
+                features.append(
+                    (no_parens_name, osm_id, lat, lng, 0.5 * score, tags["name"], wiki)
+                )
 
 # Read in the list of noun phrases.
 noun_freq = {}
-for row in csv.DictReader(open('data/noun-phrase-pois.txt'), delimiter='\t'):
-    noun_freq[row['Name']] = int(row['Count'])
+for row in csv.DictReader(open("data/noun-phrase-pois.txt"), delimiter="\t"):
+    noun_freq[row["Name"]] = int(row["Count"])
 
 
-with open(OUTPUT_FILE, 'w') as f:
+with open(OUTPUT_FILE, "w") as f:
     out = csv.writer(f)
-    out.writerow(['freq', 'name', 'osmid', 'lat', 'lng', 'score', 'OSM Name', 'Wiki'])
+    out.writerow(["freq", "name", "osmid", "lat", "lng", "score", "OSM Name", "Wiki"])
 
     # Group by name, order by rank and take the max.
     unique_features = [
         [str(noun_freq[name])] + list(max(it, key=lambda f: f[4]))
         for name, it in itertools.groupby(
-            sorted(features, key=lambda f: (f[0], -f[4])), key=lambda f: f[0])
-        if name in noun_freq and name not in blacklist_places and not name.lower() in BLACKLIST
+            sorted(features, key=lambda f: (f[0], -f[4])), key=lambda f: f[0]
+        )
+        if name in noun_freq
+        and name not in blacklist_places
+        and not name.lower() in BLACKLIST
     ]
-    print('Found %d unique terms' % len(unique_features))
+    print("Found %d unique terms" % len(unique_features))
     out.writerows(unique_features)

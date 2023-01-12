@@ -50,20 +50,21 @@ class Response(object):
 
 class CacheSession(requests.Session):
     """Monkey patch this is to replace requests.Session in order to cache get requests."""
+
     def __init__(self, cache=None):
         super(CacheSession, self).__init__()
         self._cache = cache if cache else Cache()
 
     def send(self, request, **kwargs):
         url = request.url
-        assert request.method == 'GET'
+        assert request.method == "GET"
         resp = None
         if self._cache.is_url_in_cache(url):
-            LOG.debug(f'cache hit for url: {url}')
+            LOG.debug(f"cache hit for url: {url}")
             resp = Response()
             resp.contents = self._cache.fetch_url_from_cache(url)
         else:
-            LOG.debug(f'cache miss for url: {url}')
+            LOG.debug(f"cache miss for url: {url}")
             resp = super(CacheSession, self).send(request, **kwargs)
             self._cache.store_url_in_cache(url, resp.content)
         return resp
@@ -71,40 +72,45 @@ class CacheSession(requests.Session):
 
 class Cache(object):
     """Store get request responses, keyed by their url."""
-    def __init__(self, cache_dir='cache'):
+
+    def __init__(self, cache_dir="cache"):
         super(Cache, self).__init__()
         self._cache_dir = cache_dir
         os.makedirs(self._cache_dir, exist_ok=True)
-        self._urls_file = os.path.join(self._cache_dir, 'urls.txt')
+        self._urls_file = os.path.join(self._cache_dir, "urls.txt")
 
     def _cache_path(self, url):
         """Returns path to the cached version of an URL, regardless of whether it exists."""
         parsed_url = urllib.parse.urlparse(url)
         dir_path = os.path.join(self._cache_dir, parsed_url.netloc)
         query_minus_api_key = urllib.parse.urlencode(
-            self._remove_api_key_query_param(parsed_url.query))
-        url_transformed = urllib.parse.urlunparse((
-            parsed_url.scheme,
-            parsed_url.netloc,
-            parsed_url.path,
-            parsed_url.params,
-            query_minus_api_key,
-            parsed_url.fragment))
+            self._remove_api_key_query_param(parsed_url.query)
+        )
+        url_transformed = urllib.parse.urlunparse(
+            (
+                parsed_url.scheme,
+                parsed_url.netloc,
+                parsed_url.path,
+                parsed_url.params,
+                query_minus_api_key,
+                parsed_url.fragment,
+            )
+        )
         return os.path.join(dir_path, self._hash(url_transformed))
 
     def _hash(self, url):
         """Compute SHA1 checksum for the URL."""
-        return hashlib.sha1(url.encode('utf8')).hexdigest()
+        return hashlib.sha1(url.encode("utf8")).hexdigest()
 
     def _remove_api_key_query_param(self, qp):
         parsed = urllib.parse.parse_qsl(qp)
-        return [(k, v) for k, v in parsed if k != 'key']
+        return [(k, v) for k, v in parsed if k != "key"]
 
     def fetch_url_from_cache(self, url):
         path = self._cache_path(url)
         if not os.path.exists(path):
             raise NotInCacheError()
-        return open(path, 'rb').read()
+        return open(path, "rb").read()
 
     def is_url_in_cache(self, url):
         return os.path.exists(self._cache_path(url))
@@ -112,8 +118,8 @@ class Cache(object):
     def store_url_in_cache(self, url, contents):
         path = self._cache_path(url)
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        open(path, 'wb').write(contents)
-        open(self._urls_file, 'a').write('%s\t%s\n' % (self._hash(url), url))
+        open(path, "wb").write(contents)
+        open(self._urls_file, "a").write("%s\t%s\n" % (self._hash(url), url))
 
     def remove_url_from_cache(self, url):
         # Note: we leave the URL in cache/urls.txt. It's harmless there.
@@ -124,7 +130,8 @@ class Cache(object):
 
 class Fetcher(object):
     """Provides throttling on top of the cache object."""
-    def __init__(self, throttle_secs=3.0, cache_dir='cache'):
+
+    def __init__(self, throttle_secs=3.0, cache_dir="cache"):
         self._cache = Cache(cache_dir)
         self._throttle_secs = throttle_secs
         self._last_fetch = 0.0
@@ -140,10 +147,10 @@ class Fetcher(object):
         t = time.time()
         if t - self._last_fetch < self._throttle_secs:
             wait_s = self._throttle_secs - (t - self._last_fetch)
-            sys.stderr.write('Waiting %s secs...\n' % wait_s)
+            sys.stderr.write("Waiting %s secs...\n" % wait_s)
             time.sleep(wait_s)
 
-        print('Fetching %s...' % url)
+        print("Fetching %s..." % url)
         self._last_fetch = time.time()
         response = requests.get(url)
         response.raise_for_status()  # checks for status == 200 OK
@@ -163,21 +170,21 @@ class Fetcher(object):
         self._cache.remove_url_from_cache(url)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     assert len(sys.argv) <= 1
-    log_file = sys.argv[0] if len(sys.argv) == 1 else __file__ + '.log'
+    log_file = sys.argv[0] if len(sys.argv) == 1 else __file__ + ".log"
     configure_logging(log_file)
     f = Fetcher()
     for i, line in enumerate(fileinput.input()):
         line = line.strip()
-        if '\t' in line:
-            filename, url = line.split('\t')
+        if "\t" in line:
+            filename, url = line.split("\t")
         else:
             filename = None
             url = line
 
-        print('%5d Fetching %s' % (i + 1, url))
+        print("%5d Fetching %s" % (i + 1, url))
         content = f.fetch_url(url)
         if filename:
-            open(filename, 'wb').write(content)
-        print('  %d bytes' % len(content))
+            open(filename, "wb").write(content)
+        print("  %d bytes" % len(content))

@@ -17,9 +17,9 @@ def main():
     (_, url) = sys.argv
     f = fetcher.Fetcher()
     content = f.fetch_url_from_cache(url)
-    sys.stderr.write('Loading cached content from %s\n' % f._cache_path(url))
-    print(content.decode('utf8'))
+    sys.stderr.write("Loading cached content from %s\n" % f._cache_path(url))
+    print(content.decode("utf8"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
