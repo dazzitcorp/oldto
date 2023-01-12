@@ -1,10 +1,8 @@
-from io import StringIO
-
 import sys
+from io import StringIO
 
 sys.path.append("oldtoronto")
 from oldtoronto.generate_geojson import load_patch_csv  # noqa
-
 
 TEST_DATA = StringIO(
     """Timestamp,Photo Id,Location suggestion,Lat,Lng,Fixed

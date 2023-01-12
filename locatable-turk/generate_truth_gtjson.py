@@ -5,9 +5,9 @@ See:
 https://docs.google.com/spreadsheets/d/1AZ_X4YFPJF9-KdRxjdiDJhRF5z6tAd3fBBaAXBZLNHE/edit
 """
 
-from collections import defaultdict
-import json
 import csv
+import json
+from collections import defaultdict
 
 
 def merge_entries(entries):

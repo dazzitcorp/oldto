@@ -25,7 +25,6 @@ from collections import defaultdict
 
 import haversine
 import tqdm
-
 from utils.generators import read_ndjson_file
 
 # Skip the urban design photographs, they are all over the place:

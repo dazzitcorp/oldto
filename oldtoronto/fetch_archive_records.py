@@ -13,7 +13,6 @@ import fileinput
 import fetcher
 from toronto_archives import url_for_unique_id
 
-
 if __name__ == "__main__":
     f = fetcher.Fetcher(throttle_secs=2.0)
     any_uncached_fetches = False

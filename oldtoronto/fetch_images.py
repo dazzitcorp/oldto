@@ -8,9 +8,8 @@ import fileinput
 import json
 import os
 
-import requests
-
 import fetcher
+import requests
 
 if __name__ == "__main__":
     f = fetcher.Fetcher()

@@ -12,12 +12,12 @@ Output:
 import argparse
 import json
 import os
-import pandas as pd
 
+import pandas as pd
 from date_distribution import parse_year
 from toronto_archives import SHORT_URL_PATTERN
-from utils.generators import read_ndjson_file
 from utils.deep_update import deep_update
+from utils.generators import read_ndjson_file
 
 # Possible sources of imagery.
 SOURCE_TPL = "tpl"

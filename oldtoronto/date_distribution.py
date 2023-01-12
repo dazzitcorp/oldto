@@ -5,17 +5,15 @@ Usage:
     python date_distribution.py $log_filename
 """
 
-from collections import defaultdict
 import json
 import logging
 import re
 import sys
+from collections import defaultdict
 
 from dateutil.parser import parse
-
 from logging_configuration import configure_logging
 from utils import generators
-
 
 LOG = logging.getLogger(__name__)
 

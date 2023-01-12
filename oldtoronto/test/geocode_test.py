@@ -1,11 +1,12 @@
 import json
-import tempfile
 import sys
+import tempfile
 
 sys.path.append("oldtoronto")
 
 from nose.tools import eq_, ok_  # noqa
 from parameterized import parameterized  # noqa
+
 from oldtoronto import geocode  # noqa
 
 

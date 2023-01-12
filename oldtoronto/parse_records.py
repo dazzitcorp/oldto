@@ -16,9 +16,9 @@ Note that all URLs are assumed to have been cached beforehand, e.g. with:
 import json
 import re
 import sys
-from bs4 import BeautifulSoup
 
 import fetcher
+from bs4 import BeautifulSoup
 from toronto_archives import url_for_unique_id
 
 keys = {

@@ -11,7 +11,6 @@ import sys
 
 import googlemaps
 import tqdm
-
 from extract_noun_phrases import noun_pat
 from fetcher import CacheSession
 from logging_configuration import configure_logging

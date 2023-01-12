@@ -5,8 +5,8 @@ This is used for the geocode correction UI.
 """
 
 import argparse
-from collections import defaultdict
 import json
+from collections import defaultdict
 
 
 def main(input_geojson, output_js):

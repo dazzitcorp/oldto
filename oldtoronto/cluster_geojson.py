@@ -6,8 +6,8 @@ import argparse
 import json
 import sys
 
-from haversine import haversine
 import numpy as np
+from haversine import haversine
 from sklearn.cluster import DBSCAN
 
 

@@ -10,12 +10,12 @@ Supported endpoints:
 """
 
 import argparse
-from collections import defaultdict, Counter
 import copy
 import json
 import os
+from collections import Counter, defaultdict
 
-from flask import Flask, abort, jsonify, request, Response
+from flask import Flask, Response, abort, jsonify, request
 from haversine import haversine
 
 geojson_file = None  # filled in in __main__

@@ -13,9 +13,8 @@ import re
 import urllib
 import urllib.parse
 
-from bs4 import BeautifulSoup
-
 import fetcher
+from bs4 import BeautifulSoup
 
 
 def lines_from_html(html):

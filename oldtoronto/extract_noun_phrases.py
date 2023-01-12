@@ -16,7 +16,7 @@ The output is TSV for easy copy/pasting into a spreadsheet.
 import argparse
 import json
 import re
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
 
 from weightreservoir import reservoir
 

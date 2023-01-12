@@ -28,10 +28,8 @@ import sys
 import time
 import urllib
 
-from logging_configuration import configure_logging
-
 import requests
-
+from logging_configuration import configure_logging
 
 LOG = logging.getLogger(__name__)
 

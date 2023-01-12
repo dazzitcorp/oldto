@@ -14,7 +14,6 @@ import json
 import random
 
 from haversine import haversine
-
 from utils.id_sample import should_sample
 
 

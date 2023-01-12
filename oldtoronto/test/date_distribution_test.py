@@ -1,7 +1,7 @@
+import sys
+
 from nose.tools import eq_
 from parameterized import parameterized
-
-import sys
 
 sys.path.append("oldtoronto")
 from oldtoronto.date_distribution import parse_year  # noqa
