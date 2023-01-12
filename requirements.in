@@ -1,0 +1,22 @@
+# develop
+black
+flake8
+flake8-quotes
+isort
+nose
+pip-tools
+vulture
+
+# run
+beautifulsoup4
+flask
+googlemaps
+haversine
+numpy
+pandas
+parameterized
+requests
+sklearn
+tqdm
+untangle
+weightreservoir
