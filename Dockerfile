@@ -4,7 +4,7 @@ ARG GMAPS_API_KEY
 WORKDIR oldto-site
 COPY oldto-site .
 ENV GMAPS_API_KEY $GMAPS_API_KEY
-RUN yarn && yarn webpack
+RUN npm install && npm run webpack
 
 FROM nginx
 

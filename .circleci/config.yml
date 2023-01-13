@@ -12,7 +12,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/yarn.lock" }}
+          - v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/package-lock.json" }}
           # fallback to using the latest cache if no exact match is found
           - v2-dependencies-
 
@@ -23,14 +23,12 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             cd oldto-site
-            yarn
+            npm install
 
       - save_cache:
           paths:
             - ./venv
-            - ~/.yarn
-            - ~/.cache/yarn
-          key: v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/yarn.lock" }}
+          key: v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/package-lock.json" }}
 
       # run tests!
       - run:
@@ -41,7 +39,7 @@ jobs:
             nosetests
             ./scripts/find-dead-code.sh
             cd oldto-site
-            yarn lint
+            npm run lint
 
 
   check-data:

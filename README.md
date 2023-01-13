@@ -50,30 +50,27 @@ If you've generated geocodes in a different location, change `data/images.geojso
 
 ### Web application
 
-The OldTO site lives in `oldto-site`. In order to build it, you'll need the
-yarn package manager. Instructions on setting that up at https://yarnpkg.com/.
+The OldTO site lives in `oldto-site`.
 
-You'll also need to get a [Google Maps API key][api key]. Once you've done this,
+You'll need to get a [Google Maps API key][api key]. Once you've done this,
 set the enviroment variable `GMAPS_API_KEY` to your own api key:
 
     export GMAPS_API_KEY=...
 
-Webpack needs this to build the site when you run `yarn webpack`. You can
-spin it up by running it locally using `http-server` (install with
-`npm install -g http-server`).
+Webpack needs this to build the site when you run `npm run webpack`:
 
     cd oldto-site
-    yarn          # install dependencies
-    yarn webpack  # bundle JavaScript and build site
+    npm install      # install dependencies
+    npm run webpack  # bundle JavaScript and build site
     cd dist
     http-server --proxy=http://localhost:8081
 
-Then visit http://localhost:8080/ to browse the site.
+Now visit http://localhost:8080/ to browse the site.
 
-To iterate on the site, use `yarn watch`:
+To iterate on the site, use `npm run watch`:
 
     cd oldto-site
-    yarn watch &
+    npm run watch &
     cd dist
     http-server --proxy=http://localhost:8081
 

@@ -14,7 +14,7 @@ do
   python oldtoronto/cluster_geojson.py --output_file data/clustered.images.geojson --epsilon $EPS
   python oldtoronto/gtjson_to_site.py data/clustered.images.geojson oldto-site/
   cd oldto-site
-  yarn webpack
+  npm run webpack
   cd -
   OUTPUT_PATH="${OUT_DIR}/${LOCATION}-clustered-${EPS}.png"
   echo $OUTPUT_PATH
