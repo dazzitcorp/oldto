@@ -1,3 +1,8 @@
+import knobBlue from '../images/knob-blue.png';
+import knobBlack from '../images/knob-black.png';
+import knobGrey from '../images/knob-grey.png';
+import pinBlack from '../images/pin-black.png';
+
 import {fillDetailsPanel} from './fill-details';
 import {libraryUrlForPhotoId, infoForPhotoId, loadInfoForLatLon} from './photo-info';
 import {MAP_STYLE} from './map-styles';
@@ -217,10 +222,10 @@ export function initializeMap() {
     anchor: new google.maps.Point((width + 2) / 4, (height + 2) / 4),
     scaledSize: new google.maps.Size(width / 2, height / 2)
   });
-  markerIcons.images = makeMarker('images/knob-blue.png', 34, 34);
-  markerIcons.selected = makeMarker('images/knob-black.png', 34, 34);
-  markerIcons.filtered = makeMarker('images/knob-grey.png', 26, 26);
-  markerIcons.searchPin = makeMarker('images/pin-black.png', 50, 72);
+  markerIcons.images = makeMarker(knobBlue, 34, 34);
+  markerIcons.selected = makeMarker(knobBlack, 34, 34);
+  markerIcons.filtered = makeMarker(knobGrey, 26, 26);
+  markerIcons.searchPin = makeMarker(pinBlack, 50, 72);
   markerIcons.searchPin.anchor.y = 35;  // bottom
 
   popup = new Popup(center, document.createElement('div'));

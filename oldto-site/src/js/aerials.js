@@ -1,4 +1,5 @@
 /* global mapboxgl */
+/* global process */
 
 import 'mapbox-gl-compare';
 
@@ -14,7 +15,7 @@ const LABEL_LAYERS = [
 ]
 const YEARS = [1947, 1983, 1985, 1987, 1989, 1991, 1992, 2018];
 
-mapboxgl.accessToken = 'pk.eyJ1IjoicnZpbGltIiwiYSI6ImNqZ2Nic2R5czNncWwyd241djdwODIyOGgifQ.YwmNuS4UDs0Q27LBHvLg7w';
+mapboxgl.accessToken = process.env.MAPBOX_API_KEY;
 
 var map = new mapboxgl.Map({
   container: 'map',
@@ -97,7 +98,7 @@ $('#location-search').on('keypress', function(e) {
   const address = $(this).val();
   $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', {
     address,
-    key: 'AIzaSyCS3o6gGDBx16T0OQtb_2wJRuxlcFjfnyA',
+    key: process.env.GOOGLE_MAPS_API_KEY,
     // This is a bit tight to avoid a bug with how Google geocodes "140 Yonge".
     bounds: '43.598284,-79.448761|43.712376, -79.291565'
   }).done(response => {

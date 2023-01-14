@@ -38,7 +38,7 @@ Python dependencies in a virtual environment via:
 
 ## Running the site
 
-### Server
+### Backend
 
 The data for the OldTO site is served via a Python API server.
 Start by running this:
@@ -48,31 +48,34 @@ Start by running this:
 
 If you've generated geocodes in a different location, change `data/images.geojson` to that.
 
-### Web application
+### Frontend
 
-The OldTO site lives in `oldto-site`.
-
-You'll need to get a [Google Maps API key][api key]. Once you've done this,
-set the enviroment variable `GMAPS_API_KEY` to your own api key:
-
-    export GMAPS_API_KEY=...
-
-Webpack needs this to build the site when you run `npm run webpack`:
+The OldTO site lives in the `oldto-site` directory:
 
     cd oldto-site
-    npm install      # install dependencies
-    npm run webpack  # bundle JavaScript and build site
-    cd dist
-    http-server --proxy=http://localhost:8081
 
-Now visit http://localhost:8080/ to browse the site.
+To install the required packages, use:
 
-To iterate on the site, use `npm run watch`:
+    npm install
 
-    cd oldto-site
-    npm run watch &
-    cd dist
-    http-server --proxy=http://localhost:8081
+Then create a `.env` file (or, even better, separate `.env.development` and `.env.production` files) in the `oldto-site` directory with the following keys and values:
+
+    FACEBOOK_APP_ID=...
+    GOOGLE_ANALYTICS_TRACKING_ID=...
+    GOOGLE_MAPS_API_KEY=...
+    MAPBOX_API_KEY=...
+
+Now you can build the site:
+
+    npm run build
+
+or run it locally:
+
+    npm run start
+
+If you run it locally, visit http://localhost:8080/ to browse it.
+
+(To run the frontend locally you have to run the backend locally too!)
 
 ## Generating new geocodes
 

@@ -597,7 +597,7 @@ div#time-slider {
 }
 
 span.ui-slider-handle.ui-corner-all.ui-state-default {
-  background: url(/images/knob-blue.png) no-repeat center;
+  background: url(../images/knob-blue.png) no-repeat center;
   border: 0;
   width: 20px;
   height: 20px;
@@ -627,12 +627,12 @@ span.ui-slider-handle.ui-corner-all.ui-state-default {
 }
 
 .time-chart-bg {
-  background: url(/images/chart-bg.png) no-repeat left top;
+  background: url(../images/chart-bg.png) no-repeat left top;
   background-size: 177px 25px;
 }
 
 .time-chart-fg {
-  background: url(/images/chart-fg.png) no-repeat left top;
+  background: url(../images/chart-fg.png) no-repeat left top;
   background-size: 177px 25px;
   position: absolute;
 }

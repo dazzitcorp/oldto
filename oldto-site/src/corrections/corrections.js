@@ -1,3 +1,5 @@
+/* global ll_to_ids */
+
 import {fillDetailsPanel} from '../js/fill-details';
 
 function getCookie(name) {

@@ -1,37 +1,31 @@
 {
-  "name": "oldnyc",
-  "version": "1.0.0",
-  "description": "The oldnyc.org frontend",
-  "main": "js/viewer.js",
-  "scripts": {
-    "test": "npm run lint",
-    "lint": "eslint js/*.js",
-    "webpack": "webpack",
-    "watch": "webpack --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/oldnyc/oldnyc.github.io.git"
-  },
-  "author": "Dan Vanderkam",
+  "name": "oldto",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/oldnyc/oldnyc.github.io/issues"
+  "version": "1.0.0",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "source": "src/index.html",
+  "scripts": {
+    "build": "parcel build",
+    "lint": "eslint js/*.js",
+    "start": "parcel --port 8080",
+    "test": "npm run lint",
+    "watch": "parcel watch"
   },
-  "homepage": "https://github.com/oldnyc/oldnyc.github.io#readme",
+  "parcelIgnore": [
+    "^/api/"
+  ],
   "devDependencies": {
-    "babel-core": "^6.9.0",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.9.0",
-    "copy-webpack-plugin": "^4.5.1",
     "eslint": "^2.10.2",
     "eslint-plugin-import": "^1.8.0",
-    "html-webpack-plugin": "^3.2.0",
-    "webpack": "^1.13.1"
+    "events": "^3.3.0",
+    "http-proxy-middleware": "^2.0.6",
+    "parcel": "^2.8.2",
+    "parcel-resolver-ignore": "^2.1.3",
+    "posthtml-expressions": "^1.11.0",
+    "process": "^0.11.10"
   },
   "dependencies": {
     "clipboard": "^2.0.0",
-    "http-server": "^0.11.1",
     "mapbox-gl-compare": "^0.2.0",
     "underscore": "^1.8.3"
   }

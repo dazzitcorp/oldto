@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="../styles/fonts.css">
   <link rel="stylesheet" href="../styles/fonts-aboutpage.css">
   <link rel="stylesheet" href="corrections.css">
-  <link rel="icon" href="images/OT-favicon-32x32.png">
+  <link rel="icon" href="../images/OT-favicon-32x32.png">
 </head>
 
 <body>
@@ -124,13 +124,15 @@
 </div>
 </div>
 
+<iframe class="hide" name="hiddenFrame"></iframe>
+
 <script src="../js/vendor/jquery.1.12.5-pre.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS3o6gGDBx16T0OQtb_2wJRuxlcFjfnyA&libraries=places&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap"
   async defer></script>
 
 <script src="ids.js" async></script>
 
-<iframe class="hide" name="hiddenFrame"></iframe>
+<script type="module" src="corrections.js"></script>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -138,7 +140,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-79490400-3', 'auto');
+  ga('create', '{{ GOOGLE_ANALYTICS_TRACKING_ID }}', 'auto');
   ga('send', 'pageview');
 </script>
 
