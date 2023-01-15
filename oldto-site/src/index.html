@@ -215,7 +215,7 @@
 
   <!-- Google Maps API -->
   <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}">
+      src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY">
   </script>
   <script src="js/vendor/jquery.1.12.5-pre.js"></script>
 
@@ -248,7 +248,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '{{ GOOGLE_ANALYTICS_TRACKING_ID }}', 'auto');
+  ga('create', '$GOOGLE_ANALYTICS_TRACKING_ID', 'auto');
   ga('send', 'pageview');
 </script>
 
@@ -256,7 +256,7 @@
 <script>
   window.fbAsyncInit = function() {
     FB.init({
-      appId: '{{ FACEBOOK_APP_ID }}',
+      appId: '$FACEBOOK_APP_ID',
       xfbml: true,
       version: 'v2.12'
     });

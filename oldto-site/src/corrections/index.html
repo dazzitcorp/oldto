@@ -127,7 +127,7 @@
 <iframe class="hide" name="hiddenFrame"></iframe>
 
 <script src="../js/vendor/jquery.1.12.5-pre.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"
   async defer></script>
 
 <script src="ids.js" async></script>
@@ -140,7 +140,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '{{ GOOGLE_ANALYTICS_TRACKING_ID }}', 'auto');
+  ga('create', '$GOOGLE_ANALYTICS_TRACKING_ID', 'auto');
   ga('send', 'pageview');
 </script>
 

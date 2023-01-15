@@ -1,4 +1,10 @@
 {
   "extends": "@parcel/config-default",
-  "resolvers": ["parcel-resolver-ignore", "..."]
+  "resolvers": ["parcel-resolver-ignore", "..."],
+  "transformers": {
+    "*.html": [
+      "@plasmohq/parcel-transformer-inject-env",
+      "..."
+    ]
+  }
 }
