@@ -169,8 +169,7 @@ class Fetcher(object):
 
 
 if __name__ == "__main__":
-    assert len(sys.argv) <= 1
-    log_file = sys.argv[0] if len(sys.argv) == 1 else __file__ + ".log"
+    log_file = __file__ + ".log"
     configure_logging(log_file)
     f = Fetcher()
     for i, line in enumerate(fileinput.input()):
