@@ -419,6 +419,7 @@ span.ui-slider-handle {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  overflow: hidden;
 }
 
 input#location-search {
