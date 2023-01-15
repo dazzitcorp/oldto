@@ -316,10 +316,12 @@ a#slideshow-all, a#slideshow-all:visited {
   height: 20px;
   overflow: hidden;  /* this hides the "Like" flyout */
 }
+/*
 .og-details .facebook-holder {
   margin-top: -4px;
-  height: 24px;  /* for some reason the facebook button is shifted a bit. */
+  height: 24px;  / * for some reason the facebook button is shifted a bit. * /
 }
+*/
 
 .og-details .social, .more-on-back {
   margin: 10px 0;
