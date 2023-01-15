@@ -32,8 +32,8 @@ Setup dependencies (on a Mac):
 OldTO requires Python 3. Once you have this set up, you can install the
 Python dependencies in a virtual environment via:
 
-    python3 -m venv venv
-    source venv/bin/activate
+    python3 -m venv .venv
+    source .venv/bin/activate
     pip install -r requirements.txt
 
 ## Running the site
@@ -43,7 +43,7 @@ Python dependencies in a virtual environment via:
 The data for the OldTO site is served via a Python API server.
 Start by running this:
 
-    source venv/bin/activate
+    source .venv/bin/activate
     oldtoronto/devserver.py data/images.geojson
 
 If you've generated geocodes in a different location, change `data/images.geojson` to that.
