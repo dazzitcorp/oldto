@@ -1,9 +1,7 @@
 FROM node:9.8.0 as builder
-ARG GMAPS_API_KEY
 
 WORKDIR oldto-site
 COPY oldto-site .
-ENV GMAPS_API_KEY $GMAPS_API_KEY
 RUN npm install && npm run build
 
 FROM nginx

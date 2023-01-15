@@ -72,7 +72,7 @@ jobs:
           command: git rev-parse --short=8 HEAD > /tmp/tag
       - run:
           name: Build image
-          command: docker build . -t us.gcr.io/nyc-tlc-1225/swl-oldtoronto-web:$(cat /tmp/tag) --build-arg GMAPS_API_KEY=${GMAPS_API_KEY}
+          command: docker build . -t us.gcr.io/nyc-tlc-1225/swl-oldtoronto-web:$(cat /tmp/tag)
       - run:
           name: Push image
           command: gcloud docker -- push us.gcr.io/nyc-tlc-1225/swl-oldtoronto-web:$(cat /tmp/tag)
