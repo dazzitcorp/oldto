@@ -41,12 +41,15 @@ Python dependencies in a virtual environment via:
 ### Backend
 
 The data for the OldTO site is served by a Python API server.
-Start by running this:
+Start by running it:
 
     source .venv/bin/activate
-    backend/app.py pipeline_data/images.geojson
+    cd backend
+    app.py
 
-If you've generated geocodes in a different location, change `pipeline_data/images.geojson` to that.
+The API server defaults to loading data from `images.geojson` in the current
+directory. You can choose a different file if you like; look in `app.py` for
+details.
 
 ### Frontend
 
@@ -87,6 +90,7 @@ pipeline run faster and more consistently than geocoding from scratch.
 
 With this in place, you can update `images.geojson` by running:
 
+    source .venv/bin/activate
     make
 
 Note, to run the makefile on an OSX machine you will probably want to install md5sum, which can be done by running:
