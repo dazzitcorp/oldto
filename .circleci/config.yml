@@ -12,7 +12,7 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/package-lock.json" }}
+          - v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "frontend/package-lock.json" }}
           # fallback to using the latest cache if no exact match is found
           - v2-dependencies-
 
@@ -22,13 +22,13 @@ jobs:
             python3.6 -m venv .venv
             . .venv/bin/activate
             pip install -r requirements.txt
-            cd oldto-site
+            cd frontend
             npm install
 
       - save_cache:
           paths:
             - ./.venv
-          key: v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "oldto-site/package-lock.json" }}
+          key: v2-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "frontend/package-lock.json" }}
 
       # run tests!
       - run:
@@ -38,7 +38,7 @@ jobs:
             flake8
             nosetests
             ./scripts/find-dead-code.sh
-            cd oldto-site
+            cd frontend
             npm run lint
 
 

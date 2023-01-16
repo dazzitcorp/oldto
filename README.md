@@ -50,15 +50,15 @@ If you've generated geocodes in a different location, change `data/images.geojso
 
 ### Frontend
 
-The OldTO site lives in the `oldto-site` directory:
+The OldTO site lives in the `frontend` directory:
 
-    cd oldto-site
+    cd frontend
 
 To install the required packages, use:
 
     npm install
 
-Then create a `.env` file (or, even better, separate `.env.development` and `.env.production` files) in the `oldto-site` directory with the following keys and values:
+Then create a `.env` file (or, even better, separate `.env.development` and `.env.production` files) in the `frontend` directory with the following keys and values:
 
     FACEBOOK_APP_ID=...
     GOOGLE_ANALYTICS_TRACKING_ID=...

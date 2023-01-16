@@ -34,7 +34,7 @@ if __name__ == "__main__":
         "output_js",
         help="Path to JavaScript output file",
         type=str,
-        default="oldto-site/corrections/ids.js",
+        default="frontend/corrections/ids.js",
         nargs="?",
     )
     args = parser.parse_args()
