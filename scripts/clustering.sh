@@ -4,7 +4,7 @@
 # make sure you are serving the files from frontend
 set -o errexit
 LOCATION="yonge-and-bay"
-OUT_DIR="oldto-screenshots"
+OUT_DIR="screenshots"
 
 mkdir -p $OUT_DIR
 
@@ -18,5 +18,5 @@ do
   cd -
   OUTPUT_PATH="${OUT_DIR}/${LOCATION}-clustered-${EPS}.png"
   echo $OUTPUT_PATH
-  node scripts/old-to-screenshot.js $OUTPUT_PATH
+  node scripts/screenshot.js $OUTPUT_PATH
 done

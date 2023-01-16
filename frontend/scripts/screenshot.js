@@ -16,7 +16,7 @@ function pause() {
     browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setViewport({width:2880, height:1800});
-    await page.goto('http://localhost:8000');
+    await page.goto('http://localhost:8080');
     console.log('allow to load')
     await pause();
     await page.screenshot({path: path});
