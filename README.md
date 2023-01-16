@@ -40,11 +40,11 @@ Python dependencies in a virtual environment via:
 
 ### Backend
 
-The data for the OldTO site is served via a Python API server.
+The data for the OldTO site is served by a Python API server.
 Start by running this:
 
     source .venv/bin/activate
-    oldtoronto/devserver.py data/images.geojson
+    backend/devserver.py data/images.geojson
 
 If you've generated geocodes in a different location, change `data/images.geojson` to that.
 
