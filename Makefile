@@ -87,8 +87,21 @@ $(geojson): $(tpl_geojson).md5 $(archives_geojson).md5
 %.md5: %
 	@$(if $(filter-out $(shell cat $@ 2>/dev/null), $(shell md5sum $*)),md5sum $* > $@)
 
+.PHONY: requirements
+requirements: requirements.txt backend/requirements.txt pipeline/requirements.txt ;
+
+requirements.txt: requirements.in
+	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+
+backend/requirements.txt: backend/requirements.in
+	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+
+pipeline/requirements.txt: pipeline/requirements.in
+	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+
+.PHONY: deps
 deps: requirements.txt
-	pip install -r requirements.txt
+	.venv/bin/pip install -r requirements.txt
 
 # by making sure that files are newer than input sources, we will make sure steps only run if the .md5 file changes, instead of using timestamps
 # this is useful if you're using a new repo from version control, since it's impossible to trust those timestamps
