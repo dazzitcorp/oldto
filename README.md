@@ -44,7 +44,7 @@ The data for the OldTO site is served by a Python API server.
 Start by running this:
 
     source .venv/bin/activate
-    backend/devserver.py pipeline_data/images.geojson
+    backend/app.py pipeline_data/images.geojson
 
 If you've generated geocodes in a different location, change `pipeline_data/images.geojson` to that.
 
