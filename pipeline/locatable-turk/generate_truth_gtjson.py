@@ -48,7 +48,7 @@ def merge_entries(entries):
 if __name__ == "__main__":
     id_to_data = defaultdict(list)
 
-    for row in csv.DictReader(open("locatable-turk/truth-combined.csv")):
+    for row in csv.DictReader(open("pipeline/locatable-turk/truth-combined.csv")):
         id_ = row["uniqueID"]
         is_locatable = row["geolocatable"] == "Locatable"
 
