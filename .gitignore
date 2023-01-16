@@ -31,4 +31,4 @@ aerials/*.html
 detections.ndjson
 
 # secrets
-oldtoronto/settings.py
+pipeline/settings.py

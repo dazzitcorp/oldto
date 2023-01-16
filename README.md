@@ -79,7 +79,7 @@ If you run it locally, visit http://localhost:8080/ to browse it.
 
 ## Generating new geocodes
 
-First, add your [Google Maps API key][api key] to the file `oldtoronto/settings.py`.
+First, add your [Google Maps API key][api key] to the file `pipeline/settings.py`.
 
 Next, you'll first want to download cached geocodes from [here][cached-geocodes].
 Unzip this file into `cache/maps.googleapis.com`. This will make the geocoding
@@ -99,20 +99,20 @@ Before sending out a PR with geocoding changes, you'll want to run a diff to eva
 
 For a quick check, you can operate on a 5% sample and diff that against `master`:
 
-    oldtoronto/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
-    oldtoronto/diff_geocodes.py --sample 0.05 /tmp/geocode_results.new.5pct.json
+    pipeline/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
+    pipeline/diff_geocodes.py --sample 0.05 /tmp/geocode_results.new.5pct.json
 
 To calculate metrics using truth data (must have jq installed):
 
     grep -E  "$(jq '.features[] | .id' data/truth.gtjson | sed s/\"//g | paste -s -d '|' )" data/images.ndjson > data/test.images.ndjson
-    oldtoronto/geocode.py --input data/test.images.ndjson
-    oldtoronto/generate_geojson.py --geocode_results data/test.images.ndjson --output data/test.images.geojson
-    oldtoronto/calculate_metrics.py --truth_data data/truth.gtjson --computed_data data/test.images.geojson
+    pipeline/geocode.py --input data/test.images.ndjson
+    pipeline/generate_geojson.py --geocode_results data/test.images.ndjson --output data/test.images.geojson
+    pipeline/calculate_metrics.py --truth_data data/truth.gtjson --computed_data data/test.images.geojson
 
 To debug a specific image ID, run something like:
 
-    oldtoronto/geocode.py --ids 520805 --output /tmp/geocode.json && \
-    cat oldtoronto/geocode.py.log | grep -v regex
+    pipeline/geocode.py --ids 520805 --output /tmp/geocode.json && \
+    cat pipeline/geocode.py.log | grep -v regex
 
 If you want to understand the differences between two `images.geojson` files, you can
 use the `diff_geojson.py` script. This file will create a series of `.geojson` files
@@ -126,7 +126,7 @@ Once you're ready to send the PR, run a diff on the full geocodes.
 
 To update the list of street names, run:
 
-    oldtoronto/extract_noun_phrases.py streets 1 > /tmp/streets+examples.txt && \
+    pipeline/extract_noun_phrases.py streets 1 > /tmp/streets+examples.txt && \
     cut -f2 /tmp/streets+examples.txt | sed 1d | sort > data/streets.txt
 
 [1]: https://www.toronto.ca/city-government/accountability-operations-customer-service/access-city-information-or-records/city-of-toronto-archives/

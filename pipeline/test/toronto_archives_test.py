@@ -1,6 +1,6 @@
 from nose.tools import eq_
 
-from oldtoronto.toronto_archives import get_citation_hierarchy  # noqa
+from pipeline.toronto_archives import get_citation_hierarchy  # noqa
 
 
 def test_get_citation_hierarchy():

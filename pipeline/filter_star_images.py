@@ -6,7 +6,7 @@ Toronto Public Library's website.
 
 Usage:
 
-    ./oldtoronto/filter_star_images.py images.ndjson > images-nonstar.ndjson
+    ./pipeline/filter_star_images.py images.ndjson > images-nonstar.ndjson
 """
 
 import fileinput

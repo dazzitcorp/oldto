@@ -10,19 +10,19 @@ Here's the procedure:
 
 3. Run
 
-        oldtoronto/fetcher.py data/search_urls.txt
+        pipeline/fetcher.py data/search_urls.txt
 
     This will fetch all the results pages and store them in a cache for later use.
 
 4. Read the results pages from the cache, parse them and produce the `data/images.ndjson` file.
 
-    oldtoronto/parse_results.py
+    pipeline/parse_results.py
 
 To fetch complete metadata for this sample of images, write out a new version of `record-ids.txt` with the unique IDs of the random images (note that these URLs don't have session IDs!). Then fetch and parse them:
 
-    oldtoronto/write_records_txt.py data/images.random1000.ndjson > data/record_ids.txt
-    oldtoronto/fetch_archive_records.py data/record_ids.txt
-    oldtoronto/parse_records.py data/record_ids.txt data/images.ndjson
+    pipeline/write_records_txt.py data/images.random1000.ndjson > data/record_ids.txt
+    pipeline/fetch_archive_records.py data/record_ids.txt
+    pipeline/parse_records.py data/record_ids.txt data/images.ndjson
 
 This produces `images.ndjson`, which has full metadata. The `data/images.ndjson` that is committed on GitHub has full metadata for all images.
 

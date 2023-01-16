@@ -3,7 +3,7 @@
 
 Usage:
 
-    ./oldtoronto/diff_geocodes.py old/geocode_results.json data/geocode_results.json
+    ./pipeline/diff_geocodes.py old/geocode_results.json data/geocode_results.json
 
 This works best if you copy the version of data/geocode_results.json on the master branch to a
 temp location and run against the version in your branch.

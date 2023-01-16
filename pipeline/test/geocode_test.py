@@ -2,12 +2,12 @@ import json
 import sys
 import tempfile
 
-sys.path.append("oldtoronto")
+sys.path.append("pipeline")
 
 from nose.tools import eq_, ok_  # noqa
 from parameterized import parameterized  # noqa
 
-from oldtoronto import geocode  # noqa
+from pipeline import geocode  # noqa
 
 
 class MapsClientMock(object):

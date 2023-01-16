@@ -3,8 +3,8 @@ import sys
 from nose.tools import eq_
 from parameterized import parameterized
 
-sys.path.append("oldtoronto")
-from oldtoronto.date_distribution import parse_year  # noqa
+sys.path.append("pipeline")
+from pipeline.date_distribution import parse_year  # noqa
 
 
 @parameterized(

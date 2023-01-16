@@ -27,8 +27,8 @@ in `data/tpl/toronto-library.ndjson`.
 
 This data was assembled by doing an empty search and parsing the results in XML format.
 
-See `oldtoronto/parse_library_xml.py` and `data/tpl/tpl-rss-urls.txt`.
+See `pipeline/parse_library_xml.py` and `data/tpl/tpl-rss-urls.txt`.
 
 To update, run:
 
-    oldtoronto/parse_library_xml.py data/tpl/tpl-rss-urls.txt data/tpl/toronto-library.ndjson
+    pipeline/parse_library_xml.py data/tpl/tpl-rss-urls.txt data/tpl/toronto-library.ndjson

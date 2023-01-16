@@ -11,8 +11,8 @@ mkdir -p $OUT_DIR
 for EPS in $(seq 0.0001 0.00001 0.0002);
 do
   echo "run for epsilon: $EPS"
-  python oldtoronto/cluster_geojson.py --output_file data/clustered.images.geojson --epsilon $EPS
-  python oldtoronto/gtjson_to_site.py data/clustered.images.geojson frontend/
+  python pipeline/cluster_geojson.py --output_file data/clustered.images.geojson --epsilon $EPS
+  python pipeline/gtjson_to_site.py data/clustered.images.geojson frontend/
   cd frontend
   npm run build
   cd -
