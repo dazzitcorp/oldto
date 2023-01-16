@@ -131,31 +131,31 @@ if __name__ == "__main__":
         "--series",
         type=str,
         help="ndjson formatted file containing the series information",
-        default="data/series.ndjson",
+        default="pipeline_data/series.ndjson",
     )
     parser.add_argument(
         "--geocoded_results",
         type=str,
         help="json file with image-id -> geocode results",
-        default="data/geocode_results.json",
+        default="pipeline_data/geocode_results.json",
     )
     parser.add_argument(
         "--series_geocoded",
         type=str,
         help="json file with series-id -> geocode results",
-        default="data/series-geocoded.json",
+        default="pipeline_data/series-geocoded.json",
     )
     parser.add_argument(
         "--images",
         type=str,
         help="ndjson formatted file containing all images",
-        default="data/images.ndjson",
+        default="pipeline_data/images.ndjson",
     )
     parser.add_argument(
         "--output",
         type=str,
         help="json file to write out the mined values keyed by image id",
-        default="data/parent_mined_data.json",
+        default="pipeline_data/parent_mined_data.json",
     )
     args = parser.parse_args()
 

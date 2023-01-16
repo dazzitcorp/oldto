@@ -5,7 +5,7 @@ It fetches and parses Toronto Public Library XML results.
 
 Usage:
 
-    pipeline/parse_library_xml.py data/tpl/tpl-rss-urls.txt data/tpl/toronto-library.ndjson
+    pipeline/parse_library_xml.py pipeline_data/tpl/tpl-rss-urls.txt pipeline_data/tpl/toronto-library.ndjson
 
 The choice of field names is somewhat evocative of the Toronto Archives.
 """

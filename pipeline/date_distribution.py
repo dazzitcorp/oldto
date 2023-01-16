@@ -17,8 +17,8 @@ from utils import generators
 
 LOG = logging.getLogger(__name__)
 
-INPUT_FILENAME = "data/images.ndjson"
-JSON_OUTPUT = "data/by-decade.json"
+INPUT_FILENAME = "pipeline_data/images.ndjson"
+JSON_OUTPUT = "pipeline_data/by-decade.json"
 
 # These regular expressions are applied in order to dates until none of them match.
 # If any matches, the date is replaced with the first capture group.

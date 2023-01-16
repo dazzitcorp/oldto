@@ -2,12 +2,12 @@
 """Collect data on all the images into a GeoTempoJSON file.
 
 Inputs:
-    data/images.ndjson
-    data/geocode_results.json
-    data/image-sizes.txt
+    pipeline_data/images.ndjson
+    pipeline_data/geocode_results.json
+    pipeline_data/image-sizes.txt
 
 Output:
-    data/images.geojson
+    pipeline_data/images.geojson
 """
 import argparse
 import json
@@ -145,26 +145,26 @@ if __name__ == "__main__":
         "--geocode_results",
         type=str,
         help="json results from geocoding files",
-        default="data/geocode_results.json",
+        default="pipeline_data/geocode_results.json",
     )
     parser.add_argument(
         "--path_to_size",
         type=str,
         help="txt file containing size in pixels of each images.",
-        default="data/image-sizes.txt",
+        default="pipeline_data/image-sizes.txt",
     )
     parser.add_argument(
         "--output",
         type=str,
         help="geojson encoded version of geocodes and images metadata",
-        default="data/images.geojson",
+        default="pipeline_data/images.geojson",
     )
     parser.add_argument(
         "--patch_csv",
         type=str,
         help="path to a csv to override lat/lngs. Can be local or remote. "
         "rows with missing lat/lngs will be skipped in the output.",
-        default="data/Old Toronto Responses - Override Sheet.csv",
+        default="pipeline_data/Old Toronto Responses - Override Sheet.csv",
     )
     parser.add_argument(
         "--drop_unlocated",

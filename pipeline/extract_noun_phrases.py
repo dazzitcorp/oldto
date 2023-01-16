@@ -120,7 +120,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--input",
         type=str,
-        default="data/toronto-archives/images.ndjson",
+        default="pipeline_data/toronto-archives/images.ndjson",
         help="path to images.ndjson file to extract from",
     )
 

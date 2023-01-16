@@ -114,7 +114,7 @@ if __name__ == "__main__":
         "--input_file",
         type=str,
         help="geojson file in needs of clustering",
-        default="data/images.geojson",
+        default="pipeline_data/images.geojson",
     )
     parser.add_argument(
         "--epsilon",
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         "--output_file",
         type=str,
         help="clustered geojson file",
-        default="data/clustered.images.geojson",
+        default="pipeline_data/clustered.images.geojson",
     )
     args = parser.parse_args()
 

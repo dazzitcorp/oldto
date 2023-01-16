@@ -104,7 +104,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "geojson",
         type=str,
-        default="data/images.geojson",
+        default="pipeline_data/images.geojson",
         help="Path to images.geojson",
     )
     args = parser.parse_args()

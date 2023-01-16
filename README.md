@@ -14,13 +14,13 @@ repo and it is possible to run it yourself. The instructions below describe how 
 ## How it works
 
 OldTO begins with data from the [Toronto Archives][1], which you can find
-in [`data/images.ndjson`](/data/images.ndjson).
+in [`pipeline_data/images.ndjson`](/pipeline_data/images.ndjson).
 
 To place the images on a map ("geocode" them), we use a [list of Toronto
-street names](/data/streets.txt) and a collection of regular expressions
+street names](/pipeline_data/streets.txt) and a collection of regular expressions
 which look for addresses and cross-streets. We send these through the
 [Google Maps Geocoding API][API] to get latitudes and longitudes for the
-images. We also incorporate a [set of points of interest](/data/toronto-pois.osm.csv)
+images. We also incorporate a [set of points of interest](/pipeline_data/toronto-pois.osm.csv)
 for popular locations like the CN Tower or City Hall.
 
 ## Development setup
@@ -44,9 +44,9 @@ The data for the OldTO site is served by a Python API server.
 Start by running this:
 
     source .venv/bin/activate
-    backend/devserver.py data/images.geojson
+    backend/devserver.py pipeline_data/images.geojson
 
-If you've generated geocodes in a different location, change `data/images.geojson` to that.
+If you've generated geocodes in a different location, change `pipeline_data/images.geojson` to that.
 
 ### Frontend
 
@@ -104,10 +104,10 @@ For a quick check, you can operate on a 5% sample and diff that against `master`
 
 To calculate metrics using truth data (must have jq installed):
 
-    grep -E  "$(jq '.features[] | .id' data/truth.gtjson | sed s/\"//g | paste -s -d '|' )" data/images.ndjson > data/test.images.ndjson
-    pipeline/geocode.py --input data/test.images.ndjson
-    pipeline/generate_geojson.py --geocode_results data/test.images.ndjson --output data/test.images.geojson
-    pipeline/calculate_metrics.py --truth_data data/truth.gtjson --computed_data data/test.images.geojson
+    grep -E  "$(jq '.features[] | .id' pipeline_data/truth.gtjson | sed s/\"//g | paste -s -d '|' )" pipeline_data/images.ndjson > pipeline_data/test.images.ndjson
+    pipeline/geocode.py --input pipeline_data/test.images.ndjson
+    pipeline/generate_geojson.py --geocode_results pipeline_data/test.images.ndjson --output pipeline_data/test.images.geojson
+    pipeline/calculate_metrics.py --truth_data pipeline_data/truth.gtjson --computed_data pipeline_data/test.images.geojson
 
 To debug a specific image ID, run something like:
 
@@ -127,7 +127,7 @@ Once you're ready to send the PR, run a diff on the full geocodes.
 To update the list of street names, run:
 
     pipeline/extract_noun_phrases.py streets 1 > /tmp/streets+examples.txt && \
-    cut -f2 /tmp/streets+examples.txt | sed 1d | sort > data/streets.txt
+    cut -f2 /tmp/streets+examples.txt | sed 1d | sort > pipeline_data/streets.txt
 
 [1]: https://www.toronto.ca/city-government/accountability-operations-customer-service/access-city-information-or-records/city-of-toronto-archives/
 [m]: https://gencat.eloquent-systems.com/city-of-toronto-archives-m-public.html

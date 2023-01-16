@@ -171,13 +171,13 @@ if __name__ == "__main__":
         "--truth_data",
         type=str,
         help=".gtjson files containing truth data",
-        default="data/truth.gtjson",
+        default="pipeline_data/truth.gtjson",
     )
     parser.add_argument(
         "--computed_data",
         type=str,
         help="result of generate_geojson.py from geocoded images",
-        default="data/images.geojson",
+        default="pipeline_data/images.geojson",
     )
     args = parser.parse_args()
 

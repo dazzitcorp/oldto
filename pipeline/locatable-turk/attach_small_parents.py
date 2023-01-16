@@ -11,7 +11,7 @@ import sys
 def load_series():
     """Returns a uniqueID --> series record dict."""
     out = {}
-    for line in open("data/series.ndjson"):
+    for line in open("pipeline_data/series.ndjson"):
         record = json.loads(line)
         id_ = record["uniqueID"]
         out[id_] = record

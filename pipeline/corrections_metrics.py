@@ -65,19 +65,19 @@ if __name__ == "__main__":
         "--geocodes",
         type=str,
         help="file calculated by geocode.results",
-        default="data/corrections.geocode_results.json",
+        default="pipeline_data/corrections.geocode_results.json",
     )
     parser.add_argument(
         "--truth_data",
         type=str,
         help="CSV file (without a header line) of imageId,lat,lng",
-        default="data/corrections.csv",
+        default="pipeline_data/corrections.csv",
     )
     parser.add_argument(
         "--incorrect_file",
         type=str,
         help="file to write a csv of image_id,error_reason",
-        default="data/incorrect.csv",
+        default="pipeline_data/incorrect.csv",
     )
     args = parser.parse_args()
 

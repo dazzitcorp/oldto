@@ -8,8 +8,8 @@ import sys
 
 from toronto_archives import get_citation_hierarchy
 
-INPUT_FILE = "data/images.ndjson"
-OUTPUT_FILE = "data/images+parents.ndjson"
+INPUT_FILE = "pipeline_data/images.ndjson"
+OUTPUT_FILE = "pipeline_data/images+parents.ndjson"
 
 
 def load_series():
@@ -17,7 +17,7 @@ def load_series():
     out = {}
     num_missing = 0
     parts_of = set()
-    for line in open("data/series.ndjson"):
+    for line in open("pipeline_data/series.ndjson"):
         record = json.loads(line)
         id_ = record["uniqueID"]
         try:

@@ -77,10 +77,10 @@ TAG_SCORES = {
 }
 
 # This list was made by hand by looking at terms which matched image titles.
-BLACKLIST = set(open("data/poi-blacklist.txt").read().splitlines())
+BLACKLIST = set(open("pipeline_data/poi-blacklist.txt").read().splitlines())
 
 
-OUTPUT_FILE = "data/toronto-pois.osm.csv"
+OUTPUT_FILE = "pipeline_data/toronto-pois.osm.csv"
 
 root = untangle.parse("toronto+names.osm")
 
@@ -167,7 +167,7 @@ for el in root.osm.node:
 
 # Read in the list of noun phrases.
 noun_freq = {}
-for row in csv.DictReader(open("data/noun-phrase-pois.txt"), delimiter="\t"):
+for row in csv.DictReader(open("pipeline_data/noun-phrase-pois.txt"), delimiter="\t"):
     noun_freq[row["Name"]] = int(row["Count"])
 
 

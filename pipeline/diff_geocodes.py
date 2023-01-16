@@ -3,9 +3,9 @@
 
 Usage:
 
-    ./pipeline/diff_geocodes.py old/geocode_results.json data/geocode_results.json
+    ./pipeline/diff_geocodes.py old/geocode_results.json pipeline_data/geocode_results.json
 
-This works best if you copy the version of data/geocode_results.json on the master branch to a
+This works best if you copy the version of pipeline_data/geocode_results.json on the master branch to a
 temp location and run against the version in your branch.
 """
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         "after",
         help="Path to geocode_results.json after",
         type=str,
-        default="data/geocode_results.json",
+        default="pipeline_data/geocode_results.json",
     )
     args = parser.parse_args()
 

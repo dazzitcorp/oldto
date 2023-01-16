@@ -4,7 +4,7 @@ import bs4
 import requests
 
 STREET_NAMES_URL = "https://geographic.org/streetview/canada/on/city_of_toronto.html"
-OUTPUT_FILENAME = "data/streets.txt"
+OUTPUT_FILENAME = "pipeline_data/streets.txt"
 
 
 def main():

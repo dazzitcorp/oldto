@@ -487,25 +487,25 @@ if __name__ == "__main__":
         "--input",
         type=str,
         help="ndjson formatted file containing the items to be geocoded",
-        default="data/images.ndjson",
+        default="pipeline_data/images.ndjson",
     )
     parser.add_argument(
         "--street_names",
         type=str,
         help="text file containing street names",
-        default="data/streets.txt",
+        default="pipeline_data/streets.txt",
     )
     parser.add_argument(
         "--pois",
         type=str,
         help="csv containing pois extracted from osm",
-        default="data/toronto-pois.osm.csv",
+        default="pipeline_data/toronto-pois.osm.csv",
     )
     parser.add_argument(
         "--output",
         type=str,
         help="json encoded output file with the geocoded results",
-        default="data/geocode_results.json",
+        default="pipeline_data/geocode_results.json",
     )
     parser.add_argument(
         "--logfile", type=str, help="file to log to", default=__file__ + ".log"

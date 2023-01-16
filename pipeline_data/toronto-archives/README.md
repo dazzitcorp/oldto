@@ -6,25 +6,25 @@ Here's the procedure:
 
 1. Visit the [mobile archives site][m] and hit "Search". Copy the `ClientSession` URL parameter. This is a long hex string, e.g. `-a47dfc9:160e3d0b97e:-7f39`.
 
-2. Open `data/search_urls.txt` and put your new `ClientSession` value in to all the URLs.
+2. Open `pipeline_data/search_urls.txt` and put your new `ClientSession` value in to all the URLs.
 
 3. Run
 
-        pipeline/fetcher.py data/search_urls.txt
+        pipeline/fetcher.py pipeline_data/search_urls.txt
 
     This will fetch all the results pages and store them in a cache for later use.
 
-4. Read the results pages from the cache, parse them and produce the `data/images.ndjson` file.
+4. Read the results pages from the cache, parse them and produce the `pipeline_data/images.ndjson` file.
 
     pipeline/parse_results.py
 
 To fetch complete metadata for this sample of images, write out a new version of `record-ids.txt` with the unique IDs of the random images (note that these URLs don't have session IDs!). Then fetch and parse them:
 
-    pipeline/write_records_txt.py data/images.random1000.ndjson > data/record_ids.txt
-    pipeline/fetch_archive_records.py data/record_ids.txt
-    pipeline/parse_records.py data/record_ids.txt data/images.ndjson
+    pipeline/write_records_txt.py pipeline_data/images.random1000.ndjson > pipeline_data/record_ids.txt
+    pipeline/fetch_archive_records.py pipeline_data/record_ids.txt
+    pipeline/parse_records.py pipeline_data/record_ids.txt pipeline_data/images.ndjson
 
-This produces `images.ndjson`, which has full metadata. The `data/images.ndjson` that is committed on GitHub has full metadata for all images.
+This produces `images.ndjson`, which has full metadata. The `pipeline_data/images.ndjson` that is committed on GitHub has full metadata for all images.
 
 ### Citation Hierarchy
 

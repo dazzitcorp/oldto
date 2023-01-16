@@ -44,7 +44,7 @@ def extract_from_line(line):
 if __name__ == "__main__":
     f = fetcher.Fetcher()
 
-    out = open("data/images.ndjson", "w")
+    out = open("pipeline_data/images.ndjson", "w")
 
     for url in open("results.txt"):
         url = url.strip()

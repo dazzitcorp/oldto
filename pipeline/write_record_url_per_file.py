@@ -16,7 +16,7 @@ import sys
 
 from toronto_archives import get_citation_hierarchy
 
-INPUT_FILE = "data/images.ndjson"
+INPUT_FILE = "pipeline_data/images.ndjson"
 
 if __name__ == "__main__":
     seen_prefixes = set()
