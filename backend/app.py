@@ -36,7 +36,7 @@ from collections import Counter, defaultdict
 from flask import Flask, Response, abort, current_app, jsonify, request
 
 # Change ETAG_VERSION when the data hasn't changed but the structure of a response has.
-ETAG_VERSION = "1"
+ETAG_VERSION = "2"
 VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
@@ -98,7 +98,7 @@ def _geojson_features_by_location(geojson_features):
 
 
 def _geojson_features_by_image(geojson_features):
-    images = {f["id"]: f for f in geojson_features}
+    images = {f["id"]: f["properties"] for f in geojson_features}
     return images
 
 

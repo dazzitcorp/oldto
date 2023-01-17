@@ -116,7 +116,8 @@ export function findLatLonForPhoto(photoId, cb) {
     success: function(featureOrFeatureCollection) {
       const feature = featureOrFeatureCollection.features ?
         featureOrFeatureCollection.features[0] : featureOrFeatureCollection;
-      const [lon, lat] = feature.geometry.coordinates;
+      const lat = feature.geocode.lat;
+      const lon = feature.geocode.lng;
       cb(lat.toFixed(6) + ',' + lon.toFixed(6))
     }
   });

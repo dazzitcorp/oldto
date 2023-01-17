@@ -133,12 +133,12 @@ function initMap() {
   });
 
   dataPromise.done(feature => {
-    const [lng, lat] = feature.geometry.coordinates;
-    const {properties} = feature;
-    const {image} = properties;
+    const lat = feature.geocode.lat
+    const lng = feature.geocode.lng
+    const image = feature.image;
 
     const $pane = $('.inputside');
-    fillDetailsPanel(feature.id, properties, $pane);
+    fillDetailsPanel(feature.id, feature, $pane);
 
     $pane.find('a img').attr('src', image.url);
     $('#photo-id').val(feature.id);
