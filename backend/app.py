@@ -28,6 +28,7 @@ Supported endpoints:
 
 import copy
 import json
+import logging
 import re
 from collections import Counter, defaultdict
 
@@ -44,7 +45,6 @@ def _load_geojson_features(geojson_file_name):
         geojson_features = [
             f for f in json.load(geojson_file)["features"] if f["geometry"]
         ]
-        print(f"Loaded {len(geojson_features)} features from {geojson_file_name}.")
     return geojson_features
 
 
@@ -108,9 +108,11 @@ def create_app():
     # Then env... (e.g. FLASK_GEOJSON_FILE_NAME)
     app.config.from_prefixed_env(prefix="FLASK")
 
+    app.logger.setLevel(logging.INFO)
     app.config["GEOJSON_FEATURES"] = _load_geojson_features(
         app.config["GEOJSON_FILE_NAME"]
     )
+    app.logger.info(f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}.")
 
     def _geojson_features():
         return current_app.config.get("GEOJSON_FEATURES", [])
