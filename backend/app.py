@@ -22,8 +22,8 @@ to reload if `images.geojson` changes.)
 
 Supported endpoints:
 - /api/locations.js?var=lat_lons
-- /api/locations/?lat=43.651501&lng=-79.359842
-- /api/images/86514
+- /api/locations/43.651501,-79.359842.json
+- /api/images/86514.json
 """
 
 import copy
@@ -33,7 +33,6 @@ import re
 from collections import Counter, defaultdict
 
 from flask import Flask, Response, abort, current_app, jsonify, request
-
 
 VAR_RE = re.compile(r"(?a:^\w+$)")
 
@@ -63,6 +62,24 @@ def _lat_lng_key(lat, lng):
     return f"{lat:2.6f},{lng:2.6f}"
 
 
+def _geojson_features_by_location(geojson_features):
+    def f_to_l(f):
+        props = copy.deepcopy(f["properties"])
+        image = props.pop("image")
+        image["image_url"] = image.pop("url")
+        return dict(image, id=f["id"], **props)
+
+    locations = defaultdict(dict)
+    for f in geojson_features:
+        lng, lat = f["geometry"]["coordinates"]
+        locations[_lat_lng_key(lat, lng)][f["id"]] = f_to_l(f)
+    return locations
+
+
+def _geojson_features_by_image(geojson_features):
+    return {f["id"]: f for f in geojson_features}
+
+
 def _locations(geojson_features):
     counts = defaultdict(Counter)
     for f in geojson_features:
@@ -72,31 +89,10 @@ def _locations(geojson_features):
     return counts
 
 
-def _locations_location(geojson_features, lat: float, lng: float):
-    def poi_to_rec(poi):
-        props = copy.deepcopy(poi["properties"])
-        image = props.pop("image")
-        image["image_url"] = image.pop("url")
-        return dict(image, id=poi["id"], **props)
-
-    lat_lng_key = _lat_lng_key(lat, lng)
-    results = {
-        f["id"]: poi_to_rec(f)
-        for f in geojson_features
-        if lat_lng_key == _lat_lng_key(*f["geometry"]["coordinates"][::-1])
-    }
-    return results
-
-
-def _images_image(geojson_features, image_id: str):
-    for f in geojson_features:
-        if f["id"] == image_id:
-            return f
-    return None
-
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
+
+    app.logger.setLevel(logging.INFO)
 
     # First defaults...
     app.config.from_mapping(
@@ -107,11 +103,19 @@ def create_app():
     # Then env... (e.g. FLASK_GEOJSON_FILE_NAME)
     app.config.from_prefixed_env(prefix="FLASK")
 
-    app.logger.setLevel(logging.INFO)
     app.config["GEOJSON_FEATURES"] = _load_geojson_features(
         app.config["GEOJSON_FILE_NAME"]
     )
-    app.logger.info(f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}.")
+    app.config["GEOJSON_FEATURES_BY_LOCATION"] = _geojson_features_by_location(
+        app.config["GEOJSON_FEATURES"]
+    )
+    app.config["GEOJSON_FEATURES_BY_IMAGE"] = _geojson_features_by_image(
+        app.config["GEOJSON_FEATURES"]
+    )
+
+    app.logger.info(
+        f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}."
+    )
 
     def _geojson_features():
         return current_app.config.get("GEOJSON_FEATURES", [])
@@ -127,19 +131,14 @@ def create_app():
         )
         return Response(js, mimetype="text/javascript")
 
-    @app.route("/api/locations/")
-    def locations_location():
-        return jsonify(
-            _locations_location(
-                _geojson_features(),
-                float(request.args.get("lat")),
-                float(request.args.get("lng")),
-            )
-        )
+    @app.route("/api/locations/<location_id>.json")
+    def locations_location(location_id):
+        location = app.config["GEOJSON_FEATURES_BY_LOCATION"].get(location_id)
+        return jsonify(location) if location else abort(404)
 
-    @app.route("/api/images/<image_id>")
+    @app.route("/api/images/<image_id>.json")
     def images_image(image_id):
-        image = _images_image(_geojson_features(), image_id)
+        image = app.config["GEOJSON_FEATURES_BY_IMAGE"].get(image_id)
         return jsonify(image) if image else abort(404)
 
     return app

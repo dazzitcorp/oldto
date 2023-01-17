@@ -20,8 +20,7 @@ export function loadInfoForLatLon(latLonStr) {
   if (latLonStr === 'pop') {
     url = SITE + '/popular.json';
   } else {
-    const [lat, lon] = latLonStr.split(',');
-    url = `${BY_LOCATION_API}?lat=${lat}&lng=${lon}`;
+    url = `${BY_LOCATION_API}${latLonStr}.json`;
   }
 
   return $.getJSON(url).then(function(responseData) {

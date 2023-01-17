@@ -23,7 +23,7 @@ if (numCompleted === 1) {
 }
 
 const id = getParameterByName('id');
-const dataPromise = $.get(`/api/images/${id}`);
+const dataPromise = $.get(`/api/images/${id}.json`);
 
 const target = getParameterByName('target');
 if (target) {
