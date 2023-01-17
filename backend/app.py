@@ -27,7 +27,6 @@ Supported endpoints:
 - /api/images/86514.json
 """
 
-import copy
 import hashlib
 import json
 import logging
@@ -36,6 +35,8 @@ from collections import Counter, defaultdict
 
 from flask import Flask, Response, abort, current_app, jsonify, request
 
+# Change ETAG_VERSION when the data hasn't changed but the structure of a response has.
+ETAG_VERSION = "1"
 VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
@@ -45,6 +46,8 @@ def _load_geojson_features(geojson_file_name):
         geojson_features = [
             f for f in json.load(geojson_file)["features"] if f["geometry"]
         ]
+        for f in geojson_features:
+            f["properties"]["id"] = f["id"]
     return geojson_features
 
 
@@ -78,20 +81,19 @@ def _geojson_features_locations_json(geojson_features_locations):
 
 
 def _geojson_features_locations_json_etag(geojson_features_locations_json):
-    return hashlib.md5(geojson_features_locations_json.encode()).hexdigest()
+    md5 = hashlib.md5(ETAG_VERSION.encode())
+    md5.update(geojson_features_locations_json.encode())
+    return md5.hexdigest()
 
 
 def _geojson_features_by_location(geojson_features):
-    def f_to_l(f):
-        props = copy.deepcopy(f["properties"])
-        image = props.pop("image")
-        image["image_url"] = image.pop("url")
-        return dict(image, id=f["id"], **props)
-
     locations = defaultdict(dict)
     for f in geojson_features:
-        lng, lat = f["geometry"]["coordinates"]
-        locations[_lat_lng_key(lat, lng)][f["id"]] = f_to_l(f)
+        locations[
+            _lat_lng_key(
+                f["properties"]["geocode"]["lat"], f["properties"]["geocode"]["lng"]
+            )
+        ][f["id"]] = f["properties"]
     return locations
 
 

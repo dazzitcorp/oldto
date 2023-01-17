@@ -159,7 +159,8 @@ function handleClick(e, opt_latLon) {
 
     if (photoId) {
       const info = infoForPhotoId(photoId);
-      const {width, height, thumb_url, title} = info;
+      const {image, title} = info;
+      const {width, height, thumb_url} = image;
       const thumbWidth = Math.floor(width / 5);
       const thumbHeight = Math.floor(height / 5);
 
@@ -308,8 +309,8 @@ export function showExpanded(key, photoIds, opt_selectedId) {
     if (!isPhotoInDateRange(info, yearRange)) return null;
     return $.extend({
       id: photoId,
-      largesrc: info.image_url,
-      src: info.thumb_url,
+      largesrc: info.image.url,
+      src: info.image.thumb_url,
       width: 600,   // these are fallbacks
       height: 400
     }, info);
@@ -348,9 +349,9 @@ function fillPhotoPane(photoId, $pane) {
   const info = infoForPhotoId(photoId);
   fillDetailsPanel(photoId, info, $pane);
   $pane.find('.inline-image').attr({
-    src: info.image_url
+    src: info.image.url
   }).css({
-    height: Math.ceil(info.height / info.width * window.innerWidth) + 'px'
+    height: Math.ceil(info.image.height / info.image.width * window.innerWidth) + 'px'
   });
 
   const canonicalUrl = `${URL_FOR_SOCIAL}/#${photoId}`;
@@ -394,10 +395,10 @@ export function fillPopularImagesPanel() {
     $panel.find('a').attr('href', '#' + row.id);
     $panel.find('img')
         .attr('border', '0')  // For IE8
-        .attr('data-src', row.thumbnail_url)
-        .attr('height', row.height);
+        .attr('data-src', row.image.thumb_url)
+        .attr('height', row.image.height)
+        .attr('width', row.image.width);
     $panel.find('.desc').text(row.title);
-    $panel.find('.loc').text(row.subtitle);
     if (row.date) $panel.find('.date').text(' (' + row.date + ')');
     return $panel.get(0);
   };
@@ -535,7 +536,7 @@ $(function() {
     if (!isFullScreen) {
       window.open(libraryUrlForPhotoId(photoId), '_blank');
     } else {
-      const imageUrl = infoForPhotoId(photoId).image_url;
+      const imageUrl = infoForPhotoId(photoId).image.url;
       if (imageUrl) {
         window.open(imageUrl, '_blank');
       }
@@ -548,6 +549,7 @@ $(function() {
   $(document).on('keyup', 'input, textarea', function(e) { e.stopPropagation(); });
 
   $('.popular-photo').on('click', 'a', function(e) {
+    // TODO: This — and the related popular.json — seems to be unused?
     e.preventDefault();
     const selectedPhotoId = photoIdFromATag(this);
 
@@ -604,7 +606,7 @@ $(function() {
       updateDebounced(ui);
     },
     stop: (event, ui) => {
-      const [a, b] = ui.values;
+      // const [a, b] = ui.values;
       // TODO: analytics event - link - time-slider - page: `/#${a}–${b}`
     }
   });
