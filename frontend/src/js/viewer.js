@@ -357,7 +357,7 @@ function fillPhotoPane(photoId, $pane) {
   setViewClass('view-photo');
 
   // Social media links.
-  // Some browser plugins block Twitter and Facebook, so we have to add these conditionally.
+  // Some browser plugins block Twitter, so we have to add these conditionally.
   $pane.find('.copy-link').attr('data-clipboard-text', canonicalUrl);
 
   if (typeof(twttr) !== 'undefined') {
@@ -367,19 +367,6 @@ function fillPhotoPane(photoId, $pane) {
         count: 'none',
         text: `${info.title} - ${info.date} #OldToronto @TorontoArchives`
       });
-  }
-
-  if (typeof(FB) !== 'undefined') {
-    var $fb_holder = $pane.find('.facebook-holder');
-    $fb_holder.empty().append($('<fb:like>').attr({
-      'href': URL_FOR_SOCIAL,
-      'hash': `#${photoId}`,
-      'layout': 'button',
-      'action': 'like',
-      'show_faces': 'false',
-      'share': 'true'
-    }));
-    FB.XFBML.parse($fb_holder.get(0));
   }
 
   // Scrolling the panel shouldn't scroll the whole grid.

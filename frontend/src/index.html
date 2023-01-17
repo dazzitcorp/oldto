@@ -196,7 +196,6 @@
           <span class="email-share">Copy Link</span>
         </div>
         <div class="tweet"></div>
-        <div class="facebook-holder"></div>
       </div>
     </div>
   </div>
@@ -250,26 +249,6 @@
 
   ga('create', '$GOOGLE_ANALYTICS_TRACKING_ID', 'auto');
   ga('send', 'pageview');
-</script>
-
-<!-- Load Facebook SDK for JavaScript -->
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId: '$FACEBOOK_APP_ID',
-      xfbml: true,
-      version: 'v2.12'
-    });
-    FB.AppEvents.logPageView();
-  };
-
-  (function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
 </script>
 
 </body>

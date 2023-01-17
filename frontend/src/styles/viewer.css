@@ -63,15 +63,8 @@ h2 a {
   font-weight: bold;
   text-shadow: 0 1px 1px rgba(255,255,255,.9);
 }
-#facebook {
-  width: 121px;
-}
 #twitter {
   width: 100px;
-}
-
-#facebook {
-  margin-right: 10px;
 }
 
 #grid-container {
@@ -310,18 +303,12 @@ a#slideshow-all, a#slideshow-all:visited {
   cursor: default;
 }
 
-.og-details .copy-link, .og-details .tweet, .og-details .facebook-holder {
+.og-details .copy-link, .og-details .tweet {
   display: inline-block;
   vertical-align: top;
   height: 20px;
   overflow: hidden;  /* this hides the "Like" flyout */
 }
-/*
-.og-details .facebook-holder {
-  margin-top: -4px;
-  height: 24px;  / * for some reason the facebook button is shifted a bit. * /
-}
-*/
 
 .og-details .social, .more-on-back {
   margin: 10px 0;
