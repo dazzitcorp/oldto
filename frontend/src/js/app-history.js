@@ -13,8 +13,8 @@ const h = new History(function(hash, cb) {
 // Ping Google Analytics with the current URL (e.g. after history.pushState).
 // See http://stackoverflow.com/a/4813223/388951
 function trackAnalyticsPageView() {
-  const url = location.pathname + location.search  + location.hash;
-  ga('send', 'pageview', { 'page': url });
+  // const url = location.pathname + location.search  + location.hash;
+  // TODO: analytics pageview - page: url
 }
 
 const LOG_HISTORY_EVENTS = false;

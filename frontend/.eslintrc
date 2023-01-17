@@ -15,7 +15,6 @@
   "globals": {
     "lat_lons": false,
     "Firebase": false,
-    "ga": false,
     "google": false,
     "ZeroClipboard": false,
     "isKiosk": false

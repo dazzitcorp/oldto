@@ -605,9 +605,7 @@ $(function() {
     },
     stop: (event, ui) => {
       const [a, b] = ui.values;
-      ga('send', 'event', 'link', 'time-slider', {
-        'page': `/#${a}–${b}`
-      });
+      // TODO: analytics event - link - time-slider - page: `/#${a}–${b}`
     }
   });
   updateYearLabels();
@@ -627,7 +625,7 @@ $(function() {
       values: yearRange
     });
     const latLonStr = $('#expanded').data('grid-key');
-    ga('send', 'event', 'link', 'time-slider-clear');
+    // TODO: analytics event - link - time-slider-clear
     hideExpanded();
     displayInfoForLatLon(latLonStr);
   });

@@ -47,10 +47,10 @@ $(() => {
     }).done(response => {
       const latLng = response.results[0].geometry.location;
       setLocation(latLng, address);
-      ga('send', 'event', 'link', 'address-search');
+      // TODO: analytics event - link - address-search
     }).fail(e => {
       console.error(e);
-      ga('send', 'event', 'link', 'address-search-fail');
+      // TODO: analytics event - link - address-search-fail
     })
   });
 
@@ -58,10 +58,10 @@ $(() => {
     navigator.geolocation.getCurrentPosition(position => {
       const { latitude, longitude } = position.coords;
       setLocation({lat: latitude, lng: longitude}, 'Current Location');
-      ga('send', 'event', 'link', 'current-location');
+      // TODO: analytics event - link - current-location
     }, e => {
       console.error(e);
-      ga('send', 'event', 'link', 'current-location-error');
+      // TODO: analytics event - link - current-location-error
     });
   });
 });

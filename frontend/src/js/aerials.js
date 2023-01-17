@@ -116,6 +116,6 @@ $('#location-search').on('keypress', function(e) {
     map.setZoom(15);
   }).fail(e => {
     console.error(e);
-    ga('send', 'event', 'link', 'address-search-fail');
+    // TODO: analytics event - link - address-search-fail
   })
 });
