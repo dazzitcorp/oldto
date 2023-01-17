@@ -28,6 +28,7 @@ Supported endpoints:
 """
 
 import copy
+import hashlib
 import json
 import logging
 import re
@@ -73,7 +74,11 @@ def _geojson_features_locations(geojson_features):
 
 
 def _geojson_features_locations_json(geojson_features_locations):
-    return (json.dumps(geojson_features_locations, sort_keys=True),)
+    return json.dumps(geojson_features_locations, sort_keys=True)
+
+
+def _geojson_features_locations_json_etag(geojson_features_locations_json):
+    return hashlib.md5(geojson_features_locations_json.encode()).hexdigest()
 
 
 def _geojson_features_by_location(geojson_features):
@@ -112,6 +117,7 @@ def create_app():
     # Since the locations JSON is *the thing* we do on *every* page load,
     # pre-compute it.
 
+    app.logger.info(f"Loading features from {app.config['GEOJSON_FILE_NAME']}...")
     app.config["GEOJSON_FEATURES"] = _load_geojson_features(
         app.config["GEOJSON_FILE_NAME"]
     )
@@ -120,6 +126,11 @@ def create_app():
     )
     app.config["GEOJSON_FEATURES_LOCATIONS_JSON"] = _geojson_features_locations_json(
         app.config["GEOJSON_FEATURES_LOCATIONS"]
+    )
+    app.config[
+        "GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"
+    ] = _geojson_features_locations_json_etag(
+        app.config["GEOJSON_FEATURES_LOCATIONS_JSON"]
     )
     app.config["GEOJSON_FEATURES_BY_LOCATION"] = _geojson_features_by_location(
         app.config["GEOJSON_FEATURES"]
@@ -131,33 +142,77 @@ def create_app():
     app.logger.info(
         f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}."
     )
+    app.logger.info(
+        f"The features ETag is {app.config['GEOJSON_FEATURES_LOCATIONS_JSON_ETAG']}."
+    )
 
     @app.route("/api/locations.js")
     def locations_js():
         var = request.args.get("var", "locations")
         if not VAR_RE.match(var):
             abort(400)
-        return Response(
-            f"var {var}={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON'][0]}",
+
+        if request.if_none_match.contains(
+            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
+        ):
+            return jsonify(message="OK"), 304
+
+        response = Response(
+            f"var {var}={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}",
             mimetype="text/javascript",
         )
+        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        return response
 
     @app.route("/api/locations.json")
     def locations_json():
-        return Response(
+        if request.if_none_match.contains(
+            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
+        ):
+            return jsonify(message="OK"), 304
+
+        response = Response(
             current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"],
             mimetype="application/json",
         )
+        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        return response
 
     @app.route("/api/locations/<location_id>.json")
     def locations_location(location_id):
+        if request.if_none_match.contains(
+            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
+        ):
+            return jsonify(message="OK"), 304
+
         location = app.config["GEOJSON_FEATURES_BY_LOCATION"].get(location_id)
-        return jsonify(location) if location else abort(404)
+        if not location:
+            abort(404)
+
+        response = Response(
+            json.dumps(location, sort_keys=True),
+            mimetype="application/json",
+        )
+        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        return response
 
     @app.route("/api/images/<image_id>.json")
     def images_image(image_id):
+        if request.if_none_match.contains(
+            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
+        ):
+            return jsonify(message="OK"), 304
+
         image = app.config["GEOJSON_FEATURES_BY_IMAGE"].get(image_id)
-        return jsonify(image) if image else abort(404)
+        if not image:
+            abort(404)
+
+        response = Response(
+            json.dumps(image, sort_keys=True),
+            mimetype="application/json",
+        )
+        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        return response
 
     return app
 
