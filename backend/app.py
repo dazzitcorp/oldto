@@ -22,6 +22,7 @@ to reload if `images.geojson` changes.)
 
 Supported endpoints:
 - /api/locations.js?var=lat_lons
+- /api/locations.json
 - /api/locations/43.651501,-79.359842.json
 - /api/images/86514.json
 """
@@ -62,6 +63,19 @@ def _lat_lng_key(lat, lng):
     return f"{lat:2.6f},{lng:2.6f}"
 
 
+def _geojson_features_locations(geojson_features):
+    locations = defaultdict(Counter)
+    for f in geojson_features:
+        lng, lat = f["geometry"]["coordinates"]
+        year = f["properties"]["date"] or ""
+        locations[_lat_lng_key(lat, lng)][year] += 1
+    return locations
+
+
+def _geojson_features_locations_json(geojson_features_locations):
+    return (json.dumps(geojson_features_locations, sort_keys=True),)
+
+
 def _geojson_features_by_location(geojson_features):
     def f_to_l(f):
         props = copy.deepcopy(f["properties"])
@@ -77,16 +91,8 @@ def _geojson_features_by_location(geojson_features):
 
 
 def _geojson_features_by_image(geojson_features):
-    return {f["id"]: f for f in geojson_features}
-
-
-def _locations(geojson_features):
-    counts = defaultdict(Counter)
-    for f in geojson_features:
-        lng, lat = f["geometry"]["coordinates"]
-        year = f["properties"]["date"] or ""
-        counts[_lat_lng_key(lat, lng)][year] += 1
-    return counts
+    images = {f["id"]: f for f in geojson_features}
+    return images
 
 
 def create_app():
@@ -103,8 +109,17 @@ def create_app():
     # Then env... (e.g. FLASK_GEOJSON_FILE_NAME)
     app.config.from_prefixed_env(prefix="FLASK")
 
+    # Since the locations JSON is *the thing* we do on *every* page load,
+    # pre-compute it.
+
     app.config["GEOJSON_FEATURES"] = _load_geojson_features(
         app.config["GEOJSON_FILE_NAME"]
+    )
+    app.config["GEOJSON_FEATURES_LOCATIONS"] = _geojson_features_locations(
+        app.config["GEOJSON_FEATURES"]
+    )
+    app.config["GEOJSON_FEATURES_LOCATIONS_JSON"] = _geojson_features_locations_json(
+        app.config["GEOJSON_FEATURES_LOCATIONS"]
     )
     app.config["GEOJSON_FEATURES_BY_LOCATION"] = _geojson_features_by_location(
         app.config["GEOJSON_FEATURES"]
@@ -117,19 +132,22 @@ def create_app():
         f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}."
     )
 
-    def _geojson_features():
-        return current_app.config.get("GEOJSON_FEATURES", [])
-
     @app.route("/api/locations.js")
     def locations_js():
         var = request.args.get("var", "locations")
         if not VAR_RE.match(var):
             abort(400)
-        js = "var %s=%s" % (
-            var,
-            json.dumps(_locations(_geojson_features()), sort_keys=True),
+        return Response(
+            f"var {var}={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON'][0]}",
+            mimetype="text/javascript",
         )
-        return Response(js, mimetype="text/javascript")
+
+    @app.route("/api/locations.json")
+    def locations_json():
+        return Response(
+            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"],
+            mimetype="application/json",
+        )
 
     @app.route("/api/locations/<location_id>.json")
     def locations_location(location_id):
