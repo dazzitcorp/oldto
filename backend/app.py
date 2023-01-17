@@ -21,9 +21,9 @@ e.g.:
 to reload if `images.geojson` changes.)
 
 Supported endpoints:
-- /api/oldtoronto/lat_lng_counts?var=lat_lons
-- /api/oldtoronto/by_location?lat=43.651501&lng=-79.359842
-- /api/layer/oldtoronto/86514
+- /api/locations.js?var=lat_lons
+- /api/locations/?lat=43.651501&lng=-79.359842
+- /api/images/86514
 """
 
 import copy
@@ -64,7 +64,7 @@ def _lat_lng_key(lat, lng):
     return f"{lat:2.6f},{lng:2.6f}"
 
 
-def _lat_lng_counts(geojson_features):
+def _locations(geojson_features):
     counts = defaultdict(Counter)
     for f in geojson_features:
         lng, lat = f["geometry"]["coordinates"]
@@ -73,7 +73,7 @@ def _lat_lng_counts(geojson_features):
     return counts
 
 
-def _by_location(geojson_features, lat: float, lng: float):
+def _locations_location(geojson_features, lat: float, lng: float):
     def poi_to_rec(poi):
         props = copy.deepcopy(poi["properties"])
         image = props.pop("image")
@@ -89,9 +89,9 @@ def _by_location(geojson_features, lat: float, lng: float):
     return results
 
 
-def _by_photo_id(geojson_features, photo_id: str):
+def _images_image(geojson_features, image_id: str):
     for f in geojson_features:
-        if f["id"] == photo_id:
+        if f["id"] == image_id:
             return f
     return None
 
@@ -117,31 +117,31 @@ def create_app():
     def _geojson_features():
         return current_app.config.get("GEOJSON_FEATURES", [])
 
-    @app.route("/api/oldtoronto/lat_lng_counts")
-    def lat_lng_counts():
-        var = request.args.get("var")
+    @app.route("/api/locations.js")
+    def locations_js():
+        var = request.args.get("var", "locations")
         if not VAR_RE.match(var):
             abort(400)
         js = "var %s=%s" % (
             var,
-            json.dumps(_lat_lng_counts(_geojson_features())),
+            json.dumps(_locations(_geojson_features()), sort_keys=True),
         )
         return Response(js, mimetype="text/javascript")
 
-    @app.route("/api/oldtoronto/by_location")
-    def by_location():
+    @app.route("/api/locations/")
+    def locations_location():
         return jsonify(
-            _by_location(
+            _locations_location(
                 _geojson_features(),
                 float(request.args.get("lat")),
                 float(request.args.get("lng")),
             )
         )
 
-    @app.route("/api/layer/oldtoronto/<photo_id>")
-    def by_photo_id(photo_id):
-        photo = _by_photo_id(_geojson_features(), photo_id)
-        return jsonify(photo) if photo else abort(404)
+    @app.route("/api/images/<image_id>")
+    def images_image(image_id):
+        image = _images_image(_geojson_features(), image_id)
+        return jsonify(image) if image else abort(404)
 
     return app
 

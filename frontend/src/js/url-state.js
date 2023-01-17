@@ -112,7 +112,7 @@ export function transitionToStateObject(targetState) {
 export function findLatLonForPhoto(photoId, cb) {
   $.ajax({
     dataType: "json",
-    url: '/api/layer/oldtoronto/' + photoId,
+    url: '/api/images/' + photoId,
     success: function(featureOrFeatureCollection) {
       const feature = featureOrFeatureCollection.features ?
         featureOrFeatureCollection.features[0] : featureOrFeatureCollection;

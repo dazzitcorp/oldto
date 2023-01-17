@@ -10,7 +10,7 @@ const photoIdToInfo = {};
 const latLonToName = {};
 
 const SITE = '';
-const BY_LOCATION_API = '/api/oldtoronto/by_location';
+const BY_LOCATION_API = '/api/locations/';
 
 // The callback is called with the photo_ids that were just loaded, after the
 // UI updates.  The callback may assume that infoForPhotoId() will return data
