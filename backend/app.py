@@ -28,10 +28,14 @@ Supported endpoints:
 
 import copy
 import json
+import re
 from collections import Counter, defaultdict
 
 from flask import Flask, Response, abort, current_app, jsonify, request
 from haversine import haversine
+
+
+VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
 def _load_geojson_features(geojson_file_name):
@@ -41,7 +45,7 @@ def _load_geojson_features(geojson_file_name):
             f for f in json.load(geojson_file)["features"] if f["geometry"]
         ]
         print(f"Loaded {len(geojson_features)} features from {geojson_file_name}.")
-        return geojson_features
+    return geojson_features
 
 
 def _lat_lng_key(lat, lng):
@@ -114,6 +118,8 @@ def create_app():
     @app.route("/api/oldtoronto/lat_lng_counts")
     def lat_lng_counts():
         var = request.args.get("var")
+        if not VAR_RE.match(var):
+            abort(400)
         js = "var %s=%s" % (
             var,
             json.dumps(_lat_lng_counts(_geojson_features())),
