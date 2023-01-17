@@ -33,7 +33,6 @@ import re
 from collections import Counter, defaultdict
 
 from flask import Flask, Response, abort, current_app, jsonify, request
-from haversine import haversine
 
 
 VAR_RE = re.compile(r"(?a:^\w+$)")
@@ -80,11 +79,11 @@ def _locations_location(geojson_features, lat: float, lng: float):
         image["image_url"] = image.pop("url")
         return dict(image, id=poi["id"], **props)
 
-    pt = (lat, lng)
+    lat_lng_key = _lat_lng_key(lat, lng)
     results = {
         f["id"]: poi_to_rec(f)
         for f in geojson_features
-        if haversine(pt, f["geometry"]["coordinates"][::-1]) < 0.005
+        if lat_lng_key == _lat_lng_key(*f["geometry"]["coordinates"][::-1])
     }
     return results
 
