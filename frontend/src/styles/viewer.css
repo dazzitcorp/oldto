@@ -63,9 +63,6 @@ h2 a {
   font-weight: bold;
   text-shadow: 0 1px 1px rgba(255,255,255,.9);
 }
-#twitter {
-  width: 100px;
-}
 
 #grid-container {
   z-index: 2;
@@ -303,7 +300,7 @@ a#slideshow-all, a#slideshow-all:visited {
   cursor: default;
 }
 
-.og-details .copy-link, .og-details .tweet {
+.og-details .copy-link {
   display: inline-block;
   vertical-align: top;
   height: 20px;

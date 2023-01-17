@@ -357,17 +357,7 @@ function fillPhotoPane(photoId, $pane) {
   setViewClass('view-photo');
 
   // Social media links.
-  // Some browser plugins block Twitter, so we have to add these conditionally.
   $pane.find('.copy-link').attr('data-clipboard-text', canonicalUrl);
-
-  if (typeof(twttr) !== 'undefined') {
-    twttr.widgets.createShareButton(
-      canonicalUrl,
-      $pane.find('.tweet').get(0), {
-        count: 'none',
-        text: `${info.title} - ${info.date} #OldToronto @TorontoArchives`
-      });
-  }
 
   // Scrolling the panel shouldn't scroll the whole grid.
   // See http://stackoverflow.com/a/10514680/388951
