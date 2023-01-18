@@ -101,7 +101,7 @@ export function updateYears(firstYear, lastYear) {
   updateYearLabels();
 
   _.forEach(latLonToMarker, (marker, lat_lon) => {
-    const count = countPhotos(lat_lons[lat_lon], yearRange);
+    const count = countPhotos(LOCATIONS[lat_lon], yearRange);
     if (count) {
       marker.setIcon(markerIcons.images);
       marker.setZIndex(1);
