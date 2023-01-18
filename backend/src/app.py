@@ -247,7 +247,9 @@ def create_app():
         return response
 
     @app.cli.command("bake")
-    @click.option("--dir", "-d", default="../dist/api", type=click.Path(file_okay=False))
+    @click.option(
+        "--dir", "-d", default="../dist/api", type=click.Path(file_okay=False)
+    )
     def bake(dir):
         with app.app_context():
             _bake(dir)

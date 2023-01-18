@@ -1,2 +1,2 @@
 #!/bin/bash
-git ls-files pipeline .py | grep -v '_test' | grep -v '.md5' |  xargs vulture
+find pipeline/src -name '*.py' -print | grep -v '_test' |  xargs vulture

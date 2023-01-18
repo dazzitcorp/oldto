@@ -14,13 +14,13 @@ repo and it is possible to run it yourself. The instructions below describe how 
 ## How it works
 
 OldTO begins with data from the [Toronto Archives][1], which you can find
-in [`pipeline_data/images.ndjson`](/pipeline_data/images.ndjson).
+in [`pipeline/dist/images.ndjson`](/pipeline/dist/images.ndjson).
 
 To place the images on a map ("geocode" them), we use a [list of Toronto
-street names](/pipeline_data/streets.txt) and a collection of regular expressions
+street names](/pipeline/dist/streets.txt) and a collection of regular expressions
 which look for addresses and cross-streets. We send these through the
 [Google Maps Geocoding API][API] to get latitudes and longitudes for the
-images. We also incorporate a [set of points of interest](/pipeline_data/toronto-pois.osm.csv)
+images. We also incorporate a [set of points of interest](/pipeline/dist/toronto-pois.osm.csv)
 for popular locations like the CN Tower or City Hall.
 
 ## Development setup
@@ -80,7 +80,7 @@ If you run it locally, visit http://localhost:8080/ to browse it.
 
 ## Generating new geocodes
 
-First, add your [Google Maps API key][api key] to the file `pipeline/settings.py`.
+First, add your [Google Maps API key][api key] to the file `pipeline/src/settings.py`.
 
 Next, you'll first want to download cached geocodes from [here][cached-geocodes].
 Unzip this file into `cache/maps.googleapis.com`. This will make the geocoding
@@ -101,20 +101,20 @@ Before sending out a PR with geocoding changes, you'll want to run a diff to eva
 
 For a quick check, you can operate on a 5% sample and diff that against `master`:
 
-    pipeline/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
-    pipeline/diff_geocodes.py --sample 0.05 /tmp/geocode_results.new.5pct.json
+    pipeline/src/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
+    pipeline/src/diff_geocodes.py --sample 0.05 /tmp/geocode_results.new.5pct.json
 
 To calculate metrics using truth data (must have jq installed):
 
-    grep -E  "$(jq '.features[] | .id' pipeline_data/truth.gtjson | sed s/\"//g | paste -s -d '|' )" pipeline_data/images.ndjson > pipeline_data/test.images.ndjson
-    pipeline/geocode.py --input pipeline_data/test.images.ndjson
-    pipeline/generate_geojson.py --geocode_results pipeline_data/test.images.ndjson --output pipeline_data/test.images.geojson
-    pipeline/calculate_metrics.py --truth_data pipeline_data/truth.gtjson --computed_data pipeline_data/test.images.geojson
+    grep -E  "$(jq '.features[] | .id' pipeline/dist/truth.gtjson | sed s/\"//g | paste -s -d '|' )" pipeline/dist/images.ndjson > pipeline/dist/test.images.ndjson
+    pipeline/src/geocode.py --input pipeline/dist/test.images.ndjson
+    pipeline/src/generate_geojson.py --geocode_results pipeline/dist/test.images.ndjson --output pipeline/dist/test.images.geojson
+    pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data pipeline/dist/test.images.geojson
 
 To debug a specific image ID, run something like:
 
-    pipeline/geocode.py --ids 520805 --output /tmp/geocode.json && \
-    cat pipeline/geocode.py.log | grep -v regex
+    pipeline/src/geocode.py --ids 520805 --output /tmp/geocode.json && \
+    cat pipeline/src/geocode.py.log | grep -v regex
 
 If you want to understand the differences between two `images.geojson` files, you can
 use the `diff_geojson.py` script. This file will create a series of `.geojson` files
@@ -128,8 +128,8 @@ Once you're ready to send the PR, run a diff on the full geocodes.
 
 To update the list of street names, run:
 
-    pipeline/extract_noun_phrases.py streets 1 > /tmp/streets+examples.txt && \
-    cut -f2 /tmp/streets+examples.txt | sed 1d | sort > pipeline_data/streets.txt
+    pipeline/src/extract_noun_phrases.py streets 1 > /tmp/streets+examples.txt && \
+    cut -f2 /tmp/streets+examples.txt | sed 1d | sort > pipeline/dist/streets.txt
 
 [1]: https://www.toronto.ca/city-government/accountability-operations-customer-service/access-city-information-or-records/city-of-toronto-archives/
 [m]: https://gencat.eloquent-systems.com/city-of-toronto-archives-m-public.html

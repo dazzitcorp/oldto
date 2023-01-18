@@ -1,82 +1,82 @@
-clustered_geojson := pipeline_data/clustered.images.geojson
-archives_geojson := pipeline_data/toronto-archives/images.geojson
-archives_images := pipeline_data/toronto-archives/images.ndjson
-archives_image_geocodes := pipeline_data/toronto-archives/geocode_results.json
-parent_mined_data := pipeline_data/toronto-archives/parent_mined_data.json
-series_geocodes := pipeline_data/toronto-archives/parent.geocode_results.json
-streets := pipeline_data/streets.txt
+clustered_geojson := pipeline/dist/clustered.images.geojson
+archives_geojson := pipeline/dist/toronto-archives/images.geojson
+archives_images := pipeline/dist/toronto-archives/images.ndjson
+archives_image_geocodes := pipeline/dist/toronto-archives/geocode_results.json
+parent_mined_data := pipeline/dist/toronto-archives/parent_mined_data.json
+series_geocodes := pipeline/dist/toronto-archives/parent.geocode_results.json
+streets := pipeline/dist/streets.txt
 
-tpl_images := pipeline_data/tpl/toronto-library.ndjson
-tpl_nonstar_images := pipeline_data/tpl/non-star-images.ndjson
-tpl_geocodes := pipeline_data/tpl/library_geocodes.json
-tpl_images_geojson := pipeline_data/tpl/library-images.geojson
-tpl_geojson := pipeline_data/tpl/images.geojson
+tpl_images := pipeline/dist/tpl/toronto-library.ndjson
+tpl_nonstar_images := pipeline/dist/tpl/non-star-images.ndjson
+tpl_geocodes := pipeline/dist/tpl/library_geocodes.json
+tpl_images_geojson := pipeline/dist/tpl/library-images.geojson
+tpl_geojson := pipeline/dist/tpl/images.geojson
 
-geojson := pipeline_data/images.geojson
+geojson := pipeline/dist/images.geojson
 
 all: $(geojson).md5
 
-$(clustered_geojson): pipeline/cluster_geojson.py.md5 $(geojson).md5
-	python pipeline/cluster_geojson.py --input_file $(geojson) --output_file $@
+$(clustered_geojson): pipeline/src/cluster_geojson.py.md5 $(geojson).md5
+	python pipeline/src/cluster_geojson.py --input_file $(geojson) --output_file $@
 
 # truth-metics does not exist as a file, this is a command
 .PHONY: truth-metrics
-truth-metrics: $(geojson).md5 pipeline_data/truth.gtjson.md5
-	python pipeline/calculate_metrics.py --truth_data pipeline_data/truth.gtjson --computed_data $(geojson)
+truth-metrics: $(geojson).md5 pipeline/dist/truth.gtjson.md5
+	python pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data $(geojson)
 
 # diff-sample does not exist as a file, this is a command
 .PHONY: diff-sample
 diff-sample:
-	pipeline/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
-	pipeline/generate_geojson.py --sample 0.05 /tmp/geocode_results.new.5pct
+	pipeline/src/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
+	pipeline/src/generate_geojson.py --sample 0.05 /tmp/geocode_results.new.5pct
 
 # mining data from parents has outstanding issues. Use a stale version of the file until resolving AP-237
-$(archives_geojson): pipeline/generate_geojson.py.md5 $(archives_image_geocodes).md5
-	pipeline/generate_geojson.py \
+$(archives_geojson): pipeline/src/generate_geojson.py.md5 $(archives_image_geocodes).md5
+	pipeline/src/generate_geojson.py \
 	--input $(archives_images) \
 	--parent_data $(parent_mined_data) \
 	--geocode_results $(archives_image_geocodes) \
-	--path_to_size pipeline_data/toronto-archives/image-sizes.txt \
+	--path_to_size pipeline/dist/toronto-archives/image-sizes.txt \
 	--source toronto-archives \
 	--output $@
 
-$(parent_mined_data): pipeline/geocode.py.md5 pipeline/mine_parents_for_data.py pipeline_data/series.ndjson.md5 $(archives_image_geocodes).md5
-	pipeline/geocode.py --input pipeline_data/series.ndjson --output $(series_geocodes) --strict true
-	pipeline/mine_parents_for_data.py --seri`es_geocoded $(series_geocodes) --geocoded_results $(archives_image_geocodes) --output $@
+$(parent_mined_data): pipeline/src/geocode.py.md5 pipeline/src/mine_parents_for_data.py pipeline/dist/series.ndjson.md5 $(archives_image_geocodes).md5
+	pipeline/src/geocode.py --input pipeline/dist/series.ndjson --output $(series_geocodes) --strict true
+	pipeline/src/mine_parents_for_data.py --seri`es_geocoded $(series_geocodes) --geocoded_results $(archives_image_geocodes) --output $@
 
-$(archives_image_geocodes): pipeline/geocode.py.md5 pipeline_data/toronto-pois.osm.csv.md5 $(streets).md5 $(archives_images).md5
-	pipeline/geocode.py \
+$(archives_image_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.md5 $(streets).md5 $(archives_images).md5
+	pipeline/src/geocode.py \
 	--input $(archives_images) \
 	--street_names $(streets) \
 	--output $@
 
-$(streets): pipeline/extract_noun_phrases.py.md5 $(archives_images).md5
-	pipeline/extract_noun_phrases.py --noun_type streets > /tmp/streets+examples.txt
+$(streets): pipeline/src/extract_noun_phrases.py.md5 $(archives_images).md5
+	pipeline/src/extract_noun_phrases.py --noun_type streets > /tmp/streets+examples.txt
 	cut -f2 /tmp/streets+examples.txt | sed 1d | sort > $@
 
-$(tpl_nonstar_images): $(tpl_images).md5 pipeline/filter_star_images.py.md5
-	pipeline/filter_star_images.py \
+$(tpl_nonstar_images): $(tpl_images).md5 pipeline/src/filter_star_images.py.md5
+	pipeline/src/filter_star_images.py \
 		$(tpl_images) \
 		> $(tpl_nonstar_images)
 
-$(tpl_geocodes): pipeline/geocode.py.md5 pipeline_data/toronto-pois.osm.csv.md5 $(streets).md5 $(tpl_nonstar_images).md5
-	python pipeline/geocode.py \
+$(tpl_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.md5 $(streets).md5 $(tpl_nonstar_images).md5
+	python pipeline/src/geocode.py \
 	--input $(tpl_nonstar_images) \
 	--street_names $(streets) \
 	--output $@
 
 # mining data from parents has outstanding issues. Use a stale version of the file until resolving AP-237
-$(tpl_geojson): pipeline/generate_geojson.py.md5 $(tpl_geocodes).md5
-	pipeline/generate_geojson.py \
+$(tpl_geojson): pipeline/src/generate_geojson.py.md5 $(tpl_geocodes).md5
+	pipeline/src/generate_geojson.py \
 	--input $(tpl_nonstar_images) \
 	--geocode_results $(tpl_geocodes) \
-	--path_to_size pipeline_data/tpl/image-sizes.txt \
+	--path_to_size pipeline/dist/tpl/image-sizes.txt \
 	--source tpl \
 	--drop_unlocated \
 	--output $@
 
 $(geojson): $(tpl_geojson).md5 $(archives_geojson).md5
-	pipeline/merge_feature_collections.py \
+	pipeline/src/merge_feature_collections.py \
 	  $(archives_geojson) \
 	  $(tpl_geojson) \
 	  $@
@@ -107,10 +107,10 @@ deps: requirements.txt
 # this is useful if you're using a new repo from version control, since it's impossible to trust those timestamps
 .PHONY: update
 update:
-	find pipeline/ -maxdepth 1 ! -name '*.md5' | xargs touch
-	find pipeline_data/ ! -name '*.md5' ! -name 'toronto-pois.osm.csv' ! -name 'images.ndjson' ! -name 'series.ndjson' ! -name 'truth.gtjson'  | grep -v 'Old Toronto Responses' | xargs touch
+	find pipeline/src/ -maxdepth 1 ! -name '*.md5' | xargs touch
+	find pipeline/dist/ ! -name '*.md5' ! -name 'toronto-pois.osm.csv' ! -name 'images.ndjson' ! -name 'series.ndjson' ! -name 'truth.gtjson'  | grep -v 'Old Toronto Responses' | xargs touch
 
 clean:
-	rm pipeline_data/*.md5
-	rm pipeline_data/*/*.md5
-	rm pipeline/*.md5
+	rm pipeline/dist/*.md5
+	rm pipeline/dist/*/*.md5
+	rm pipeline/src/*.md5
