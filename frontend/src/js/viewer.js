@@ -137,10 +137,10 @@ function displayInfoForLatLon(latLon, opt_selectCallback, opt_selectedId) {
 function handleClick(e, opt_latLon) {
   const latLon = opt_latLon || e.latLng.lat().toFixed(6) + ',' + e.latLng.lng().toFixed(6);
   const marker = latLonToMarker[latLon];
-  selectMarker(marker, lat_lons[latLon]);
+  selectMarker(marker, LOCATIONS[latLon]);
 
   loadInfoForLatLon(latLon).done(photoIds => {
-    const numPhotos = countPhotos(lat_lons[latLon], yearRange);
+    const numPhotos = countPhotos(LOCATIONS[latLon], yearRange);
     let photoId;
     const [first, last] = yearRange;
 
@@ -252,7 +252,7 @@ export function initializeMap() {
 function addNewlyVisibleMarkers() {
   const bounds = map.getBounds();
 
-  for (let latLon in lat_lons) {
+  for (let latLon in LOCATIONS) {
     if (latLon in latLonToMarker) continue;
 
     const pos = parseLatLon(latLon);
@@ -272,7 +272,7 @@ export function parseLatLon(latLonStr) {
  * latLonStr is a "(lat),(lon)" string. latLng is a google.maps.LatLng object.
  */
 export function createMarker(latLonStr, latLng) {
-  const count = countPhotos(lat_lons[latLonStr], yearRange);
+  const count = countPhotos(LOCATIONS[latLonStr], yearRange);
   const marker = new google.maps.Marker({
     position: latLng,
     map: map,
@@ -475,7 +475,7 @@ function showRandomPhotoWhenIdle() {
     const el = pickRandomElement($('#popular a'));
     el.click();
   } else {
-    const latLon = pickRandomElement(Object.keys(lat_lons));
+    const latLon = pickRandomElement(Object.keys(LOCATIONS));
     loadInfoForLatLon(latLon).then(photoIds => {
       const id = pickRandomElement(photoIds);
       displayInfoForLatLon(latLon, function() {}, id);

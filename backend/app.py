@@ -21,7 +21,7 @@ e.g.:
 to reload if `images.geojson` changes.)
 
 Supported endpoints:
-- /api/locations.js?var=lat_lons
+- /api/locations.js?var=lat_lons (default: LOCATIONS)
 - /api/locations.json
 - /api/locations/43.651501,-79.359842.json
 - /api/images/86514.json
@@ -30,9 +30,12 @@ Supported endpoints:
 import hashlib
 import json
 import logging
+import pathlib
 import re
+import shutil
 from collections import Counter, defaultdict
 
+import click
 from flask import Flask, Response, abort, current_app, jsonify, request
 
 # Change ETAG_VERSION when the data hasn't changed but the structure of a response has.
@@ -102,6 +105,33 @@ def _geojson_features_by_image(geojson_features):
     return images
 
 
+def _bake(dir):
+    current_app.logger.info(f"Baking to {dir}...")
+
+    root = pathlib.Path(dir)
+    if root.exists():
+        shutil.rmtree(root)
+    root.mkdir()
+    with open(root / "locations.js", "w") as f:
+        f.write(
+            f"var LOCATIONS={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}"
+        )
+
+    locations = root / "locations"
+    locations.mkdir()
+    for id, location in current_app.config["GEOJSON_FEATURES_BY_LOCATION"].items():
+        with open(locations / f"{id}.json", "w") as f:
+            json.dump(location, f, indent=True, sort_keys=True)
+
+    images = root / "images"
+    images.mkdir()
+    for id, image in current_app.config["GEOJSON_FEATURES_BY_IMAGE"].items():
+        with open(images / f"{id}.json", "w") as f:
+            json.dump(image, f, indent=True, sort_keys=True)
+
+    current_app.logger.info(f"Done.")
+
+
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
@@ -150,7 +180,7 @@ def create_app():
 
     @app.route("/api/locations.js")
     def locations_js():
-        var = request.args.get("var", "locations")
+        var = request.args.get("var", "LOCATIONS")
         if not VAR_RE.match(var):
             abort(400)
 
@@ -215,6 +245,12 @@ def create_app():
         )
         response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
         return response
+
+    @app.cli.command("bake")
+    @click.option("--dir", "-d", default="./api", type=click.Path(file_okay=False))
+    def bake(dir):
+        with app.app_context():
+            _bake(dir)
 
     return app
 

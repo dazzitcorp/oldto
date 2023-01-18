@@ -13,10 +13,10 @@
     "jquery": true
   },
   "globals": {
-    "lat_lons": false,
     "Firebase": false,
-    "google": false,
+    "LOCATIONS": false,
     "ZeroClipboard": false,
+    "google": false,
     "isKiosk": false
   },
   "rules": {

@@ -75,7 +75,7 @@ export function transitionToStateObject(targetState) {
     // Show a different grid?
     if (currentState.g !== state.g) {
       const latLon = state.g;
-      let count = countPhotos(lat_lons[latLon]);
+      let count = countPhotos(LOCATIONS[latLon]);
       if (state.g === 'pop') {
         count = getPopularPhotoIds().length;
       } else {
