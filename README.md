@@ -44,7 +44,7 @@ The data for the OldTO site is served by a Python API server.
 Start by running it:
 
     source .venv/bin/activate
-    cd backend
+    cd backend/src
     app.py
 
 The API server defaults to loading data from `images.geojson` in the current

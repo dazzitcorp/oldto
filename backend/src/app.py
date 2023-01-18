@@ -111,7 +111,7 @@ def _bake(dir):
     root = pathlib.Path(dir)
     if root.exists():
         shutil.rmtree(root)
-    root.mkdir()
+    root.mkdir(parents=True)
     with open(root / "locations.js", "w") as f:
         f.write(
             f"var LOCATIONS={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}"
@@ -247,7 +247,7 @@ def create_app():
         return response
 
     @app.cli.command("bake")
-    @click.option("--dir", "-d", default="./api", type=click.Path(file_okay=False))
+    @click.option("--dir", "-d", default="../dist/api", type=click.Path(file_okay=False))
     def bake(dir):
         with app.app_context():
             _bake(dir)
