@@ -1,5 +1,4 @@
-.cache/
-.env*
-.parcel-cache/
+# files
+
+# directories
 dist/
-node_modules/

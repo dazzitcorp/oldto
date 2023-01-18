@@ -1,34 +1,125 @@
-#Eclipse Metadata
-.project
-.pydevproject
-.settings/
+# ============
+# Project-Wide
+# ============
 
-#Jetbrains
-.idea*
-
-#Ignore Python Build Files
-*.pyc
-
-#Ignore Javascript build files
-dist/
-
-cache
-*.sqlite
-*.ipynb
-.venv
-venv
-
-.vscode
+# files
 *.log*
+.env
+.env.development
+.env.development.local
+.env.test.local
+.env.production
+.env.production.local
+.env.local
 
-# Images and data files
-*.jp2
-aerials/*.html
-/images
+# directories
+cache/
+tmp/
+
+# ==========
+# From macOS (https://github.com/github/gitignore/blob/main/Global/macOS.gitignore)
+# ==========
+
+# General
 .DS_Store
-*.osm
 
-detections.ndjson
+# Thumbnails
+._*
 
-# secrets
-pipeline/settings.py
+# =========
+# From Node (https://github.com/github/gitignore/blob/main/Node.gitignore)
+# =========
+
+# Logs
+logs
+*.log
+npm-debug.log*
+.pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional REPL history
+.node_repl_history
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# ===========
+# From Python (https://github.com/github/gitignore/blob/main/Python.gitignore)
+# ===========
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# ===========
+# From VSCode (https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore)
+# ===========
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
