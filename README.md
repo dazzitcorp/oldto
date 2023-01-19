@@ -1,6 +1,7 @@
 # OldTO
 
-OldTO was a site that showcased historic photographs of Toronto by placing them on a map.
+OldTO is a site that showcases historic photographs of Toronto by placing them 
+on a map.
 
 You can read more about it on the [Sidewalk Labs Blog][blog].
 
@@ -8,8 +9,8 @@ Here's a screen recording of what OldTO looked like (YouTube):
 
 [![Screen recording of OldTO](https://img.youtube.com/vi/krW-wl7gACA/0.jpg)][youtube]
 
-While the OldTO is no longer hosted by Sidewalk Labs, the source code is all available in this
-repo and it is possible to run it yourself. The instructions below describe how to do this.
+While the OldTO is no longer hosted by Sidewalk Labs, the source code was 
+available in a repo. This revival is based on that code.
 
 ## How it works
 
@@ -21,62 +22,52 @@ street names](/pipeline/dist/streets.txt) and a collection of regular expression
 which look for addresses and cross-streets. We send these through the
 [Google Maps Geocoding API][API] to get latitudes and longitudes for the
 images. We also incorporate a [set of points of interest](/pipeline/dist/toronto-pois.osm.csv)
-for popular locations like the CN Tower or City Hall.
+for popular locations like City Hall and the CN Tower.
 
-## Development setup
+## How to use it
 
-Setup dependencies (on a Mac):
+There are three basic parts to this:
 
-    brew install coreutils csvkit
+* the pipeline that generates data;
+* the backend that serves data; and
+* the frontend that presents data.
 
-OldTO requires Python 3. Once you have this set up, you can install the
-Python dependencies in a virtual environment via:
-
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install -r requirements.txt
-
-## Running the site
-
-### Backend
-
-The data for the OldTO site is served by a Python API server.
-Start by running it:
-
-    source .venv/bin/activate
-    cd backend/src
-    app.py
-
-The API server defaults to loading data from `images.geojson` in the current
-directory. You can choose a different file if you like; look in `app.py` for
-details.
-
-### Frontend
-
-The OldTO site lives in the `frontend` directory:
-
-    cd frontend
-
-To install the required packages, use:
-
-    npm install
-
-Then create a `.env` file (or, even better, separate `.env.development` and `.env.production` files) in the `frontend` directory with the following keys and values:
+When you first get going, create a `.env` file (or, even better, separate
+`.env.development` and `.env.production` files) in the `frontend` directory 
+with the following keys and values:
 
     GOOGLE_MAPS_API_KEY=...
     MAPBOX_API_KEY=...
 
-Now you can build the site:
+and a `settings.py` file in the `pipeline` directory with the following keys 
+and values:
 
-    npm run build
+    GOOGLE_MAPS_API_KEY="..."
 
-or run it locally:
+(Note that you might want to use different keys for frontend development/
+frontend production/pipeline in order to better control their restrictions.)
 
-    npm run start
+Then perform some first-time initialization:
 
-If you run it locally, visit http://localhost:8080/ to browse it.
+    make init
 
-(To run the frontend locally you have to run the backend locally too!)
+To run locally for development, use (in two different terminal windows):
+
+    make backend-serve
+    make frontend-serve
+
+and visit http://localhost:8080/.
+
+To create a distribution for production, use:
+
+    make dist
+
+Making a distribution gives you a set of files in:
+
+* `backend/dist/`; and
+* `frontend/dist/`
+
+which, when combined into a single directory, can be served statically.
 
 ## Generating new geocodes
 
@@ -88,12 +79,9 @@ pipeline run faster and more consistently than geocoding from scratch.
 
 With this in place, you can update `images.geojson` by running:
 
-    source .venv/bin/activate
-    make
+    make pipeline-dist
 
-Note, to run the makefile on an OSX machine you will probably want to install md5sum, which can be done by running:
-
-    brew update && brew install md5sha1sum
+(Note that you'll need to have `md5sum` installed.)
 
 ### Analyzing results and changes
 
