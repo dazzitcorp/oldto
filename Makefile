@@ -1,4 +1,13 @@
 #
+# Command Variables
+#
+
+RSYNC = rsync
+RSYNC_ARGS_W_DELETE = -avz --delete -e ssh --exclude='.DS_Store' --exclude='.well-known/' --progress
+RSYNC_ARGS_WO_DELETE = -avz -e ssh --exclude='.DS_Store' --exclude='.well-known/' --progress
+RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
+
+#
 # Pipeline Variables - pipeline/dist/
 #
 
@@ -52,6 +61,18 @@ requirements: requirements.txt backend/requirements.txt pipeline/requirements.tx
 requirements.txt: requirements.in
 	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
 
+.PHONY: sync
+# Go "bottom-up" so that "children" are on the server before "parents."
+sync:
+	$(MAKE) backend-sync
+	$(MAKE) frontend-sync
+
+.PHONY: sync-full
+# Go "bottom-up" so that "children" are on the server before "parents."
+sync-full:
+	$(MAKE) backend-sync-full
+	$(MAKE) frontend-sync-full
+
 #
 # Backend Targets
 #
@@ -74,6 +95,20 @@ backend-serve:
 backend/requirements.txt: backend/requirements.in
 	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
 
+.PHONY: backend-sync
+# Go "bottom-up" so that "children" are on the server before "parents."
+backend-sync:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/images/" --exclude="*" backend/dist/api/images/ $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/locations/" --exclude="*" backend/dist/api/locations/ $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="*" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api/ $(RSYNC_DEST)
+
+.PHONY: backend-sync-full
+# Go "bottom-up" so that "children" are on the server before "parents."
+backend-sync-full:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/images/" --exclude="*" backend/dist/api/images/ $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/locations/" --exclude="*" backend/dist/api/locations/ $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="*" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api/ $(RSYNC_DEST)
+
 #
 # Frontend Targets
 #
@@ -93,6 +128,14 @@ frontend-init:
 .PHONY: frontend-serve
 frontend-serve:
 	cd frontend && npm run start
+
+.PHONY: frontend-sync
+frontend-sync:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
+
+.PHONY: frontend-sync-full
+frontend-sync-full:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
 #
 # Pipeline Targets
