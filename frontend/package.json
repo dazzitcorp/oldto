@@ -5,11 +5,11 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "source": "src/index.html",
   "scripts": {
-    "build": "parcel build",
+    "build": "parcel build --dist-dir dist",
     "lint": "eslint js/*.js",
-    "start": "parcel --port 8080",
+    "start": "parcel --dist-dir tmp --port 8080",
     "test": "npm run lint",
-    "watch": "parcel watch"
+    "watch": "parcel watch --dist-dir tmp"
   },
   "parcelIgnore": [
     "^/api/"
