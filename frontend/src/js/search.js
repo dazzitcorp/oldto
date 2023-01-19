@@ -41,13 +41,15 @@ $(() => {
     const address = $(this).val();
     $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', {
       address,
-      key: process.env.GOOGLE_MAPS_API_KEY,
+      key: process.env.GOOGLE_MAPS_API_KEY_FOR_GEOCODING,
       // This is a bit tight to avoid a bug with how Google geocodes "140 Yonge".
       bounds: '43.598284,-79.448761|43.712376, -79.291565'
     }).done(response => {
-      const latLng = response.results[0].geometry.location;
-      setLocation(latLng, address);
-      // TODO: analytics event - link - address-search
+      if (response && response.results && response.results.length > 0) {
+        const latLng = response.results[0].geometry.location;
+        setLocation(latLng, address);
+        // TODO: analytics event - link - address-search
+      }
     }).fail(e => {
       console.error(e);
       // TODO: analytics event - link - address-search-fail
