@@ -14,7 +14,19 @@
   <link rel="stylesheet" href="corrections.css">
   <link rel="icon" href="../images/OT-favicon-32x32.png">
 
-  <script defer src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
+  <script type="text/javascript">
+    let _mapReady;
+
+    window.mapReady = new Promise((resolve) => {
+      _mapReady = resolve;
+    });
+    
+    window.mapInit = () => {
+      _mapReady();
+    }
+  </script>
+
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&libraries=places&callback=mapInit"></script>
 
   <script defer src="../js/vendor/jquery.1.12.5-pre.js"></script>
 

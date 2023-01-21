@@ -1,4 +1,5 @@
 /* global ll_to_ids */
+/* global mapReady */
 
 import {fillDetailsPanel} from '../js/fill-details';
 
@@ -30,7 +31,7 @@ if (target) {
   $('form').attr('target', target);
 }
 
-function initMap() {
+function initializeMap() {
   let initLatLng;
 
   const geocoder = new google.maps.Geocoder();
@@ -206,4 +207,8 @@ $('form').on('submit', function() {
   }, 100);
 });
 
-window.initMap = initMap;  // Move into the global scope for gmaps.
+$(function() {
+  mapReady.then(() => {
+    initializeMap();
+  })
+});
