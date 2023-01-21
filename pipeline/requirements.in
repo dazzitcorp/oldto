@@ -4,6 +4,7 @@ haversine
 numpy
 pandas
 parameterized
+python-dotenv
 requests
 sklearn
 tqdm

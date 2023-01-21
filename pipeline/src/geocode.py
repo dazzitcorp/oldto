@@ -6,15 +6,16 @@ import csv
 import functools
 import json
 import logging
+import os
 import re
 import sys
 
 import googlemaps
 import tqdm
+from dotenv import load_dotenv
 from extract_noun_phrases import noun_pat
 from fetcher import CacheSession
 from logging_configuration import configure_logging
-from settings import GMAPS_API_KEY
 from utils import generators
 from utils.id_sample import should_sample
 from utils.timeout import timeout
@@ -546,7 +547,8 @@ if __name__ == "__main__":
         sys.stderr.write("USING FAKE MAPS CLIENT!!\n")
         gmaps_client = None
     else:
-        gmaps_client = googlemaps.Client(key=GMAPS_API_KEY)
+        load_dotenv()
+        gmaps_client = googlemaps.Client(key=os.environ["GMAPS_API_KEY"])
     main(
         args.input,
         args.street_names,

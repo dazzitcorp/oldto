@@ -37,17 +37,44 @@ When you first get going, create a `.env` file (or, even better, separate
 with the following keys and values:
 
     GOOGLE_MAPS_API_KEY=...
+    GOOGLE_MAPS_API_KEY_FOR_GEOCODING=
     MAPBOX_API_KEY=...
 
-and a `settings.py` file in the `pipeline` directory with the following keys 
+and a `.env` file in the `pipeline` directory with the following keys 
 and values:
 
-    GOOGLE_MAPS_API_KEY="..."
+    GOOGLE_MAPS_API_KEY=...
 
-(Note that you might want to use different keys for frontend development/
-frontend production/pipeline in order to better control their restrictions.)
+Why two files? Because you'll probably want to use different keys, in order
+to use different restrictions. (As you'll see below, that's the same reason
+you might want different development and production keys.)
 
-Then perform some first-time initialization:
+Here's my current understanding:
+
+* frontend
+  * GOOGLE_MAPS_API_KEY
+    * Can be restricted by HTTP referer
+    * Can be restricted to Maps JavaScript API
+      * `corrections.js`, a tool for internal use, also requires the 
+        Places API — but it isn't currently working
+  * GOOGLE_MAPS_API_KEY_FOR_GEOCODING
+    * Can't be restricted by HTTP referer?
+    * Can't be restricted by IP?
+    * Can be restricted to Geocoding API
+  * MAPBOX_API_KEY
+    * Can be restricted by HTTP referer
+* pipeline
+  * GOOGLE_MAPS_API_KEY
+    * Can be restricted by IP?
+    * Can be restricted to Geocoding API
+
+Different HTTP referers is why you'll probably want to use different development
+and production keys in the frontend.
+
+(The pipeline doesn't need separate development and production keys because it's 
+really "development only.")
+
+Now you're ready to perform some first-time initialization:
 
     make init
 

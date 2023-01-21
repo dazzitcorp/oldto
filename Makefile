@@ -55,11 +55,9 @@ init: backend-init frontend-init pipeline-init
 	python3 -m venv .venv
 	.venv/bin/pip install -r requirements.txt
 
-.PHONY: requirements
-requirements: requirements.txt backend/requirements.txt pipeline/requirements.txt ;
-
-requirements.txt: requirements.in
+requirements.txt: backend/requirements.txt pipeline/requirements.txt
 	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+	.venv/bin/pip-sync "$@"
 
 .PHONY: sync
 # Go "bottom-up" so that "children" are on the server before "parents."
@@ -220,7 +218,7 @@ $(archives_parent_mined_data): pipeline/src/geocode.py.md5 pipeline/src/mine_par
 #
 
 $(tpl_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.md5 $(streets).md5 $(tpl_nonstar_images).md5
-	.venv/bin/python3 python pipeline/src/geocode.py \
+	.venv/bin/python3 pipeline/src/geocode.py \
 	--input $(tpl_nonstar_images) \
 	--street_names $(streets) \
 	--output $@
@@ -252,4 +250,4 @@ pipeline-generate-diff-sample:
 
 .PHONY: pipeline-calculate-truth-metrics
 pipeline-calculate-truth-metrics: $(geojson).md5 pipeline/dist/truth.gtjson.md5
-	.venv/bin/python3 python pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data $(geojson)
+	.venv/bin/python3 pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data $(geojson)
