@@ -14,8 +14,16 @@
   <link rel="stylesheet" href="corrections.css">
   <link rel="icon" href="../images/OT-favicon-32x32.png">
 
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
+
+  <script defer src="../js/vendor/jquery.1.12.5-pre.js"></script>
+
+  <script defer src="ids.js"></script>
+  <script defer src="corrections.js" type="module"></script>
+  
   <script defer data-domain="www.oldto.org" src="https://plausible.io/js/script.hash.js"></script>
-</head>
+
+  </head>
 
 <body>
 
@@ -133,14 +141,6 @@
 </div>
 
 <iframe class="hide" name="hiddenFrame"></iframe>
-
-<script src="../js/vendor/jquery.1.12.5-pre.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"
-  async defer></script>
-
-<script src="ids.js" async></script>
-
-<script type="module" src="corrections.js"></script>
 
 </body>
 </html>
