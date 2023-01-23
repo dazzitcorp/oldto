@@ -44,6 +44,21 @@ VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
 def _load_geojson_features(geojson_file_name):
+    def _lat_lng_key(lat, lng):
+        """Return a key that concatenates the lat and lng, rounded to 6 decimal places.
+        Rounding is done differently in JavaScript and Python; 3.499999 rounds to 3.4
+        in Python, but 3.5 in JavaScript. The workaround is to first round to 7 decimals,
+        and then to 6.
+        """
+
+        def _round6(f):
+            return round(round(f, 7), 6)
+
+        lat = _round6(lat)
+        lng = _round6(lng)
+
+        return f"{lat:2.6f},{lng:2.6f}"
+
     # Filter out the null geometries ahead of time.
     with open(geojson_file_name) as geojson_file:
         geojson_features = [
@@ -51,31 +66,16 @@ def _load_geojson_features(geojson_file_name):
         ]
         for f in geojson_features:
             f["properties"]["id"] = f["id"]
+            f["properties"]["location"] = _lat_lng_key(*f["geometry"]["coordinates"])
     return geojson_features
-
-
-def _lat_lng_key(lat, lng):
-    """Return a key that concatenates the lat and lng, rounded to 6 decimal places.
-    Rounding is done differently in JavaScript and Python; 3.499999 rounds to 3.4
-    in Python, but 3.5 in JavaScript. The workaround is to first round to 7 decimals,
-    and then to 6.
-    """
-
-    def _round6(f):
-        return round(round(f, 7), 6)
-
-    lat = _round6(lat)
-    lng = _round6(lng)
-
-    return f"{lat:2.6f},{lng:2.6f}"
 
 
 def _geojson_features_locations(geojson_features):
     locations = defaultdict(Counter)
     for f in geojson_features:
-        lng, lat = f["geometry"]["coordinates"]
+        location = f["properties"]["location"]
         year = f["properties"]["date"] or ""
-        locations[_lat_lng_key(lat, lng)][year] += 1
+        locations[location][year] += 1
     return locations
 
 
@@ -92,11 +92,7 @@ def _geojson_features_locations_json_etag(geojson_features_locations_json):
 def _geojson_features_by_location(geojson_features):
     locations = defaultdict(dict)
     for f in geojson_features:
-        locations[
-            _lat_lng_key(
-                f["properties"]["geocode"]["lat"], f["properties"]["geocode"]["lng"]
-            )
-        ][f["id"]] = f["properties"]
+        locations[f["properties"]["location"]][f["id"]] = f["properties"]
     return locations
 
 
