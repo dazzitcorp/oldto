@@ -112,6 +112,10 @@ def _bake(dir):
         f.write(
             f"var LOCATIONS={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}"
         )
+    with open(root / "locations.json", "w") as f:
+        f.write(
+            current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']
+        )
 
     locations = root / "locations"
     locations.mkdir()
