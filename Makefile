@@ -2,10 +2,26 @@
 # Command Variables
 #
 
+CAT = cat
+CUT = cut
+FIND = find
+GREP = grep
+MD5SUM = md5sum
+NPM = npm
+PYTHON = python3
+RM = rm
 RSYNC = rsync
 RSYNC_ARGS_W_DELETE = $(RSYNC_ARGS_WO_DELETE) --delete --delete-after
 RSYNC_ARGS_WO_DELETE = -avz --exclude='.DS_Store' --exclude='.well-known/' --human-readable --progress --rsh=ssh --size-only --stats
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
+SED = sed
+SORT = sort
+VENV_FLASK = .venv/bin/flask
+VENV_PIP = .venv/bin/pip
+VENV_PIP_COMPILE = .venv/bin/pip-compile
+VENV_PIP_SYNC = .venv/bin/pip-sync
+VENV_PYTHON = .venv/bin/python3
+XARGS = xargs
 
 #
 # Pipeline Variables - pipeline/dist/
@@ -52,12 +68,12 @@ dist: backend-dist frontend-dist;
 # initialization; at that point, it has to exist and it has to be
 # up-to-date.
 init: backend-init frontend-init pipeline-init
-	python3 -m venv .venv
-	.venv/bin/pip install -r requirements.txt
+	$(PYTHON) -m venv .venv
+	$(VENV_PIP) install -r requirements.txt
 
 requirements.txt: backend/requirements.txt pipeline/requirements.txt
-	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
-	.venv/bin/pip-sync "$@"
+	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
+	$(VENV_PIP_SYNC) "$@"
 
 .PHONY: rsync
 # Go "bottom-up" so that "children" are on the server before "parents."
@@ -77,35 +93,35 @@ rsync-full:
 
 .PHONY: backend-clean
 backend-clean:
-	rm -rf backend/dist/*
+	$(RM) -rf backend/dist/*
 
 .PHONY: backend-dist
 backend-dist: backend-clean pipeline-dist
-	cd backend/src && ../../.venv/bin/flask --debug bake
+	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug bake --dir backend/dist/api
 
 .PHONY: backend-init
 backend-init: ;
 
 .PHONY: backend-serve
 backend-serve:
-	cd backend/src && ../../.venv/bin/flask --debug run --port 8081
+	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug run --port 8081
 
 backend/requirements.txt: backend/requirements.in
-	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
 
 .PHONY: backend-rsync
 # Go "bottom-up" so that "children" are on the server before "parents."
 backend-rsync:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
 
 .PHONY: backend-rsync-full
 # Go "bottom-up" so that "children" are on the server before "parents."
 backend-rsync-full:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
 
 #
 # Frontend Targets
@@ -113,27 +129,27 @@ backend-rsync-full:
 
 .PHONY: frontend-clean
 frontend-clean:
-	rm -rf frontend/dist/*
+	$(RM) -rf frontend/dist/*
 
 .PHONY: frontend-dist
 frontend-dist: frontend-clean
-	cd frontend && npm run build
+	cd frontend && $(NPM) run build
 
 .PHONY: frontend-init
 frontend-init:
-	cd frontend && npm install
+	cd frontend && $(NPM) install
 
 .PHONY: frontend-serve
 frontend-serve:
-	cd frontend && npm run start
+	cd frontend && $(NPM) run start
 
 .PHONY: frontend-rsync
 frontend-rsync:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
 .PHONY: frontend-rsync-full
 frontend-rsync-full:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
 #
 # Pipeline Targets
@@ -141,10 +157,10 @@ frontend-rsync-full:
 
 .PHONY: pipeline-clean
 pipeline-clean:
-	rm pipeline/dist/*.md5
-	rm pipeline/dist/toronto-archives/*.md5
-	rm pipeline/dist/tpl/*.md5
-	rm pipeline/src/*.md5
+	$(RM) pipeline/dist/*.md5
+	$(RM) pipeline/dist/toronto-archives/*.md5
+	$(RM) pipeline/dist/tpl/*.md5
+	$(RM) pipeline/src/*.md5
 
 .PHONY: pipeline-dist
 pipeline-dist: $(geojson).md5 ;
@@ -155,11 +171,11 @@ pipeline-dist: $(geojson).md5 ;
 # is useful if you're using a new repo from version control, since it's
 # impossible to trust those timestamps.
 pipeline-init: pipeline-clean
-	find pipeline/dist/ ! -name '*.md5' ! -name 'toronto-pois.osm.csv' ! -name 'images.ndjson' ! -name 'series.ndjson' ! -name 'truth.gtjson'  | grep -v 'Old Toronto Responses' | xargs touch
-	find pipeline/src/ -maxdepth 1 ! -name '*.md5' | xargs touch
+	$(FIND) pipeline/dist/ ! -name '*.md5' ! -name 'toronto-pois.osm.csv' ! -name 'images.ndjson' ! -name 'series.ndjson' ! -name 'truth.gtjson'  | $(GREP) -v 'Old Toronto Responses' | $(XARGS) touch
+	$(FIND) pipeline/src/ -maxdepth 1 ! -name '*.md5' | $(XARGS) touch
 
 pipeline/requirements.txt: pipeline/requirements.in
-	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
+	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
 
 #
 # More Pipeline Targets
@@ -169,24 +185,24 @@ pipeline/requirements.txt: pipeline/requirements.in
 # .md5 hash file if the md5 hash of a file does not match what is in an
 # existing .md5 hash file. "make pipeline-init" makes sure that this step will run.
 %.md5: %
-	@$(if $(filter-out $(shell cat $@ 2>/dev/null), $(shell md5sum $*)),md5sum $* > $@)
+	@$(if $(filter-out $(shell $(CAT) $@ 2>/dev/null), $(shell $(MD5SUM) $*)),md5sum $* > $@)
 
 #
 # Pipeline Targets - pipeline/dist/
 #
 
 $(clustered_geojson): pipeline/src/cluster_geojson.py.md5 $(geojson).md5
-	.venv/bin/python3 pipeline/src/cluster_geojson.py --input_file $(geojson) --output_file $@
+	$(VENV_PYTHON) pipeline/src/cluster_geojson.py --input_file $(geojson) --output_file $@
 
 $(geojson): $(tpl_geojson).md5 $(archives_geojson).md5
-	.venv/bin/python3 pipeline/src/merge_feature_collections.py \
+	$(VENV_PYTHON) pipeline/src/merge_feature_collections.py \
 	  $(archives_geojson) \
 	  $(tpl_geojson) \
 	  $@
 
 $(streets): pipeline/src/extract_noun_phrases.py.md5 $(archives_images).md5
-	.venv/bin/python3 pipeline/src/extract_noun_phrases.py --noun_type streets > /tmp/streets+examples.txt
-	cut -f2 /tmp/streets+examples.txt | sed 1d | sort > $@
+	$(VENV_PYTHON) pipeline/src/extract_noun_phrases.py --noun_type streets > /tmp/streets+examples.txt
+	$(CUT) -f2 /tmp/streets+examples.txt | $(SED) 1d | $(SORT) > $@
 
 #
 # Pipeline Targets - pipeline/dist/toronto-archives/
@@ -195,7 +211,7 @@ $(streets): pipeline/src/extract_noun_phrases.py.md5 $(archives_images).md5
 # Mining data from parents has outstanding issues. Use a stale version of the
 # file until resolving AP-237
 $(archives_geojson): pipeline/src/generate_geojson.py.md5 $(archives_image_geocodes).md5
-	.venv/bin/python3 pipeline/src/generate_geojson.py \
+	$(VENV_PYTHON) pipeline/src/generate_geojson.py \
 	--input $(archives_images) \
 	--parent_data $(archives_parent_mined_data) \
 	--geocode_results $(archives_image_geocodes) \
@@ -204,21 +220,21 @@ $(archives_geojson): pipeline/src/generate_geojson.py.md5 $(archives_image_geoco
 	--output $@
 
 $(archives_image_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.md5 $(streets).md5 $(archives_images).md5
-	.venv/bin/python3 pipeline/src/geocode.py \
+	$(VENV_PYTHON) pipeline/src/geocode.py \
 	--input $(archives_images) \
 	--street_names $(streets) \
 	--output $@
 
 $(archives_parent_mined_data): pipeline/src/geocode.py.md5 pipeline/src/mine_parents_for_data.py pipeline/dist/series.ndjson.md5 $(archives_image_geocodes).md5
-	.venv/bin/python3 pipeline/src/geocode.py --input pipeline/dist/series.ndjson --output $(archives_series_geocodes) --strict true
-	.venv/bin/python3 pipeline/src/mine_parents_for_data.py --seri`es_geocoded $(archives_series_geocodes) --geocoded_results $(archives_image_geocodes) --output $@
+	$(VENV_PYTHON) pipeline/src/geocode.py --input pipeline/dist/series.ndjson --output $(archives_series_geocodes) --strict true
+	$(VENV_PYTHON) pipeline/src/mine_parents_for_data.py --seri`es_geocoded $(archives_series_geocodes) --geocoded_results $(archives_image_geocodes) --output $@
 
 #
 # Pipeline Targets - pipeline/dist/tpl/
 #
 
 $(tpl_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.md5 $(streets).md5 $(tpl_nonstar_images).md5
-	.venv/bin/python3 pipeline/src/geocode.py \
+	$(VENV_PYTHON) pipeline/src/geocode.py \
 	--input $(tpl_nonstar_images) \
 	--street_names $(streets) \
 	--output $@
@@ -226,7 +242,7 @@ $(tpl_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.
 # Mining data from parents has outstanding issues. Use a stale version of the 
 # file until resolving AP-237
 $(tpl_geojson): pipeline/src/generate_geojson.py.md5 $(tpl_geocodes).md5
-	.venv/bin/python3 pipeline/src/generate_geojson.py \
+	$(VENV_PYTHON) pipeline/src/generate_geojson.py \
 	--input $(tpl_nonstar_images) \
 	--geocode_results $(tpl_geocodes) \
 	--path_to_size pipeline/dist/tpl/image-sizes.txt \
@@ -235,7 +251,7 @@ $(tpl_geojson): pipeline/src/generate_geojson.py.md5 $(tpl_geocodes).md5
 	--output $@
 
 $(tpl_nonstar_images): $(tpl_images).md5 pipeline/src/filter_star_images.py.md5
-	.venv/bin/python3 pipeline/src/filter_star_images.py \
+	$(VENV_PYTHON) pipeline/src/filter_star_images.py \
 		$(tpl_images) \
 		> $(tpl_nonstar_images)
 
@@ -245,9 +261,9 @@ $(tpl_nonstar_images): $(tpl_images).md5 pipeline/src/filter_star_images.py.md5
 
 .PHONY: pipeline-generate-diff-sample
 pipeline-generate-diff-sample:
-	.venv/bin/python3 pipeline/src/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
-	.venv/bin/python3 pipeline/src/generate_geojson.py --sample 0.05 /tmp/geocode_results.new.5pct
+	$(VENV_PYTHON) pipeline/src/geocode.py --sample 0.05 --output /tmp/geocode_results.new.5pct.json
+	$(VENV_PYTHON) pipeline/src/generate_geojson.py --sample 0.05 /tmp/geocode_results.new.5pct
 
 .PHONY: pipeline-calculate-truth-metrics
 pipeline-calculate-truth-metrics: $(geojson).md5 pipeline/dist/truth.gtjson.md5
-	.venv/bin/python3 pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data $(geojson)
+	$(VENV_PYTHON) pipeline/src/calculate_metrics.py --truth_data pipeline/dist/truth.gtjson --computed_data $(geojson)
