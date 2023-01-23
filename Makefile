@@ -3,8 +3,8 @@
 #
 
 RSYNC = rsync
-RSYNC_ARGS_W_DELETE = -avz --delete -e ssh --exclude='.DS_Store' --exclude='.well-known/' --progress
-RSYNC_ARGS_WO_DELETE = -avz -e ssh --exclude='.DS_Store' --exclude='.well-known/' --progress
+RSYNC_ARGS_W_DELETE = $(RSYNC_ARGS_WO_DELETE) --delete --delete-after
+RSYNC_ARGS_WO_DELETE = -avz --exclude='.DS_Store' --exclude='.well-known/' --human-readable --progress --rsh=ssh --size-only --stats
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
 
 #
@@ -59,17 +59,17 @@ requirements.txt: backend/requirements.txt pipeline/requirements.txt
 	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
 	.venv/bin/pip-sync "$@"
 
-.PHONY: sync
+.PHONY: rsync
 # Go "bottom-up" so that "children" are on the server before "parents."
-sync:
-	$(MAKE) backend-sync
-	$(MAKE) frontend-sync
+rsync:
+	$(MAKE) backend-rsync
+	$(MAKE) frontend-rsync
 
-.PHONY: sync-full
+.PHONY: rsync-full
 # Go "bottom-up" so that "children" are on the server before "parents."
-sync-full:
-	$(MAKE) backend-sync-full
-	$(MAKE) frontend-sync-full
+rsync-full:
+	$(MAKE) backend-rsync-full
+	$(MAKE) frontend-rsync-full
 
 #
 # Backend Targets
@@ -93,19 +93,19 @@ backend-serve:
 backend/requirements.txt: backend/requirements.in
 	.venv/bin/pip-compile --output-file "$@" --resolver=backtracking "$<"
 
-.PHONY: backend-sync
+.PHONY: backend-rsync
 # Go "bottom-up" so that "children" are on the server before "parents."
-backend-sync:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/images/" --exclude="*" backend/dist/api/images/ $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/locations/" --exclude="*" backend/dist/api/locations/ $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="*" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api/ $(RSYNC_DEST)
+backend-rsync:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
 
-.PHONY: backend-sync-full
+.PHONY: backend-rsync-full
 # Go "bottom-up" so that "children" are on the server before "parents."
-backend-sync-full:
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/images/" --exclude="*" backend/dist/api/images/ $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/locations/" --exclude="*" backend/dist/api/locations/ $(RSYNC_DEST)
-	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="*" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api/ $(RSYNC_DEST)
+backend-rsync-full:
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
 
 #
 # Frontend Targets
@@ -127,12 +127,12 @@ frontend-init:
 frontend-serve:
 	cd frontend && npm run start
 
-.PHONY: frontend-sync
-frontend-sync:
+.PHONY: frontend-rsync
+frontend-rsync:
 	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
-.PHONY: frontend-sync-full
-frontend-sync-full:
+.PHONY: frontend-rsync-full
+frontend-rsync-full:
 	$(shell grep -v "^#" .env | xargs) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
 #
