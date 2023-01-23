@@ -10,17 +10,16 @@
   },
   "env": {
     "browser": true,
+    "es6": true,
     "jquery": true
   },
   "globals": {
-    "Firebase": false,
-    "LOCATIONS": false,
-    "ZeroClipboard": false,
     "google": false,
     "isKiosk": false
   },
   "rules": {
+    "eqeqeq": 2,
     "no-console": 0,
-    "eqeqeq": 2
+    "sort-imports": "error"
   }
 }

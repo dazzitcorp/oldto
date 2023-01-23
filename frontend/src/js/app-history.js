@@ -1,5 +1,5 @@
-import History from './history';
 import {hashToStateObject, stateObjectToHash, transitionToStateObject} from './url-state';
+import History from './history';
 import {mapPromise} from './viewer';
 
 const APP_NAME = 'OldTO';

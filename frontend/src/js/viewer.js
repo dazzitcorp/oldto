@@ -1,17 +1,24 @@
-import knobBlue from '../images/knob-blue.png';
+/* global LOCATIONS */
+
+// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
 import knobBlack from '../images/knob-black.png';
+// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
+import knobBlue from '../images/knob-blue.png';
+// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
 import knobGrey from '../images/knob-grey.png';
+// eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
 import pinBlack from '../images/pin-black.png';
 
-import {fillDetailsPanel} from './fill-details';
-import {libraryUrlForPhotoId, infoForPhotoId, loadInfoForLatLon} from './photo-info';
-import {MAP_STYLE} from './map-styles';
-import {popular_photos} from './popular-photos';
-import {Popup} from './popup';
+// eslint-disable-next-line sort-imports
 import {hideLocationMarker, locationMarker} from './search';
+import {infoForPhotoId, libraryUrlForPhotoId, loadInfoForLatLon} from './photo-info';
 
-import * as _ from 'underscore';
 import Clipboard from 'clipboard';
+import {MAP_STYLE} from './map-styles';
+import {Popup} from './popup';
+import _ from 'underscore';
+import {fillDetailsPanel} from './fill-details';
+import {popular_photos} from './popular-photos';
 
 // URL base for social media sharing.
 // The Facebook share button requires this; "localhost" URLs won't work in development.
@@ -605,7 +612,7 @@ $(function() {
       updateYearLabels([a, b]);
       updateDebounced(ui);
     },
-    stop: (event, ui) => {
+    stop: (/* event, ui */) => {
       // const [a, b] = ui.values;
       // TODO: analytics event - link - time-slider - page: `/#${a}–${b}`
     }

@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "parcel build --dist-dir dist",
-    "lint": "eslint js/*.js",
+    "lint": "eslint src/js/*.js",
     "start": "parcel --dist-dir tmp --port 8080",
     "test": "npm run lint",
     "watch": "parcel watch --dist-dir tmp"

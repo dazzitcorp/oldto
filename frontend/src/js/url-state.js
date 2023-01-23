@@ -1,10 +1,12 @@
+/* global LOCATIONS */
+
 // The URL looks like one of these:
 // /
 // /#photo_id
 // /#g:lat,lon
 // /#photo_id,g:lat,lon
 
-import {countPhotos, getPopularPhotoIds, latLonToMarker, parseLatLon, createMarker, selectMarker, map, hideExpanded, setViewClass, showExpanded} from './viewer';
+import {countPhotos, createMarker, getPopularPhotoIds, hideExpanded, latLonToMarker, map, parseLatLon, selectMarker, setViewClass, showExpanded} from './viewer';
 import {loadInfoForLatLon} from './photo-info';
 
 // Returns {photo_id:string, g:string}
