@@ -1,48 +1,57 @@
 #!/usr/bin/env python
 """Run a server for the API.
 
-The server defaults to loading data from a `images.geojson` file in
-the current directory. To choose a different file, create a `config.py`
+The server defaults to loading data from `images.geojson` and `images.json`
+files in the current directory. To choose different files, create a `config.py`
 file with:
 
-    GEOJSON_FILE_NAME=...
+    IMAGES_GEOJSON_FILENAME=...
+    IMAGES_JSON_FILENAME=...
 
-or use an environment variable (prefixed with "FLASK"):
+or use environment variables (prefixed with "BACKEND"):
 
-    FLASK_GEOJSON_FILE_NAME=... app.py
+    BACKEND_IMAGES_GEOJSON_FILENAME=... BACKEND_IMAGES_JSON_FILE_NAME=... app.py
+
+(`images.json`, by the way, is a JSON list of "featured features."
+The IDs in the list are image IDs.)
 
 Running this file directly starts a server in debug mode that listens
 on port 8081. For more control, run the server through Flask instead,
 e.g.:
 
-    flask --debug run --extra-files images.geojson --port 8081
+    flask --debug run --extra-files images.geojson:images.json --port 8081
 
-(The `--extra-files images.geojson` bit will cause the server
-to reload if `images.geojson` changes.)
+(The `--extra-files images.geojson:images.json` bit will cause the server
+to reload if either file changes.)
 
 Supported endpoints:
-- /api/locations.json
+
+- /api/locations_ex.json
 - /api/locations/43.651501,-79.359842.json
+
+- /api/images_ex.json
 - /api/images/86514.json
+
+(The `_ex` suffixes are because those files aren't just lists, they're...
+bespoke.)
 """
 
 import hashlib
 import json
 import logging
 import pathlib
-import re
 import shutil
 from collections import Counter, defaultdict
 
 import click
 from flask import Flask, Response, abort, current_app, jsonify, request
 
-# Change ETAG_VERSION when the data hasn't changed but the structure of a response has.
+# Change ETAG_VERSION when the content of the response hasn't changed
+# but the structure has — e.g., a new field was added.
 ETAG_VERSION = "2"
-VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
-def _load_geojson_features(geojson_file_name):
+def _load_images_geojson(images_geojson_file_name):
     def _lat_lng_key(lng, lat):
         """Return a key that concatenates the lat and lng, rounded to 6 decimal
         places. Rounding is done differently in JavaScript and Python; 3.499999
@@ -58,45 +67,88 @@ def _load_geojson_features(geojson_file_name):
 
         return f"{lat:2.6f},{lng:2.6f}"
 
-    # Filter out the null geometries ahead of time.
-    with open(geojson_file_name) as geojson_file:
-        geojson_features = [
+    # Filter out null geometries ahead of time.
+    with open(images_geojson_file_name) as geojson_file:
+        images_geojson = [
             f for f in json.load(geojson_file)["features"] if f["geometry"]
         ]
-        for f in geojson_features:
+        # Add the location and image id to the image's properties.
+        for f in images_geojson:
             f["properties"]["id"] = f["id"]
             f["properties"]["location"] = _lat_lng_key(*f["geometry"]["coordinates"])
-    return geojson_features
+    return images_geojson
 
 
-def _geojson_features_locations(geojson_features):
+def _load_images_json(images_json_file_name):
+    with open(images_json_file_name) as json_file:
+        images_json = json.load(json_file)
+    return images_json
+
+
+def _locations(images_geojson):
+    """{
+        "<location>": {
+            "": <count>,
+            "<year>": <count>
+        }, ...
+    }"""
     locations = defaultdict(Counter)
-    for f in geojson_features:
+    for f in images_geojson:
         location = f["properties"]["location"]
         year = f["properties"]["date"] or ""
         locations[location][year] += 1
     return locations
 
 
-def _geojson_features_locations_json(geojson_features_locations):
-    return json.dumps(geojson_features_locations, sort_keys=True)
+def _locations_json(locations):
+    return json.dumps(locations, sort_keys=True)
 
 
-def _geojson_features_locations_json_etag(geojson_features_locations_json):
+def _images(images_json, by_image):
+    """[
+        {
+            <image properties>
+        }, ...
+    ]"""
+    featured = sorted(
+        [by_image[featured] for featured in images_json if featured in by_image],
+        key=lambda f: (f["date"] or "", f["title"], f["id"]),
+    )
+    return featured
+
+
+def _images_json(images):
+    return json.dumps(images, sort_keys=True)
+
+
+def _etag(locations_json, images_json):
     md5 = hashlib.md5(ETAG_VERSION.encode())
-    md5.update(geojson_features_locations_json.encode())
+    md5.update(locations_json.encode())
+    md5.update(images_json.encode())
     return md5.hexdigest()
 
 
-def _geojson_features_by_location(geojson_features):
+def _by_location(images_geojson):
+    """{
+        "<location>": {
+            "<image>": {
+                <image properties>
+            }, ...
+        }, ...
+    }"""
     locations = defaultdict(dict)
-    for f in geojson_features:
+    for f in images_geojson:
         locations[f["properties"]["location"]][f["id"]] = f["properties"]
     return locations
 
 
-def _geojson_features_by_image(geojson_features):
-    images = {f["id"]: f["properties"] for f in geojson_features}
+def _by_image(images_geojson):
+    """{
+        "<image>": {
+            <image properties>
+        }, ...
+    }"""
+    images = {f["id"]: f["properties"] for f in images_geojson}
     return images
 
 
@@ -107,18 +159,22 @@ def _bake(dir):
     if root.exists():
         shutil.rmtree(root)
     root.mkdir(parents=True)
-    with open(root / "locations.json", "w") as f:
-        f.write(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"])
+
+    with open(root / "locations_ex.json", "w") as f:
+        f.write(current_app.config["LOCATIONS_JSON"])
 
     locations = root / "locations"
     locations.mkdir()
-    for id, location in current_app.config["GEOJSON_FEATURES_BY_LOCATION"].items():
+    for id, location in current_app.config["BY_LOCATION"].items():
         with open(locations / f"{id}.json", "w") as f:
             json.dump(location, f, indent=True, sort_keys=True)
 
+    with open(root / "images_ex.json", "w") as f:
+        f.write(current_app.config["IMAGES_JSON"])
+
     images = root / "images"
     images.mkdir()
-    for id, image in current_app.config["GEOJSON_FEATURES_BY_IMAGE"].items():
+    for id, image in current_app.config["BY_IMAGE"].items():
         with open(images / f"{id}.json", "w") as f:
             json.dump(image, f, indent=True, sort_keys=True)
 
@@ -132,68 +188,66 @@ def create_app():
 
     # First defaults...
     app.config.from_mapping(
-        GEOJSON_FILE_NAME="images.geojson",
+        IMAGES_GEOJSON_FILENAME="images.geojson",
+        IMAGES_JSON_FILENAME="images.json",
     )
     # Then file...
     app.config.from_pyfile("config.py", silent=True)
-    # Then env... (e.g. FLASK_GEOJSON_FILE_NAME)
-    app.config.from_prefixed_env(prefix="FLASK")
-
-    # Since the locations JSON is *the thing* we do on *every* page load,
-    # pre-compute it.
-
-    app.logger.info(f"Loading features from {app.config['GEOJSON_FILE_NAME']}...")
-    app.config["GEOJSON_FEATURES"] = _load_geojson_features(
-        app.config["GEOJSON_FILE_NAME"]
-    )
-    app.config["GEOJSON_FEATURES_LOCATIONS"] = _geojson_features_locations(
-        app.config["GEOJSON_FEATURES"]
-    )
-    app.config["GEOJSON_FEATURES_LOCATIONS_JSON"] = _geojson_features_locations_json(
-        app.config["GEOJSON_FEATURES_LOCATIONS"]
-    )
-    app.config[
-        "GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"
-    ] = _geojson_features_locations_json_etag(
-        app.config["GEOJSON_FEATURES_LOCATIONS_JSON"]
-    )
-    app.config["GEOJSON_FEATURES_BY_LOCATION"] = _geojson_features_by_location(
-        app.config["GEOJSON_FEATURES"]
-    )
-    app.config["GEOJSON_FEATURES_BY_IMAGE"] = _geojson_features_by_image(
-        app.config["GEOJSON_FEATURES"]
-    )
+    # Then env...
+    app.config.from_prefixed_env(prefix="BACKEND")
 
     app.logger.info(
-        f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features "
-        f"from {app.config['GEOJSON_FILE_NAME']}."
-    )
-    app.logger.info(
-        f"The features ETag is {app.config['GEOJSON_FEATURES_LOCATIONS_JSON_ETAG']}."
+        "Loading "
+        f"features from {app.config['IMAGES_GEOJSON_FILENAME']} and "
+        f"featured features from {app.config['IMAGES_JSON_FILENAME']}..."
     )
 
-    @app.route("/api/locations.json")
+    # Load...
+    images_geojson = _load_images_geojson(app.config["IMAGES_GEOJSON_FILENAME"])
+    images_json = _load_images_json(app.config["IMAGES_JSON_FILENAME"])
+
+    # Derive: location id -> image id -> image
+    app.config["BY_LOCATION"] = _by_location(images_geojson)
+
+    # Derive: image id -> image
+    app.config["BY_IMAGE"] = _by_image(images_geojson)
+
+    # Since the locations and images JSON are produced on *every* page load,
+    # pre-compute them.
+
+    # Derive: location ids -> year ids -> counts
+    app.config["LOCATIONS"] = _locations(images_geojson)
+    app.config["LOCATIONS_JSON"] = _locations_json(app.config["LOCATIONS"])
+
+    # Derive: [image, ...]
+    app.config["IMAGES"] = _images(images_json, app.config["BY_IMAGE"])
+    app.config["IMAGES_JSON"] = _images_json(app.config["IMAGES"])
+
+    # Derive: ETag
+    app.config["ETAG"] = _etag(app.config["LOCATIONS_JSON"], app.config["IMAGES_JSON"])
+
+    app.logger.info(f"Loaded {len(app.config['LOCATIONS']):,} features.")
+    app.logger.info(f"Loaded {len(app.config['IMAGES']):,} featured features.")
+    app.logger.info(f"Current ETag is {app.config['ETAG']}.")
+
+    @app.route("/api/locations_ex.json")
     def locations_json():
-        if request.if_none_match.contains(
-            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
-        ):
+        if request.if_none_match.contains(current_app.config["ETAG"]):
             return jsonify(message="OK"), 304
 
         response = Response(
-            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"],
+            current_app.config["LOCATIONS_JSON"],
             mimetype="application/json",
         )
-        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        response.set_etag(current_app.config["ETAG"])
         return response
 
     @app.route("/api/locations/<location_id>.json")
     def locations_location(location_id):
-        if request.if_none_match.contains(
-            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
-        ):
+        if request.if_none_match.contains(current_app.config["ETAG"]):
             return jsonify(message="OK"), 304
 
-        location = app.config["GEOJSON_FEATURES_BY_LOCATION"].get(location_id)
+        location = app.config["BY_LOCATION"].get(location_id)
         if not location:
             abort(404)
 
@@ -201,17 +255,27 @@ def create_app():
             json.dumps(location, sort_keys=True),
             mimetype="application/json",
         )
-        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        response.set_etag(current_app.config["ETAG"])
+        return response
+
+    @app.route("/api/images_ex.json")
+    def images_json():
+        if request.if_none_match.contains(current_app.config["ETAG"]):
+            return jsonify(message="OK"), 304
+
+        response = Response(
+            current_app.config["IMAGES_JSON"],
+            mimetype="application/json",
+        )
+        response.set_etag(current_app.config["ETAG"])
         return response
 
     @app.route("/api/images/<image_id>.json")
     def images_image(image_id):
-        if request.if_none_match.contains(
-            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
-        ):
+        if request.if_none_match.contains(current_app.config["ETAG"]):
             return jsonify(message="OK"), 304
 
-        image = app.config["GEOJSON_FEATURES_BY_IMAGE"].get(image_id)
+        image = app.config["BY_IMAGE"].get(image_id)
         if not image:
             abort(404)
 
@@ -219,7 +283,7 @@ def create_app():
             json.dumps(image, sort_keys=True),
             mimetype="application/json",
         )
-        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
+        response.set_etag(current_app.config["ETAG"])
         return response
 
     @app.cli.command("bake")

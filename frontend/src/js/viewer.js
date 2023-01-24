@@ -8,16 +8,15 @@ import knobGrey from '../images/knob-grey.png';
 import pinBlack from '../images/pin-black.png';
 
 // eslint-disable-next-line sort-imports
+import { IMAGES, LOCATIONS } from './index-init';
 import { hideLocationMarker, locationMarker } from './search';
 import { infoForPhotoId, libraryUrlForPhotoId, loadInfoForLatLon } from './photo-info';
 
 import Clipboard from 'clipboard';
-import { LOCATIONS } from './index-init';
 import { MAP_STYLE } from './map-styles';
 import { Popup } from './popup';
 import _ from 'underscore';
 import { fillDetailsPanel } from './fill-details';
-import { popular_photos } from './popular-photos';
 
 // URL base for social media sharing.
 // The Facebook share button requires this; "localhost" URLs won't work in development.
@@ -393,17 +392,21 @@ export function fillPopularImagesPanel() {
   // Rotate the images daily.
   const elapsedMs = new Date().getTime() - new Date('2015/12/15').getTime();
   const elapsedDays = Math.floor(elapsedMs / 86400 / 1000);
-  const shift = elapsedDays % popular_photos.length;
-  const shownPhotos = popular_photos.slice(shift).concat(popular_photos.slice(0, shift));
+  const shift = elapsedDays % IMAGES.length;
+  const shownPhotos = IMAGES.slice(shift).concat(IMAGES.slice(0, shift));
 
   const makePanel = function(row) {
+    const aspectRatio = row.image.width / row.image.height;
+    const width = 200;
+    const height = width / aspectRatio;
+
     const $panel = $('#popular-photo-template').clone().removeAttr('id');
     $panel.find('a').attr('href', '#' + row.id);
     $panel.find('img')
         .attr('border', '0')  // For IE8
         .attr('data-src', row.image.thumb_url)
-        .attr('height', row.image.height)
-        .attr('width', row.image.width);
+        .attr('height', height)
+        .attr('width', width);
     $panel.find('.desc').text(row.title);
     if (row.date) $panel.find('.date').text(' (' + row.date + ')');
     return $panel.get(0);

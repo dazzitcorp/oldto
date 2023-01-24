@@ -106,7 +106,7 @@ backend-clean:
 
 .PHONY: backend-dist
 backend-dist: backend-clean pipeline-dist
-	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug bake --dir backend/dist/api
+	BACKEND_IMAGES_GEOJSON_FILENAME=pipeline/dist/images.geojson BACKEND_IMAGES_JSON_FILENAME=pipeline/dist/images.json $(VENV_FLASK) --app backend/src/app --debug bake --dir backend/dist/api
 
 .PHONY: backend-init
 backend-init: ;
@@ -139,7 +139,7 @@ backend-rsync-with-delete:
 
 .PHONY: backend-serve
 backend-serve:
-	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug run --port 8081
+	BACKEND_IMAGES_GEOJSON_FILENAME=pipeline/dist/images.geojson BACKEND_IMAGES_JSON_FILENAME=pipeline/dist/images.json $(VENV_FLASK) --app backend/src/app --debug run --port 8081
 
 #
 # Frontend Targets
