@@ -3,11 +3,12 @@
 import './app-history';
 import './search';
 
-import {fillPopularImagesPanel, initializeMap} from './viewer';
+import { fillPopularImagesPanel, initializeMap } from './viewer';
+import { locationsReady } from './index-init';
 
 $(function() {
   fillPopularImagesPanel();
-  mapReady.then(() => {
+  Promise.all([locationsReady, mapReady]).then(() => {
     initializeMap();
   })
 });

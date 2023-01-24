@@ -1,5 +1,3 @@
-/* global LOCATIONS */
-
 // eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
 import knobBlack from '../images/knob-black.png';
 // eslint-disable-next-line import/namespace, import/default, import/no-named-as-default-member, import/no-named-as-default
@@ -10,15 +8,16 @@ import knobGrey from '../images/knob-grey.png';
 import pinBlack from '../images/pin-black.png';
 
 // eslint-disable-next-line sort-imports
-import {hideLocationMarker, locationMarker} from './search';
-import {infoForPhotoId, libraryUrlForPhotoId, loadInfoForLatLon} from './photo-info';
+import { hideLocationMarker, locationMarker } from './search';
+import { infoForPhotoId, libraryUrlForPhotoId, loadInfoForLatLon } from './photo-info';
 
 import Clipboard from 'clipboard';
-import {MAP_STYLE} from './map-styles';
-import {Popup} from './popup';
+import { LOCATIONS } from './index-init';
+import { MAP_STYLE } from './map-styles';
+import { Popup } from './popup';
 import _ from 'underscore';
-import {fillDetailsPanel} from './fill-details';
-import {popular_photos} from './popular-photos';
+import { fillDetailsPanel } from './fill-details';
+import { popular_photos } from './popular-photos';
 
 // URL base for social media sharing.
 // The Facebook share button requires this; "localhost" URLs won't work in development.

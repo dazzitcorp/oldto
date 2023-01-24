@@ -21,7 +21,6 @@ e.g.:
 to reload if `images.geojson` changes.)
 
 Supported endpoints:
-- /api/locations.js?var=lat_lons (default: LOCATIONS)
 - /api/locations.json
 - /api/locations/43.651501,-79.359842.json
 - /api/images/86514.json
@@ -108,10 +107,6 @@ def _bake(dir):
     if root.exists():
         shutil.rmtree(root)
     root.mkdir(parents=True)
-    with open(root / "locations.js", "w") as f:
-        f.write(
-            f"var LOCATIONS={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}"
-        )
     with open(root / "locations.json", "w") as f:
         f.write(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"])
 
@@ -176,24 +171,6 @@ def create_app():
     app.logger.info(
         f"The features ETag is {app.config['GEOJSON_FEATURES_LOCATIONS_JSON_ETAG']}."
     )
-
-    @app.route("/api/locations.js")
-    def locations_js():
-        var = request.args.get("var", "LOCATIONS")
-        if not VAR_RE.match(var):
-            abort(400)
-
-        if request.if_none_match.contains(
-            current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"]
-        ):
-            return jsonify(message="OK"), 304
-
-        response = Response(
-            f"var {var}={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}",
-            mimetype="text/javascript",
-        )
-        response.set_etag(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON_ETAG"])
-        return response
 
     @app.route("/api/locations.json")
     def locations_json():
