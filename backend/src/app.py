@@ -45,7 +45,7 @@ import sys
 from collections import Counter, defaultdict
 
 import click
-from flask import Flask, Response, abort, current_app, jsonify, request
+from flask import Flask, Response, abort, current_app, jsonify, request, url_for
 
 # Change ETAG_VERSION when the content of the response hasn't changed
 # but the structure has -- e.g., a new field was added.
@@ -161,39 +161,13 @@ def _by_image(images_geojson):
     return images
 
 
-def _bake(dir):
-    current_app.logger.info(f"Baking to {dir}...")
-
-    root = pathlib.Path(dir)
-    if root.exists():
-        shutil.rmtree(root)
-    root.mkdir(parents=True)
-
-    with open(root / "locations_ex.json", "w") as f:
-        f.write(current_app.config["LOCATIONS_JSON"])
-
-    locations = root / "locations"
-    locations.mkdir()
-    for id, location in current_app.config["BY_LOCATION"].items():
-        with open(locations / f"{id}.json", "w") as f:
-            json.dump(location, f, indent=True, sort_keys=True)
-
-    with open(root / "images_ex.json", "w") as f:
-        f.write(current_app.config["IMAGES_JSON"])
-
-    images = root / "images"
-    images.mkdir()
-    for id, image in current_app.config["BY_IMAGE"].items():
-        with open(images / f"{id}.json", "w") as f:
-            json.dump(image, f, indent=True, sort_keys=True)
-
-    current_app.logger.info("Done.")
-
-
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     app.logger.setLevel(logging.INFO)
+
+    # Only needed for baking.
+    app.config["SERVER_NAME"] = "localhost"
 
     # First defaults...
     app.config.from_mapping(
@@ -295,12 +269,52 @@ def create_app():
         return response
 
     @app.cli.command("bake")
-    @click.option(
-        "--dir", "-d", default="../dist/api", type=click.Path(file_okay=False)
-    )
+    @click.option("--dir", "-d", default="../dist", type=click.Path(file_okay=False))
     def bake(dir):
         with app.app_context():
-            _bake(dir)
+            current_app.logger.info(f"Baking to {dir}...")
+
+            root = pathlib.Path(dir)
+            root.mkdir(exist_ok=True, parents=True)
+
+            api = root / "api"
+            if api.exists():
+                current_app.logger.info("Removing...")
+                shutil.rmtree(api)
+            api.mkdir()
+
+            locations = root / "api" / "locations"
+            locations.mkdir()
+
+            images = root / "api" / "images"
+            images.mkdir()
+
+            current_app.logger.info("Writing...")
+
+            with open(root / url_for("locations_json", _external=False)[1:], "w") as f:
+                f.write(current_app.config["LOCATIONS_JSON"])
+
+            for id, location in current_app.config["BY_LOCATION"].items():
+                with open(
+                    root
+                    / url_for("locations_location", location_id=id, _external=False)[
+                        1:
+                    ],
+                    "w",
+                ) as f:
+                    json.dump(location, f, indent=True, sort_keys=True)
+
+            with open(root / url_for("images_json", _external=False)[1:], "w") as f:
+                f.write(current_app.config["IMAGES_JSON"])
+
+            for id, image in current_app.config["BY_IMAGE"].items():
+                with open(
+                    root / url_for("images_image", image_id=id, _external=False)[1:],
+                    "w",
+                ) as f:
+                    json.dump(image, f, indent=True, sort_keys=True)
+
+            current_app.logger.info("Done.")
 
     return app
 

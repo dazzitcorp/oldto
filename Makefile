@@ -106,7 +106,7 @@ backend-clean:
 
 .PHONY: backend-dist
 backend-dist: backend-clean pipeline-dist
-	BACKEND_IMAGES_GEOJSON_FILENAME=pipeline/dist/images.geojson BACKEND_IMAGES_JSON_FILENAME=pipeline/dist/images.json $(VENV_FLASK) --app backend/src/app --debug bake --dir backend/dist/api
+	BACKEND_IMAGES_GEOJSON_FILENAME=pipeline/dist/images.geojson BACKEND_IMAGES_JSON_FILENAME=pipeline/dist/images.json $(VENV_FLASK) --app backend/src/app --debug bake --dir backend/dist
 
 .PHONY: backend-init
 backend-init: ;
