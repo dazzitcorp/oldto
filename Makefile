@@ -11,8 +11,8 @@ NPM = npm
 PYTHON = python3
 RM = rm
 RSYNC = rsync
-RSYNC_ARGS_W_DELETE = $(RSYNC_ARGS_WO_DELETE) --delete --delete-after
-RSYNC_ARGS_WO_DELETE = -avz --exclude='.DS_Store' --exclude='.well-known/' --human-readable --progress --rsh=ssh --size-only --stats
+RSYNC_ARGS_W_DELETE = $(RSYNC_ARGS) --delete --delete-after
+RSYNC_ARGS = -avz --exclude='.DS_Store' --exclude='.well-known/' --human-readable --progress --rsh=ssh --size-only --stats
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
 SED = sed
 SORT = sort
@@ -90,11 +90,11 @@ rsync:
 	$(MAKE) backend-rsync
 	$(MAKE) frontend-rsync
 
-.PHONY: rsync-full
+.PHONY: rsync-with-delete
 # Go "bottom-up" so that "children" are on the server before "parents."
-rsync-full:
-	$(MAKE) backend-rsync-full
-	$(MAKE) frontend-rsync-full
+rsync-with-delete:
+	$(MAKE) backend-rsync-with-delete
+	$(MAKE) frontend-rsync-with-delete
 
 #
 # Backend Targets
@@ -120,26 +120,26 @@ backend-reformat:
 	$(VENV_BLACK) backend/src
 	$(VENV_ISORT) --profile black backend/src
 
-.PHONY: backend-serve
-backend-serve:
-	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug run --port 8081
-
 backend/requirements.txt: backend/requirements.in
 	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
 
 .PHONY: backend-rsync
 # Go "bottom-up" so that "children" are on the server before "parents."
 backend-rsync:
-	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
-	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
 
-.PHONY: backend-rsync-full
+.PHONY: backend-rsync-with-delete
 # Go "bottom-up" so that "children" are on the server before "parents."
-backend-rsync-full:
+backend-rsync-with-delete:
 	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/images/" --include="/api/images/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
 	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --include="/api/locations/" --include="/api/locations/*" --exclude="*" backend/dist/api $(RSYNC_DEST)
 	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --include="/api/" --exclude="/api/images/" --exclude="/api/locations/" backend/dist/api $(RSYNC_DEST)
+
+.PHONY: backend-serve
+backend-serve:
+	FLASK_GEOJSON_FILE_NAME=pipeline/dist/images.geojson $(VENV_FLASK) --app backend/src/app --debug run --port 8081
 
 #
 # Frontend Targets
@@ -161,17 +161,17 @@ frontend-init:
 frontend-lint:
 	cd frontend && $(NPM) run lint
 
+.PHONY: frontend-rsync
+frontend-rsync:
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
+
+.PHONY: frontend-rsync-with-delete
+frontend-rsync-with-delete:
+	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
+
 .PHONY: frontend-serve
 frontend-serve:
 	cd frontend && $(NPM) run start
-
-.PHONY: frontend-rsync
-frontend-rsync:
-	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_WO_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
-
-.PHONY: frontend-rsync-full
-frontend-rsync-full:
-	$(shell $(GREP) -v "^#" .env | $(XARGS)) && $(RSYNC) $(RSYNC_ARGS_W_DELETE) --exclude="/api/" frontend/dist/ $(RSYNC_DEST)
 
 #
 # Pipeline Targets
