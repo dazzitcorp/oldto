@@ -44,7 +44,7 @@ VAR_RE = re.compile(r"(?a:^\w+$)")
 
 
 def _load_geojson_features(geojson_file_name):
-    def _lat_lng_key(lat, lng):
+    def _lat_lng_key(lng, lat):
         """Return a key that concatenates the lat and lng, rounded to 6 decimal
         places. Rounding is done differently in JavaScript and Python; 3.499999
         rounds to 3.4 in Python, but 3.5 in JavaScript. The workaround is to
