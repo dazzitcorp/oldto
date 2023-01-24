@@ -20,7 +20,7 @@ import { fillDetailsPanel } from './fill-details';
 
 // URL base for social media sharing.
 // The Facebook share button requires this; "localhost" URLs won't work in development.
-const URL_FOR_SOCIAL = 'https://oldtoronto.sidewalklabs.com/';
+const URL_FOR_SOCIAL = `${window.location.protocol}//${window.location.host}`;
 
 const markers = [];
 export const markerIcons = {
