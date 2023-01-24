@@ -18,8 +18,8 @@
     "isKiosk": false
   },
   "rules": {
-    "eqeqeq": 2,
-    "no-console": 0,
+    "eqeqeq": "error",
+    "no-console":"off",
     "sort-imports": "error"
   }
 }
