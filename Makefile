@@ -16,8 +16,10 @@ RSYNC_ARGS_WO_DELETE = -avz --exclude='.DS_Store' --exclude='.well-known/' --hum
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
 SED = sed
 SORT = sort
+VENV_BLACK = .venv/bin/black
 VENV_FLAKE8 = .venv/bin/flake8
 VENV_FLASK = .venv/bin/flask
+VENV_ISORT = .venv/bin/isort
 VENV_PIP = .venv/bin/pip
 VENV_PIP_COMPILE = .venv/bin/pip-compile
 VENV_PIP_SYNC = .venv/bin/pip-sync
@@ -75,6 +77,9 @@ init: backend-init frontend-init pipeline-init
 .PHONY: lint
 lint: backend-lint frontend-lint pipeline-lint ;
 
+.PHONY: reformat
+reformat: backend-reformat pipeline-reformat ;
+
 requirements.txt: backend/requirements.txt pipeline/requirements.txt
 	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
 	$(VENV_PIP_SYNC) "$@"
@@ -109,6 +114,11 @@ backend-init: ;
 .PHONY: backend-lint
 backend-lint:
 	$(VENV_FLAKE8) backend/src
+
+.PHONY: backend-reformat
+backend-reformat:
+	$(VENV_BLACK) backend/src
+	$(VENV_ISORT) --profile black backend/src
 
 .PHONY: backend-serve
 backend-serve:
@@ -189,6 +199,11 @@ pipeline-init: pipeline-clean
 .PHONY: pipeline-lint
 pipeline-lint:
 	$(VENV_FLAKE8) pipeline/src
+
+.PHONY: pipeline-reformat
+pipeline-reformat:
+	$(VENV_BLACK) pipeline/src
+	$(VENV_ISORT) --profile black pipeline/src
 
 pipeline/requirements.txt: pipeline/requirements.in
 	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
