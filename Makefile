@@ -12,7 +12,7 @@ PYTHON = python3
 RM = rm
 RSYNC = rsync
 RSYNC_ARGS_W_DELETE = $(RSYNC_ARGS) --delete --delete-after
-RSYNC_ARGS = -avz --exclude='.DS_Store' --exclude='.well-known/' --human-readable --progress --rsh=ssh --size-only --stats
+RSYNC_ARGS = -avz --checksum --exclude='.DS_Store' --exclude='.well-known/' --human-readable --rsh=ssh --stats
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
 SED = sed
 SORT = sort
