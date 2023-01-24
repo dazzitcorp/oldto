@@ -41,17 +41,24 @@ import json
 import logging
 import pathlib
 import shutil
+import sys
 from collections import Counter, defaultdict
 
 import click
 from flask import Flask, Response, abort, current_app, jsonify, request
 
 # Change ETAG_VERSION when the content of the response hasn't changed
-# but the structure has — e.g., a new field was added.
+# but the structure has -- e.g., a new field was added.
 ETAG_VERSION = "2"
 
 
-def _load_images_geojson(images_geojson_file_name):
+def _check_can_load(filename):
+    if not pathlib.Path(filename).is_file():
+        print(f"file not found: {filename}", file=sys.stderr)
+        exit(1)
+
+
+def _load_images_geojson(images_geojson_filename):
     def _lat_lng_key(lng, lat):
         """Return a key that concatenates the lat and lng, rounded to 6 decimal
         places. Rounding is done differently in JavaScript and Python; 3.499999
@@ -67,8 +74,9 @@ def _load_images_geojson(images_geojson_file_name):
 
         return f"{lat:2.6f},{lng:2.6f}"
 
-    # Filter out null geometries ahead of time.
-    with open(images_geojson_file_name) as geojson_file:
+    _check_can_load(images_geojson_filename)
+    with open(images_geojson_filename) as geojson_file:
+        # Filter out null geometries ahead of time.
         images_geojson = [
             f for f in json.load(geojson_file)["features"] if f["geometry"]
         ]
@@ -79,8 +87,9 @@ def _load_images_geojson(images_geojson_file_name):
     return images_geojson
 
 
-def _load_images_json(images_json_file_name):
-    with open(images_json_file_name) as json_file:
+def _load_images_json(images_json_filename):
+    _check_can_load(images_json_filename)
+    with open(images_json_filename) as json_file:
         images_json = json.load(json_file)
     return images_json
 
@@ -196,15 +205,14 @@ def create_app():
     # Then env...
     app.config.from_prefixed_env(prefix="BACKEND")
 
-    app.logger.info(
-        "Loading "
-        f"features from {app.config['IMAGES_GEOJSON_FILENAME']} and "
-        f"featured features from {app.config['IMAGES_JSON_FILENAME']}..."
-    )
-
     # Load...
+    app.logger.info(f"Loading {app.config['IMAGES_GEOJSON_FILENAME']}...")
     images_geojson = _load_images_geojson(app.config["IMAGES_GEOJSON_FILENAME"])
+
+    app.logger.info(f"Loading {app.config['IMAGES_JSON_FILENAME']}...")
     images_json = _load_images_json(app.config["IMAGES_JSON_FILENAME"])
+
+    app.logger.info("Working...")
 
     # Derive: location id -> image id -> image
     app.config["BY_LOCATION"] = _by_location(images_geojson)
