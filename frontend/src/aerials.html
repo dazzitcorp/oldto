@@ -15,6 +15,20 @@
   <link rel="stylesheet" href='styles/aerials.css'/>
   <link rel="icon" href="images/OT-favicon-32x32.png">
 
+  <script type="text/javascript">
+    let _mapReady;
+
+    window.mapReady = new Promise((resolve) => {
+      _mapReady = resolve;
+    });
+
+    window.mapInit = () => {
+      _mapReady();
+    }
+  </script>
+
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=$GOOGLE_MAPS_API_KEY&callback=mapInit"></script>
+
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
   <script defer src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
 

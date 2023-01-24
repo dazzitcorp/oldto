@@ -1,6 +1,6 @@
 # OldTO
 
-OldTO is a site that showcases historic photographs of Toronto by placing them 
+OldTO is a site that showcases historic photographs of Toronto by placing them
 on a map.
 
 You can read more about it on the [Sidewalk Labs Blog][blog].
@@ -9,7 +9,7 @@ Here's a screen recording of what OldTO looked like (YouTube):
 
 [![Screen recording of OldTO](https://img.youtube.com/vi/krW-wl7gACA/0.jpg)][youtube]
 
-While the OldTO is no longer hosted by Sidewalk Labs, the source code was 
+While the OldTO is no longer hosted by Sidewalk Labs, the source code was
 available in a repo. This revival is based on that code.
 
 ## How it works
@@ -33,45 +33,41 @@ There are three basic parts to this:
 * the frontend that presents data.
 
 When you first get going, create a `.env` file (or, even better, separate
-`.env.development` and `.env.production` files) in the `frontend` directory 
+`.env.development` and `.env.production` files) in the `frontend` directory
 with the following keys and values:
 
     GOOGLE_MAPS_API_KEY=...
-    GOOGLE_MAPS_API_KEY_FOR_GEOCODING=
     MAPBOX_API_KEY=...
 
-and a `.env` file in the `pipeline` directory with the following keys 
+and a `.env` file in the `pipeline` directory with the following keys
 and values:
 
     GOOGLE_MAPS_API_KEY=...
 
 Why two files? Because you'll probably want to use different keys, in order
 to use different restrictions. (As you'll see below, that's the same reason
-you might want different development and production keys.)
+you might want different development and production keys too.)
 
 Here's my current understanding:
 
 * frontend
   * GOOGLE_MAPS_API_KEY
     * Can be restricted by HTTP referer
-    * Can be restricted to Maps JavaScript API
-      * `corrections.js`, a tool for internal use, also requires the 
-        Places API — but it isn't currently working
-  * GOOGLE_MAPS_API_KEY_FOR_GEOCODING
-    * Can't be restricted by HTTP referer?
-    * Can't be restricted by IP?
     * Can be restricted to Geocoding API
+    * Can be restricted to Maps JavaScript API
+      * `corrections.js`, a tool for internal use, also requires the
+        Places API — but it isn't currently working
   * MAPBOX_API_KEY
     * Can be restricted by HTTP referer
 * pipeline
   * GOOGLE_MAPS_API_KEY
-    * Can be restricted by IP?
+    * Can be restricted by IP
     * Can be restricted to Geocoding API
 
 Different HTTP referers is why you'll probably want to use different development
 and production keys in the frontend.
 
-(The pipeline doesn't need separate development and production keys because it's 
+(The pipeline doesn't need separate development and production keys because it's
 really "development only.")
 
 Now you're ready to perform some first-time initialization:

@@ -96,28 +96,35 @@ $('#location-search').on('keypress', function(e) {
   document.activeElement.blur();  // hides keyboard for kiosk
 
   const address = $(this).val();
-  $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', {
-    address,
-    key: process.env.GOOGLE_MAPS_API_KEY_FOR_GEOCODING,
-    // This is a bit tight to avoid a bug with how Google geocodes "140 Yonge".
-    bounds: '43.598284,-79.448761|43.712376, -79.291565'
-  }).done(response => {
-    if (response && response.results && response.results.length > 0) {
-      const latLng = response.results[0].geometry.location;
+  // This is a bit tight to avoid a bug with how Google geocodes "140 Yonge".
+  const bounds = {
+    south: 43.598284,
+    west: -79.448761,
+    north: 43.712376,
+    east: -79.291565
+  };
+
+  new google.maps.Geocoder().geocode({
+    address: address,
+  bounds: bounds
+  }, (results, status) => {
+    if (status === 'OK') {
+      // TODO: analytics event - link - address-search
+      const latLng = results[0].geometry.location;
+
       if (marker) {
         marker.setMap(null);
       }
-
-      const {lng, lat} = latLng;
       marker = new mapboxgl.Marker()
-        .setLngLat([lng, lat])
+        .setLngLat([latLng.lng(), latLng.lat()])
         .addTo(map);
 
-      map.setCenter([lng, lat]);
+      map.setCenter([latLng.lng(), latLng.lat()]);
       map.setZoom(15);
+    } else {
+      // TODO: analytics event - link - address-search-fail
+      console.error(status);
     }
-  }).fail(e => {
-    console.error(e);
-    // TODO: analytics event - link - address-search-fail
   })
+
 });
