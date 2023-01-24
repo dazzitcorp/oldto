@@ -23,15 +23,15 @@ JSON_OUTPUT = "pipeline/dist/by-decade.json"
 # These regular expressions are applied in order to dates until none of them match.
 # If any matches, the date is replaced with the first capture group.
 CLEANER_RES = [
-    re.compile("^(?:ca.|circa)\s*(.*)"),  # remove leading "ca", e.g. 'ca. June 1922'
-    re.compile("^(.*)\?$"),  # remove trailing ?, e.g '1948-?'
-    re.compile("^[\[(\{](.*)"),  # remove surrounding braces, e.g. '[1890]'
-    re.compile("^(.*)[\]\}).]$"),  # remove surrounding braces, e.g. '[1890]'
-    re.compile("^\s+(.*)"),  # leading whitespace
-    re.compile("(.*)\s+$"),  # trailing whitespace
+    re.compile(r"^(?:ca.|circa)\s*(.*)"),  # remove leading "ca", e.g. 'ca. June 1922'
+    re.compile(r"^(.*)\?$"),  # remove trailing ?, e.g '1948-?'
+    re.compile(r"^[\[(\{](.*)"),  # remove surrounding braces, e.g. '[1890]'
+    re.compile(r"^(.*)[\]\}).]$"),  # remove surrounding braces, e.g. '[1890]'
+    re.compile(r"^\s+(.*)"),  # leading whitespace
+    re.compile(r"(.*)\s+$"),  # trailing whitespace
     re.compile(r".*originally created (.*)"),
     # meaningful keywords that we just ignore for now.
-    re.compile("^(?:spring|summer|fall|winter) (.*)"),
+    re.compile(r"^(?:spring|summer|fall|winter) (.*)"),
 ]
 
 
@@ -101,8 +101,9 @@ def parse_year(date_string):
     """Parse string and extract a range of years from date.
 
     Return:
-        None if a year is not found in the string, otherwise the parsed date is returned as a
-        (start_year, end_year) string tuple. If either is unknown, it will be None.
+        None if a year is not found in the string, otherwise the parsed date
+        is returned as a (start_year, end_year) string tuple. If either is
+        unknown, it will be None.
     """
     if len(date_string) == 0:
         return None
@@ -122,7 +123,8 @@ def parse_year(date_string):
     if result:
         return result
     else:
-        # If the whitelist of patterns fails, look for four digit numbers as a last resort.
+        # If the whitelist of patterns fails, look for four digit numbers as
+        # a last resort.
         return _find_loose_date(date_string)
 
 
@@ -153,7 +155,8 @@ def write_as_json_to_file(dictionary, filename):
 
 
 def main(input_filename, json_output):
-    """Searches the images.ndjson file and counts the number of dates found per decade."""
+    """Searches the images.ndjson file and counts the number of dates found per
+    decade."""
     num_parsed = 0
     num_total = 0
     by_decade = defaultdict(int)

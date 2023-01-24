@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate a list of place names and associated lat/lngs for geocoding.
 
-This takes the list of noun phrases (noun-phrase-pois.txt) and attempts to attach OSM features to
-them. It does this using a few strategies:
+This takes the list of noun phrases (noun-phrase-pois.txt) and attempts to attach
+OSM features to them. It does this using a few strategies:
 
     - Match either the "name" or "wiki" tag in an OSM feature, subject to a few tweaks:
         - Removing "Toronto" ("Toronto City Hall" → "City Hall")
@@ -12,8 +12,8 @@ them. It does this using a few strategies:
         - Having an associated Wikipedia article gives you points.
     - Blacklisting a few terms that are known to be problematic.
 
-The resulting list goes in toronto-pois.osm.csv. It's ~500-600 terms, short enough to be
-verified by hand.
+The resulting list goes in toronto-pois.osm.csv. It's ~500-600 terms, short enough
+to be verified by hand.
 
 To update, grab an Ontario OSM extract and run:
 
@@ -25,12 +25,12 @@ To update, grab an Ontario OSM extract and run:
     osmfilter toronto.osm \
       --drop-author \
       --drop-version \
-      --keep-tags='all name= old_name= loc_name= building= leisure= subway= wikipedia= amenity= tourism= place= highway= area= bBox=' \  # noqa
+      --keep-tags='all name= old_name= loc_name= building= leisure= subway= wikipedia= amenity= tourism= place= highway= area= bBox=' \
       --keep='name=' \
       -o=toronto+names.osm
     ./extract_noun_phrases.py pois 1 > noun-phrase-pois.txt
     ./generate_pois.py
-"""
+"""  # noqa: E501
 
 import csv
 import itertools
@@ -146,7 +146,8 @@ for el in root.osm.node:
         blacklist_places.add(name)
 
     # Roads should be handled via addresses or cross streets.
-    # But sometimes squares are labeled as "highway=pedestrian", e.g. Nathan Phillips Square.
+    # But sometimes squares are labeled as "highway=pedestrian",
+    # e.g. Nathan Phillips Square.
     if tags.get("highway") and not tags.get("area") == "yes":
         continue
 

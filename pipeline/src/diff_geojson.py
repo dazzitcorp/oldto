@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
-"""Diffs a before and after geojson producing deleted, after, changed and unchanged geojson files.
+"""Diffs a before and after geojson producing deleted, after, changed and
+unchanged geojson files.
 
-This can be used to estimate what locations in the before input have been corrected in the after
-input. In order to estimate the correctness of features one can assume that features with location
-changes in the after geojson are corrected and any features that haven't changed location to
-remain incorrect. Note: this would label deleted features as incorrect.
+This can be used to estimate what locations in the before input have been
+corrected in the after input. In order to estimate the correctness of features
+one can assume that features with location changes in the after geojson are
+corrected and any features that haven't changed location to remain incorrect.
+Note: this would label deleted features as incorrect.
 
- If the number of features in either geojson are too numerous, you can restrict the
-features used for the diffing by passing the sample_set flag a pipe delimited set of ids as a
-restriction. For example, this would be useful if a second geojson is constructed over a subset of
-ids that are suspected of being incorrect.
+ If the number of features in either geojson are too numerous, you can restrict
+the features used for the diffing by passing the sample_set flag a pipe delimited
+set of ids as a restriction. For example, this would be useful if a second
+geojson is constructed over a subset of ids that are suspected of being incorrect.
 
 Output .geojson files:
     - dropped: features from the before file that no longer appear in the after
-    - added: features from the before file that are in the after file, but in the before
+    - added: features from the before file that are in the after file, but in the
+      before
     - changed: features that appear in both files, but are in different locations
     - unchanged: features that appear in both files, and are in the same location
 """

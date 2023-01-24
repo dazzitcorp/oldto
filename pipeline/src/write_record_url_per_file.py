@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Write out a set of thick record URLs to fetch, one per File/Series/etc.
 
-The idea here is that there's valuable data on the File/Subseries pages, but we have no way of
-figuring out what the unique ID for the series is without fetching the record page for an image
-belonging to it. This script assembles a minimal set of IDs that should get us links to all the
-series pages.
+The idea here is that there's valuable data on the File/Subseries pages,
+but we have no way of figuring out what the unique ID for the series is
+without fetching the record page for an image belonging to it. This script
+assembles a minimal set of IDs that should get us links to all the series
+pages.
 
 Usage:
 

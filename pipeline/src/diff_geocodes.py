@@ -3,10 +3,13 @@
 
 Usage:
 
-    ./pipeline/src/diff_geocodes.py old/geocode_results.json pipeline/dist/geocode_results.json
+    ./pipeline/src/diff_geocodes.py \
+        old/geocode_results.json \
+        pipeline/dist/geocode_results.json
 
-This works best if you copy the version of pipeline/dist/geocode_results.json on the master branch to a
-temp location and run against the version in your branch.
+This works best if you copy the version of pipeline/dist/geocode_results.json
+on the master branch to a temp location and run against the version in your
+branch.
 """
 
 import argparse

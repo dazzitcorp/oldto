@@ -4,7 +4,7 @@ from nose.tools import eq_
 from parameterized import parameterized
 
 sys.path.append("pipeline/src")
-from extract_noun_phrases import extract_nouns, is_street
+from extract_noun_phrases import extract_nouns, is_street  # noqa: E402
 
 
 @parameterized(
@@ -19,7 +19,8 @@ from extract_noun_phrases import extract_nouns, is_street
         ),
         ("Carol Turofsky", ["Carol Turofsky"]),
         (
-            "Construction of retaining wall on railway lands, Chaplin Cres. north of Eglinton Ave. W.",
+            "Construction of retaining wall on railway lands, "
+            "Chaplin Cres. north of Eglinton Ave. W.",
             ["Chaplin Cres.", "Eglinton Ave. W."],
         ),
         (

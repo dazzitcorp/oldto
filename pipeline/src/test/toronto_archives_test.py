@@ -3,7 +3,7 @@ import sys
 from nose.tools import eq_
 
 sys.path.append("pipeline/src")
-from toronto_archives import get_citation_hierarchy  # noqa
+from toronto_archives import get_citation_hierarchy  # noqa: E402
 
 
 def test_get_citation_hierarchy():

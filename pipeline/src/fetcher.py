@@ -47,7 +47,8 @@ class Response(object):
 
 
 class CacheSession(requests.Session):
-    """Monkey patch this is to replace requests.Session in order to cache get requests."""
+    """Monkey patch this is to replace requests.Session in order to cache get
+    requests."""
 
     def __init__(self, cache=None):
         super(CacheSession, self).__init__()
@@ -78,7 +79,8 @@ class Cache(object):
         self._urls_file = os.path.join(self._cache_dir, "urls.txt")
 
     def _cache_path(self, url):
-        """Returns path to the cached version of an URL, regardless of whether it exists."""
+        """Returns path to the cached version of an URL, regardless of whether
+        it exists."""
         parsed_url = urllib.parse.urlparse(url)
         dir_path = os.path.join(self._cache_dir, parsed_url.netloc)
         query_minus_api_key = urllib.parse.urlencode(

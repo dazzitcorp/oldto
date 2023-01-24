@@ -34,7 +34,14 @@ def load_image_sizes(sizes_file):
     # The image sizes file is the output of something like
     # identify 'images/*.jpg' > image-sizes.txt
     # A sample line looks like:
-    # images/f0124_fl0001_id0001.jpg JPEG 1050x715 1050x715+0+0 8-bit sRGB 122804B 0.000u 0:00.009
+    # images/f0124_fl0001_id0001.jpg \
+    #   JPEG 1050x715 \
+    #   1050x715+0+0 \
+    #   8-bit \
+    #   sRGB \
+    #   122804B \
+    #   0.000u \
+    #   0:00.009
     path_to_dimensions = {}
     for line in open(sizes_file):
         parts = line.split(" ")
@@ -244,9 +251,10 @@ if __name__ == "__main__":
             os.path.basename(image_url), path_to_size.get(id_ + ".jpg")
         )
 
-        # If dims is none it means that ImageMagick was not able to parse the image so it doesn't
-        # appear in our image dimension list. This could be because the image was corrupt, or did
-        # not exist on the original website. Regardless, it can't be displayed.
+        # If dims is none it means that ImageMagick was not able to parse the
+        # image so it doesn't appear in our image dimension list. This could be
+        # because the image was corrupt, or did not exist on the original website.
+        # Regardless, it can't be displayed.
         if dims is None:
             num_invalid += 1
             continue

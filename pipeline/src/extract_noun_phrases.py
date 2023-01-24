@@ -47,7 +47,8 @@ def extract_nouns(title):
     for match in noun_pat.finditer(title):
         term = match.group()
         if match.start() == 0 and not has_multiple_caps(term):
-            continue  # skip leading capitalized words that aren't part of a longer phrase.
+            # skip leading capitalized words that aren't part of a longer phrase.
+            continue
         nouns.append(term.strip())
     return nouns
 

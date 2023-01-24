@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Calculate metrics between two GTJSON files.
 
-This will print row-by-row metrics and overall summary statistics. These can be copy/pasted into
-a spreadsheet for further analysis.
+This will print row-by-row metrics and overall summary statistics. These can be
+copy/pasted into a spreadsheet for further analysis.
 
 Taxonomy of errors:
 

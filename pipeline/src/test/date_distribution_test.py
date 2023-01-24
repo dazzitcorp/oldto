@@ -4,7 +4,7 @@ from nose.tools import eq_
 from parameterized import parameterized
 
 sys.path.append("pipeline/src")
-from date_distribution import parse_year  # noqa
+from date_distribution import parse_year  # noqa: E402
 
 
 @parameterized(

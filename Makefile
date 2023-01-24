@@ -16,6 +16,7 @@ RSYNC_ARGS_WO_DELETE = -avz --exclude='.DS_Store' --exclude='.well-known/' --hum
 RSYNC_DEST = $${SSH_USER}@$${SSH_HOST}:$${SSH_DIR}
 SED = sed
 SORT = sort
+VENV_FLAKE8 = .venv/bin/flake8
 VENV_FLASK = .venv/bin/flask
 VENV_PIP = .venv/bin/pip
 VENV_PIP_COMPILE = .venv/bin/pip-compile
@@ -71,6 +72,9 @@ init: backend-init frontend-init pipeline-init
 	$(PYTHON) -m venv .venv
 	$(VENV_PIP) install -r requirements.txt
 
+.PHONY: lint
+lint: backend-lint frontend-lint pipeline-lint ;
+
 requirements.txt: backend/requirements.txt pipeline/requirements.txt
 	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
 	$(VENV_PIP_SYNC) "$@"
@@ -101,6 +105,10 @@ backend-dist: backend-clean pipeline-dist
 
 .PHONY: backend-init
 backend-init: ;
+
+.PHONY: backend-lint
+backend-lint:
+	$(VENV_FLAKE8) backend/src
 
 .PHONY: backend-serve
 backend-serve:
@@ -139,6 +147,10 @@ frontend-dist: frontend-clean
 frontend-init:
 	cd frontend && $(NPM) install
 
+.PHONY: frontend-lint
+frontend-lint:
+	cd frontend && $(NPM) run lint
+
 .PHONY: frontend-serve
 frontend-serve:
 	cd frontend && $(NPM) run start
@@ -166,13 +178,17 @@ pipeline-clean:
 pipeline-dist: $(geojson).md5 ;
 
 .PHONY: pipeline-init
-# By making sure that files are newer than input sources, we will make sure 
+# By making sure that files are newer than input sources, we will make sure
 # steps only run if the .md5 file changes, instead of using timestamps. This
 # is useful if you're using a new repo from version control, since it's
 # impossible to trust those timestamps.
 pipeline-init: pipeline-clean
 	$(FIND) pipeline/dist/ ! -name '*.md5' ! -name 'toronto-pois.osm.csv' ! -name 'images.ndjson' ! -name 'series.ndjson' ! -name 'truth.gtjson'  | $(GREP) -v 'Old Toronto Responses' | $(XARGS) touch
 	$(FIND) pipeline/src/ -maxdepth 1 ! -name '*.md5' | $(XARGS) touch
+
+.PHONY: pipeline-lint
+pipeline-lint:
+	$(VENV_FLAKE8) pipeline/src
 
 pipeline/requirements.txt: pipeline/requirements.in
 	$(VENV_PIP_COMPILE) --output-file "$@" --resolver=backtracking "$<"
@@ -239,7 +255,7 @@ $(tpl_geocodes): pipeline/src/geocode.py.md5 pipeline/dist/toronto-pois.osm.csv.
 	--street_names $(streets) \
 	--output $@
 
-# Mining data from parents has outstanding issues. Use a stale version of the 
+# Mining data from parents has outstanding issues. Use a stale version of the
 # file until resolving AP-237
 $(tpl_geojson): pipeline/src/generate_geojson.py.md5 $(tpl_geocodes).md5
 	$(VENV_PYTHON) pipeline/src/generate_geojson.py \

@@ -2,7 +2,7 @@ import sys
 from io import StringIO
 
 sys.path.append("pipeline/src")
-from generate_geojson import load_patch_csv  # noqa
+from generate_geojson import load_patch_csv  # noqa: E402
 
 TEST_DATA = StringIO(
     """Timestamp,Photo Id,Location suggestion,Lat,Lng,Fixed

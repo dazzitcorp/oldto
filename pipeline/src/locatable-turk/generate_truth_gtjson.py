@@ -64,7 +64,8 @@ if __name__ == "__main__":
             if start and not end:
                 date = start
             elif end and not start:
-                # TODO(danvk): this is kind of a lie; https://stackoverflow.com/q/48696238/388951
+                # TODO(danvk): this is kind of a lie;
+                # https://stackoverflow.com/q/48696238/388951
                 date = end
             elif start and end:
                 if start == end:

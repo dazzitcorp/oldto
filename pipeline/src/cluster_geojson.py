@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-""" Takes a .geojson file that is a feature collection and rewrites the coordinates according the
-centroid of the cluster computed by the dbscan algorithm.
+""" Takes a .geojson file that is a feature collection and rewrites the
+coordinates according the centroid of the cluster computed by the dbscan
+algorithm.
 """
 import argparse
 import json
@@ -42,8 +43,8 @@ def cluster_coordinates(coordinates, epsilon, ids):
         coordinates: an array of coordinates ((x1, y1), (x2, y2) ... (xn, yn))
         epsilon: the haversine distance used to determine dbscan's eps neighborhoods
     Returns:
-        a list where each element of the original coordinates has a new coordinate, the centroid
-        of its cluster or it's original coordinate if it's a noise point.
+        a list where each element of the original coordinates has a new coordinate,
+        the centroid of its cluster or it's original coordinate if it's a noise point.
     """
     coordinates = np.array([np.array(c) for c in coordinates])
     db = DBSCAN(eps=epsilon, metric="haversine", min_samples=2).fit(

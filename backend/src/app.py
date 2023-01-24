@@ -12,7 +12,7 @@ or use an environment variable (prefixed with "FLASK"):
     FLASK_GEOJSON_FILE_NAME=... app.py
 
 Running this file directly starts a server in debug mode that listens
-on port 8081. For more control, run the server through Flask instead, 
+on port 8081. For more control, run the server through Flask instead,
 e.g.:
 
     flask --debug run --extra-files images.geojson --port 8081
@@ -45,10 +45,10 @@ VAR_RE = re.compile(r"(?a:^\w+$)")
 
 def _load_geojson_features(geojson_file_name):
     def _lat_lng_key(lat, lng):
-        """Return a key that concatenates the lat and lng, rounded to 6 decimal places.
-        Rounding is done differently in JavaScript and Python; 3.499999 rounds to 3.4
-        in Python, but 3.5 in JavaScript. The workaround is to first round to 7 decimals,
-        and then to 6.
+        """Return a key that concatenates the lat and lng, rounded to 6 decimal
+        places. Rounding is done differently in JavaScript and Python; 3.499999
+        rounds to 3.4 in Python, but 3.5 in JavaScript. The workaround is to
+        first round to 7 decimals, and then to 6.
         """
 
         def _round6(f):
@@ -113,9 +113,7 @@ def _bake(dir):
             f"var LOCATIONS={current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']}"
         )
     with open(root / "locations.json", "w") as f:
-        f.write(
-            current_app.config['GEOJSON_FEATURES_LOCATIONS_JSON']
-        )
+        f.write(current_app.config["GEOJSON_FEATURES_LOCATIONS_JSON"])
 
     locations = root / "locations"
     locations.mkdir()
@@ -129,7 +127,7 @@ def _bake(dir):
         with open(images / f"{id}.json", "w") as f:
             json.dump(image, f, indent=True, sort_keys=True)
 
-    current_app.logger.info(f"Done.")
+    current_app.logger.info("Done.")
 
 
 def create_app():
@@ -172,7 +170,8 @@ def create_app():
     )
 
     app.logger.info(
-        f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features from {app.config['GEOJSON_FILE_NAME']}."
+        f"Loaded {len(app.config['GEOJSON_FEATURES']):,} features "
+        f"from {app.config['GEOJSON_FILE_NAME']}."
     )
     app.logger.info(
         f"The features ETag is {app.config['GEOJSON_FEATURES_LOCATIONS_JSON_ETAG']}."

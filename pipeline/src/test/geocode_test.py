@@ -2,11 +2,11 @@ import json
 import sys
 import tempfile
 
-from nose.tools import eq_, ok_  # noqa
-from parameterized import parameterized  # noqa
+from nose.tools import eq_, ok_
+from parameterized import parameterized
 
 sys.path.append("pipeline/src")
-import geocode  # noqa
+import geocode  # noqa: E402
 
 
 class MapsClientMock(object):
@@ -14,7 +14,8 @@ class MapsClientMock(object):
         search_term_to_response = {
             "Davenport Road and Uxbridge Avenue, toronto, ontario, canada": [
                 {
-                    "formatted_address": "Uxbridge Ave & Davenport Rd, Toronto, ON M6N, Canada",
+                    "formatted_address": "Uxbridge Ave & Davenport Rd, "
+                    "Toronto, ON M6N, Canada",
                     "geometry": {
                         "location": {"lat": 43.6701965, "lng": -79.45703689999999},
                         "location_type": "GEOMETRIC_CENTER",
@@ -41,7 +42,8 @@ class MapsClientMock(object):
                         "location": {"lat": 43.655123, "lng": -79.41658699999999},
                         "location_type": "RANGE_INTERPOLATED",
                     },
-                    "place_id": "EiwxNjEgQmVhdHJpY2UgU3QsIFRvcm9udG8sIE9OIE02RyAxQjksIENhbmFkYQ",
+                    "place_id": "EiwxNjEgQmVhdHJpY2UgU3QsIFRvcm9udG8s"
+                    "IE9OIE02RyAxQjksIENhbmFkYQ",
                     "types": ["street_address"],
                 }
             ],
@@ -61,7 +63,8 @@ images = [
         "uniqueID": "100004",
     },
     {
-        "title": "Northwest corner Davenport Road and Uxbridge Avenue - Defective building",
+        "title": "Northwest corner Davenport Road and Uxbridge Avenue - "
+        "Defective building",
         "date": "April 17, 1915",
         "uniqueID": "100007",
     },
@@ -307,19 +310,23 @@ def extract_exact_address_test(original, result):
             ("Bay Street", "Wellington Street West"),
         ),
         (
-            "House of Demo - view of southeast corner of building at Sherbourne and Esplanade",
+            "House of Demo - view of southeast corner of building at "
+            "Sherbourne and Esplanade",
             ("Sherbourne", "Esplanade"),
         ),
         (
-            "Norseman & Development Ltd, 1304 Woodbine Avenue, at Holborne Avenue, south-west corner",
+            "Norseman & Development Ltd, 1304 Woodbine Avenue, at Holborne Avenue, "
+            "south-west corner",
             ("Woodbine Avenue", "Holborne Avenue"),
         ),
         (
-            "Grocery, 391 Brock Avenue, 389 Brock Avenue, at Muir Avenue, southeast corner",
+            "Grocery, 391 Brock Avenue, 389 Brock Avenue, at Muir Avenue, "
+            "southeast corner",
             ("Brock Avenue", "Muir Avenue"),
         ),
         (
-            "Former corner store, 857 and 859 Lansdowne Avenue, north of Wallace Avenue",
+            "Former corner store, 857 and 859 Lansdowne Avenue, north of "
+            "Wallace Avenue",
             None,
         ),
         ("NE corner Gerrard and River", ("Gerrard", "River")),
@@ -329,8 +336,9 @@ def extract_exact_address_test(original, result):
         ),
         ("Three eggs, large, small & long, south-east corner", None),
         (
-            "Demolition of a building, used by Railway Company and Toronto Railway Company, located on"
-            "the northwest corner of Front St. E. and Frederick St",
+            "Demolition of a building, used by Railway Company and Toronto Railway "
+            "Company, located on the northwest corner of Front St. E. and "
+            "Frederick St",
             ("Front St. E.", "Frederick St"),
         ),
         (
@@ -353,11 +361,13 @@ def extract_exact_address_test(original, result):
         ("King St E. at Sackville, southeast corner", ("King St E.", "Sackville")),
         ("Northeast corner of King and Bay streets", ("King", "Bay")),
         (
-            "Former East York Shoe Repair, 232 Sammon Avenue, at Marlowe Avenue, north-west corner",
+            "Former East York Shoe Repair, 232 Sammon Avenue, at Marlowe Avenue, "
+            "north-west corner",
             ("Sammon Avenue", "Marlowe Avenue"),
         ),
         (
-            "George Drew, Premier of Ontario, at cornerstone laying for Variety Village",
+            "George Drew, Premier of Ontario, at cornerstone laying for "
+            "Variety Village",
             None,
         ),
         ("King St E., northeast corner at Princess St", ("King St E.", "Princess St")),
@@ -412,7 +422,8 @@ def corner_test(original, test):
         ),
         ("Yonge and Queen looking north", ("Yonge", "Queen")),
         (
-            "Proposed playground site at Davenport Road, Christie Street, and Benson Avenue",
+            "Proposed playground site at Davenport Road, Christie Street, and "
+            "Benson Avenue",
             ("Christie Street", "Benson Avenue"),
         ),
         ("Bank of Montreal on northeast corner of Queen and Yonge", ("Queen", "Yonge")),
@@ -471,7 +482,8 @@ def parse_place_name_test():
     pois_file = create_pois_file()
     regex, place_map = geocode.build_place_name_regex(pois_file.name)
 
-    # "C. N. E." should take precedence because of its score, even though it's second in the title.
+    # "C. N. E." should take precedence because of its score, even though it's
+    # second in the title.
     eq_(
         ("exact", "c. n. e.", ("43.633751", "-79.4192546"), ""),
         geocode.parse_place_name(regex, place_map, "high park enches, c. n. e."),

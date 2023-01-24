@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Calculate the difference between geocodes and some truth data in a csv.
 
-The input consistss of a truth csv (without a header) of imageId,lat,lng and some geocode_results.
-The script checks to see how many of calculated lat, lngs are corrected in comparision to the
-truth csv. Incorrect image ids get saved to a csv and correct image ids get printed to stderr.
+The input consistss of a truth csv (without a header) of imageId,lat,lng and
+some geocode_results. The script checks to see how many of calculated lat,
+lngs are corrected in comparision to the truth csv. Incorrect image ids get
+saved to a csv and correct image ids get printed to stderr.
 
 Geocodes
     - Missing a location

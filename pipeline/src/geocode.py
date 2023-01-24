@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Runs through images.ndjson and uses the google maps geocoding api to find location for photos.
+"""Runs through images.ndjson and uses the google maps geocoding api to find
+location for photos.
 """
 import argparse
 import csv
@@ -81,8 +82,8 @@ def unique_streets(street_list):
 
 
 def exact_address_regex(street_re_str):
-    decimal_suffix = "(?:(?:\.5)?)"
-    exact_address_re_str = f".*?(\d+{decimal_suffix})\s+(?:1/2\s)?({street_re_str})"
+    decimal_suffix = r"(?:(?:\.5)?)"
+    exact_address_re_str = rf".*?(\d+{decimal_suffix})\s+(?:1/2\s)?({street_re_str})"
     return re.compile(exact_address_re_str)
 
 
@@ -123,9 +124,9 @@ def build_place_name_regex(csv_file):
     return (re.compile(regex, flags=re.I), name_to_place)
 
 
-CAPITALIZED_TOKEN = "(?:[A-Z][A-Za-z.']*\s?)"
-CAPITALIZED_TOKENS = f"{CAPITALIZED_TOKEN}+"
-CARDINAL_DIRECTIONS = "(?:east|west|north|south)"
+CAPITALIZED_TOKEN = r"(?:[A-Z][A-Za-z.']*\s?)"
+CAPITALIZED_TOKENS = rf"{CAPITALIZED_TOKEN}+"
+CARDINAL_DIRECTIONS = r"(?:east|west|north|south)"
 DIRECTION_FROM_RE = re.compile(
     rf"""
                                  .*?
@@ -148,8 +149,8 @@ JOINED_BY_AND_RE = re.compile(
     re.X,
 )
 
-N_START = "(?:(?:^N)|\sn)"
-S_START = "(?:(?:^S)|\ss)"
+N_START = r"(?:(?:^N)|\sn)"
+S_START = r"(?:(?:^S)|\ss)"
 INTERCARDINAL_RE = rf"""(?:
                        {N_START}orth-?east|
                        {N_START}\.\s?e\.|
@@ -264,7 +265,8 @@ def parse_corner(title):
 
 def parse_direction_from(title):
     if title.startswith("Looking"):
-        # otherwise we match things like "Looking at Spadina east over Bay" as (Looking, Spadina)
+        # otherwise we match things like "Looking at Spadina east over Bay" as
+        # (Looking, Spadina)
         title = title.strip("Looking")
     m = DIRECTION_FROM_RE.match(title)
     if m:
@@ -362,7 +364,8 @@ def call_geocoding_api(maps_client, search_string, expected_types):
         types = set(geocode_result["types"])
         if len(types.intersection(expected_types)) == 0:
             LOG.debug(
-                f'Discarding "{search_string}"; expected one of {expected_types}, got {types}'
+                f'Discarding "{search_string}"; expected one of {expected_types}, '
+                f"got {types}"
             )
             return None
 

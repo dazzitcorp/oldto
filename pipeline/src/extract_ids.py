@@ -14,7 +14,8 @@ def main(input_geojson, output_js):
 
     ll_to_ids = defaultdict(list)
     for f in fc["features"]:
-        # Features with null geometries couldn't be geocoded and aren't shown on the site.
+        # Features with null geometries couldn't be geocoded and aren't shown
+        # on the site.
         if f["geometry"] is None:
             continue
         lng, lat = f["geometry"]["coordinates"]

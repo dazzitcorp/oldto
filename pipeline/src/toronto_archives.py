@@ -2,10 +2,27 @@
 
 import re
 
-URL_PATTERN = "https://gencat4.eloquent-systems.com/webcat/request/Action?SystemName=City+of+Toronto+Archives&UserName=wa+public&Password=&TemplateProcessID=6000_3355&PromptID=&ParamID=&TemplateProcessID=6000_1051_1051&PromptID=&ParamID=&CMD_(DetailRequest)[0]=&ProcessID=6000_3363(0)&KeyValues=KEY_%s"  # noqa: E501
+URL_PATTERN = (
+    "https://gencat4.eloquent-systems.com/"
+    "webcat/request/Action?"
+    "SystemName=City+of+Toronto+Archives&UserName=wa+public&"
+    "Password=&"
+    "TemplateProcessID=6000_3355&"
+    "PromptID=&"
+    "ParamID=&"
+    "TemplateProcessID=6000_1051_1051&"
+    "PromptID=&"
+    "ParamID=&"
+    "CMD_(DetailRequest)[0]=&"
+    "ProcessID=6000_3363(0)&"
+    "KeyValues=KEY_%s"
+)
 
 # This resolves to URL_PATTERN via a redirect.
-SHORT_URL_PATTERN = "https://gencat.eloquent-systems.com/city-of-toronto-archives-m-permalink.html?key=%s"  # noqa: E501
+SHORT_URL_PATTERN = (
+    "https://gencat.eloquent-systems.com/"
+    "city-of-toronto-archives-m-permalink.html?key=%s"
+)
 
 
 def url_for_unique_id(unique_id):
