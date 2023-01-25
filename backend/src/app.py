@@ -166,9 +166,6 @@ def create_app():
 
     app.logger.setLevel(logging.INFO)
 
-    # Only needed for baking.
-    app.config["SERVER_NAME"] = "localhost"
-
     # First defaults...
     app.config.from_mapping(
         IMAGES_GEOJSON_FILENAME="images.geojson",
@@ -271,6 +268,7 @@ def create_app():
     @app.cli.command("bake")
     @click.option("--dir", "-d", default="../dist", type=click.Path(file_okay=False))
     def bake(dir):
+        app.config["SERVER_NAME"] = "localhost"
         with app.app_context():
             current_app.logger.info(f"Baking to {dir}...")
 
