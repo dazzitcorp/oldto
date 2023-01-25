@@ -93,7 +93,7 @@ $('#show-labels').on('change', function() {
 $('#location-search').on('keypress', function(e) {
   if (e.which !== 13) return;
 
-  document.activeElement.blur();  // hides keyboard for kiosk
+  document.activeElement.blur();  // hides keyboard
 
   const address = $(this).val();
   // This is a bit tight to avoid a bug with how Google geocodes "140 Yonge".

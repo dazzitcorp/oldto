@@ -126,8 +126,8 @@
   </a>
 
   <div class="feedback-about">
-    <a class="mdl-shadow--4dp" href="about.html?kiosk=1">About</a>
-    <a class="mdl-shadow--4dp hide-for-kiosk" href="mailto:feedback@oldto.org">Feedback</a>
+    <a class="mdl-shadow--4dp" href="about.html">About</a>
+    <a class="mdl-shadow--4dp" href="mailto:feedback@oldto.org">Feedback</a>
   </div>
 
   <div class="legal">
@@ -212,7 +212,7 @@
 
       <div style="display:none" class="geocode-debug"></div>
 
-      <div class="social hide-for-kiosk">
+      <div class="social">
         <div class="copy-link" data-clipboard-text="">
           <span class="octicon octicon-clippy"></span>
           <span class="email-share">Copy Link</span>
@@ -232,15 +232,6 @@
     <img src="images/blank.gif" />
     <img src="images/spinner.gif" />
   </div>
-
-  <script type="text/javascript">
-    var isKiosk = (window.location.search.indexOf('kiosk') >= 0);
-    if (isKiosk) {
-      document.body.className += ' kiosk';
-      document.querySelector('.feedback-about a').setAttribute('href', '/?kiosk=1');
-      document.querySelector('a.aerials-link').setAttribute('href', '/aerials.html?kiosk=1');
-    }
-  </script>
 
 </body>
 </html>

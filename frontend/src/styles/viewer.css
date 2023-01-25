@@ -826,8 +826,3 @@ iframe.hide {
     display: inline;
   }
 }
-
-/* Kiosk mode */
-body.kiosk .hide-for-kiosk {
-  display: none;
-}

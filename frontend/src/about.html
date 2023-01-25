@@ -41,7 +41,7 @@
     <span class="TitleSubhead2">Mapping historical photos</span>
     <div class="feedback-about">
       <a class="mdl-shadow--4dp" href="/">Photo Map</a>
-      <a class="mdl-shadow--4dp hide-for-kiosk" href="mailto:feedback@oldto.org">Feedback</a>
+      <a class="mdl-shadow--4dp" href="mailto:feedback@oldto.org">Feedback</a>
     </div>
   </div>
 
@@ -215,14 +215,6 @@
       </p>
     </div>
   </div>
-
-  <script type="text/javascript">
-    var isKiosk = (window.location.search.indexOf('kiosk') >= 0);
-    if (isKiosk) {
-      document.body.className += ' kiosk';
-      document.querySelector('.feedback-about a').setAttribute('href', '/?kiosk=1');
-    }
-  </script>
 
 </body>
 </html>
