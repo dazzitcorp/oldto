@@ -14,8 +14,7 @@
     "jquery": true
   },
   "globals": {
-    "google": false,
-    "isKiosk": false
+    "google": false
   },
   "rules": {
     "eqeqeq": "error",

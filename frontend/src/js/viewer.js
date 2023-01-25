@@ -455,62 +455,6 @@ export function setViewClass(view) {
   $('body').removeClass(allViews).addClass(view);
 }
 
-function pickRandomElement(ary) {
-  return ary[Math.floor(Math.random() * ary.length)];
-}
-
-let idleTimer;
-document.onmousemove = resetIdleTimer;
-document.onmousedown = resetIdleTimer; // touchscreen presses
-document.ontouchstart = resetIdleTimer;
-document.onclick = resetIdleTimer;     // touchpad clicks
-document.onscroll = resetIdleTimer;    // scrolling with arrow keys
-document.onkeypress = resetIdleTimer;
-
-function showRandomPhotoWhenIdle() {
-  // Reset the UI as best we can.
-  const $clearFiltersEl = $('#clear-filters');
-  if ($clearFiltersEl.is(':visible')) {
-    $clearFiltersEl.click();
-  }
-  map.setCenter(INIT_CENTER);
-  map.setZoom(INIT_ZOOM);
-  popup.setMap(null);
-  selectMarker(null);
-
-  // Show a random photo.
-  // Ever photo has a chance, but show the popular ones much more.
-  if (Math.random() > 0.5) {
-    const el = pickRandomElement($('#popular a'));
-    el.click();
-  } else {
-    const latLon = pickRandomElement(Object.keys(LOCATIONS));
-    loadInfoForLatLon(latLon).then(photoIds => {
-      const id = pickRandomElement(photoIds);
-      displayInfoForLatLon(latLon, function() {}, id);
-    }).fail(err => {
-      console.error(err);
-    });
-  }
-  resetIdleTimer();
-}
-
-function resetIdleTimer() {
-  if (idleTimer) {
-    clearTimeout(idleTimer);
-  }
-
-  // Show a random photo after 5 minutes of inactivity.
-  if (isKiosk) {
-    idleTimer = setTimeout(showRandomPhotoWhenIdle, 5 * 60 * 1000);
-  }
-}
-
-resetIdleTimer();
-if (isKiosk) {
-  console.log('Running OldTO in Kiosk Mode');
-}
-
 $(function() {
   // Clicks on the background or "exit" button should leave the slideshow.
   const hide = () => {
