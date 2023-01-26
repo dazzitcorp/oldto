@@ -8,23 +8,15 @@
 
   <link rel="icon" href="images/OT-favicon-32x32.png">
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple/siimple.css" />
-  <style>
-    .container {
-      max-width: 50rem;  /* 50rem * 16px = 800px */
-    }
-    .has-gap-1 {
-      gap: 1rem
-    }
-  </style>
+  <link rel="stylesheet" href="styles/main.css" />
 
   <script defer data-domain="www.oldto.org" src="https://plausible.io/js/script.hash.js"></script>
 </head>
 <body>
-  <header class="container has-mb-12 has-pt-1 has-pb-1 is-flex has-items-center">
-    <!-- Navbar brand: always visible -->
-    <a class="is-flex has-items-center has-size-1-mobile has-size-2 has-text-primary has-text-secondary-hover is-not-underlined" href="/">
-      <span class="has-weight-bold is-uppercase">OldTO</span>
+  <header class="container has-mb-12 has-mt-2 is-flex is-readable has-items-center">
+    <a class="is-flex has-items-center has-size-2 has-text-current has-text-secondary-hover is-not-underlined" href="/">
+      <span class="has-weight-black">OldTO</span>
+      <!--
       <span class="has-ml-1">
         <svg width="1rem" height="1rem" xviewBox="0 0 16 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <g id="Design" stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
@@ -38,20 +30,21 @@
           </g>
         </svg>
       </span>
+      -->
     </a>
     <div class="is-flex has-justify-between has-w-full">
       <div class="has-ml-auto">
-        <div class="is-flex">
-          <a class="has-size-0 has-size-1-tablet has-weight-medium navlink" href="/">Photo Map</a>
-          <a class="has-size-0 has-size-1-tablet has-weight-medium navlink" href="mailto:feedback@oldto.org">Feedback</a>
+        <div class="is-flex has-direction-row">
+          <a class="has-ml-3 has-text-current has-text-secondary-hover is-not-underlined" href="/">Photo Map</a>
+          <a class="has-ml-3 has-text-current has-text-secondary-hover is-not-underlined" href="mailto:feedback@oldto.org">Feedback</a>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container is-readable">
     <section>
-      <h1 class="has-mt-0">About OldTO</h1>
+      <h1>About OldTO</h1>
 
       <p>
         OldTO is an <a href="https://github.com/sidewalklabs/oldto">open-source</a>
@@ -108,9 +101,9 @@
     </section>
 
     <section>
-      <h2 class="has-mt-0">FAQ</h2>
+      <h2>FAQ</h2>
 
-      <h3>Who built this site?</h3>
+      <h3 class="has-size-2">Who built this site?</h3>
       <p>
         The project was led by
         Senior Software Engineer Dan Vanderkam (creator of <a href="https://oldnyc.org">OldNYC</a> and
@@ -119,7 +112,7 @@
         Several members of the City of Toronto Archives staff provided critical guidance.
       </p>
 
-      <h3>Where did these images come from?</h3>
+      <h3 class="has-size-2">Where did these images come from?</h3>
       <p>
         The images for the initial launch of OldTO all come from the collection of historic city
         photographs held at the
@@ -137,14 +130,14 @@
         restrictions.
       </p>
 
-      <h3>Who holds the copyright for these images?</h3>
+      <h3 class="has-size-2">Who holds the copyright for these images?</h3>
       <p>
         Copyright information for each image held by the City of Toronto Archives is shown with the image
         entry. The archives gave digitization priority to images whose copyright is in the public domain,
         which means permission is not required for reuse.
       </p>
 
-      <h3>How did you map the images?</h3>
+      <h3 class="has-size-2">How did you map the images?</h3>
       <p>
         The creators of OldTO used the titles of the photographs in the archives to assign the image a
         latitude and longitude—a process known as geocoding. For example, a photo titled “Yonge Street,
@@ -164,7 +157,7 @@
         If you see an incorrect address in the collection, please <a href="mailto:feedback@oldto.org">email us</a>.
       </p>
 
-      <h3>What else can this tool do?</h3>
+      <h3 class="has-size-2">What else can this tool do?</h3>
       <p>
         In addition to the existing map of street-level photographs, the OldTO engineering team plans to
         build an “aerial” button that will enable people to see how the city has changed from a bird’s-eye
@@ -176,7 +169,7 @@
         the images with similar attributes, providing yet another point of comparison and exploration.
       </p>
 
-      <h3>I’m a developer who loves Toronto. Can I build on this tool?</h3>
+      <h3 class="has-size-2">I’m a developer who loves Toronto. Can I build on this tool?</h3>
       <p>
         Please do! We’re also releasing the data for the project here:
         <a href="https://storage.googleapis.com/sidewalk-old-toronto/images.geojson"><code>images.geojson</code></a>.
@@ -192,7 +185,7 @@
           on Github</a>.
       </p>
 
-      <h3>What data does this tool collect?</h3>
+      <h3 class="has-size-2">What data does this tool collect?</h3>
       <p>
         To help gauge usage, the tool records anonymous information about which photos people
         look at. We don’t tie that information to individuals. If users submit feedback, our
@@ -202,7 +195,7 @@
         <a href="https://sidewalktoronto.ca/wp-content/uploads/2018/01/Sidewalk-Toronto-Website-Privacy-Policy-.pdf">Sidewalk Toronto privacy policy</a>.
       </p>
 
-      <h3>What does this tool have to do with Sidewalk Toronto?</h3>
+      <h3 class="has-size-2">What does this tool have to do with Sidewalk Toronto?</h3>
       <p>
         The OldTO tool is not directly connected with the ongoing project plans for
         <a href="https://sidewalktoronto.ca/">Sidewalk Toronto</a>,
@@ -212,7 +205,7 @@
         and open digital infrastructure.
       </p>
 
-      <h3>What if I spot an error?</h3>
+      <h3 class="has-size-2">What if I spot an error?</h3>
       <p>
         We’re counting on you to let us know! You can use the feedback button to contact us, or reach us at
         <a href="mailto:feedback@oldto.org">feedback@oldto.org</a>.
@@ -220,7 +213,7 @@
     </section>
   </main>
 
-  <footer class="container has-mt-12">
+  <footer class="container has-mt-12 is-readable">
     <p class="has-size-0">
       Copyright © 2018, Sidewalk Toronto Employees Ltd. / <a href="https://sidewalktoronto.ca/wp-content/uploads/2018/01/Sidewalk-Toronto-Website-Privacy-Policy-.pdf">Privacy Policy</a> / <a href="terms.pdf">Terms of Use</a>
     </p>

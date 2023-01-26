@@ -10,6 +10,7 @@
   "scripts": {
     "build": "parcel build --dist-dir dist",
     "lint": "eslint src/js/*.js",
+    "siimple": "npx siimple -c ./siimple.config.mjs -o ./src/styles/main.css",
     "start": "parcel --dist-dir tmp --port 8080",
     "test": "npm run lint",
     "watch": "parcel watch --dist-dir tmp"
@@ -22,7 +23,8 @@
     "http-proxy-middleware": "^2.0.6",
     "parcel": "^2.8.2",
     "parcel-reporter-static-files-copy": "^1.5.0",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "siimple": "^4.3.1"
   },
   "dependencies": {
     "clipboard": "^2.0.0",
