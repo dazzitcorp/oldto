@@ -16,7 +16,7 @@ html, body {
 }
 
 .label-control {
-  margin-bottom: 10px;
+  margin-bottom: 22px;
   font-size: 12px;
 }
 
@@ -29,11 +29,15 @@ label {
 }
 
 .legal {
+  background-color: #ffffff9f;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 4px;
   position: absolute;
   bottom: 0px;
-  left: 100px;
-  opacity: 0.7;
+  left: 0px;
 }
+
 .short-copyright {
   display: none;
 }
@@ -67,7 +71,7 @@ label {
   left: 15px;
   bottom: 45px;
 
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 26px;
   font-weight: 500;
   font-style: normal;
@@ -81,6 +85,10 @@ label {
 @media only screen and (max-width: 736px) {
   .left-nav {
     display: block;
+  }
+
+  .legal {
+    display: none;
   }
 
   #search, .feedback-about, .mdl-card__title, hr, .satellite-control {

@@ -1,10 +1,10 @@
-html {box-sizing:border-box;background:background;color:#363f4f;background-color:#fff;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:body;line-height:1.5;scroll-behavior:smooth;}
+html {box-sizing:border-box;background:background;color:#363f4f;background-color:#fff;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:400;line-height:1.5;scroll-behavior:smooth;}
 *,*:before,*:after {box-sizing:inherit;}
 body {margin:0;padding:0;min-height:100vh;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
 ul {margin-bottom:1rem;margin-top:0;}
 ol {margin-bottom:1rem;margin-top:0;}
 dl {margin-bottom:1rem;margin-top:0;}
-p {font-weight:body;line-height:1.5;margin-bottom:1rem;margin-top:0px;}
+p {font-weight:400;line-height:1.5;margin-bottom:1rem;margin-top:0px;}
 strong {font-weight:700;}
 b {font-weight:700;}
 img {display:block;height:auto;max-width:100%;}
@@ -23,11 +23,11 @@ h3 {color:#1d2734;display:block;font-family:inherit;font-size:1.75rem;font-weigh
 h4 {color:#1d2734;display:block;font-family:inherit;font-size:1.5rem;font-weight:900;line-height:1.25;margin-bottom:0.5rem;padding:0px;}
 h5 {color:#1d2734;display:block;font-family:inherit;font-size:1.25rem;font-weight:900;line-height:1.25;margin-bottom:0.5rem;padding:0px;}
 h6 {color:#1d2734;display:block;font-family:inherit;font-size:16px;font-weight:900;line-height:1.25;margin-bottom:0.5rem;padding:0px;}
-a {color:#d9308d;}
-a:hover {color:#a41e68;}
+a {color:#1272ce;}
+a:hover {color:#d9308d;}
 small {font-size:0.875rem;}
 pre {font-family:SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;overflow-x:auto;}
-code {color:#1c76fd;font-family:SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;font-size:0.875rem;font-weight:700;text-decoration:none;}
+code {color:#1272ce;font-family:SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;font-size:0.875rem;font-weight:700;text-decoration:none;}
 hr {background-color:#dadadd;border:0px;display:block;height:0.125rem;padding:0px;}
 hr:not(:first-child) {margin-top:1rem;}
 hr:not(:last-child) {margin-bottom:1rem;}
@@ -36,8 +36,8 @@ blockquote {border-left:0.25rem solid currentColor;color:currentColor;display:bl
 .container {display:block;margin-left:auto;margin-right:auto;max-width:1264px;padding-left:1.5rem;padding-right:1.5rem;width:100%;}
 .crumbs {border-radius:default;display:flex;flex-wrap:nowrap;margin-bottom:1rem;overflow:hidden;overflow-x:auto;padding:0.5rem;white-space:nowrap !important;}
 .navlink {border-radius:0.5rem;color:#363f4f;cursor:pointer;display:block;font-weight:medium;margin:0px;padding:0.75rem;text-decoration:none !important;user-select:none;white-space:nowrap;width:100%;}
-.navlink:hover {color:#1c76fd;}
-.navlink.is-active {color:#1c76fd;}
+.navlink:hover {color:#1272ce;}
+.navlink.is-active {color:#1272ce;}
 .navlink.is-disabled {opacity:0.5;pointer-events:none;}
 .divider {background-color:#dadadd;border:0px;display:block;height:0.125rem;padding:0px;}
 .divider:not(:first-child) {margin-top:1rem;}
@@ -73,22 +73,18 @@ blockquote {border-left:0.25rem solid currentColor;color:currentColor;display:bl
 .has-bg-current-hover:hover {background-color:currentColor;}
 .has-bg-transparent {background-color:transparent;}
 .has-bg-transparent-hover:hover {background-color:transparent;}
-.has-bg-primary {background-color:#1c76fd;}
-.has-bg-primary-hover:hover {background-color:#1c76fd;}
+.has-bg-primary {background-color:#1272ce;}
+.has-bg-primary-hover:hover {background-color:#1272ce;}
 .has-bg-secondary {background-color:#d9308d;}
 .has-bg-secondary-hover:hover {background-color:#d9308d;}
-.has-bg-highlight {background-color:#9bc5fd;}
-.has-bg-highlight-hover:hover {background-color:#9bc5fd;}
+.has-bg-highlight {background-color:#38b7d3;}
+.has-bg-highlight-hover:hover {background-color:#38b7d3;}
 .has-bg-muted {background-color:#dadadd;}
 .has-bg-muted-hover:hover {background-color:#dadadd;}
 .has-bg-dark {background-color:#1d2734;}
 .has-bg-dark-hover:hover {background-color:#1d2734;}
 .has-bg-light {background-color:#f6f7f9;}
 .has-bg-light-hover:hover {background-color:#f6f7f9;}
-.has-bg-primaryDarker {background-color:#025cca;}
-.has-bg-primaryDarker-hover:hover {background-color:#025cca;}
-.has-bg-secondaryDarker {background-color:#a41e68;}
-.has-bg-secondaryDarker-hover:hover {background-color:#a41e68;}
 .has-text-white {color:#fff;}
 .has-text-white-hover:hover {color:#fff;}
 .has-text-black {color:#000;}
@@ -97,22 +93,18 @@ blockquote {border-left:0.25rem solid currentColor;color:currentColor;display:bl
 .has-text-current-hover:hover {color:currentColor;}
 .has-text-transparent {color:transparent;}
 .has-text-transparent-hover:hover {color:transparent;}
-.has-text-primary {color:#1c76fd;}
-.has-text-primary-hover:hover {color:#1c76fd;}
+.has-text-primary {color:#1272ce;}
+.has-text-primary-hover:hover {color:#1272ce;}
 .has-text-secondary {color:#d9308d;}
 .has-text-secondary-hover:hover {color:#d9308d;}
-.has-text-highlight {color:#9bc5fd;}
-.has-text-highlight-hover:hover {color:#9bc5fd;}
+.has-text-highlight {color:#38b7d3;}
+.has-text-highlight-hover:hover {color:#38b7d3;}
 .has-text-muted {color:#dadadd;}
 .has-text-muted-hover:hover {color:#dadadd;}
 .has-text-dark {color:#1d2734;}
 .has-text-dark-hover:hover {color:#1d2734;}
 .has-text-light {color:#f6f7f9;}
 .has-text-light-hover:hover {color:#f6f7f9;}
-.has-text-primaryDarker {color:#025cca;}
-.has-text-primaryDarker-hover:hover {color:#025cca;}
-.has-text-secondaryDarker {color:#a41e68;}
-.has-text-secondaryDarker-hover:hover {color:#a41e68;}
 .has-size-0 {font-size:0.875rem;}
 .has-size-1 {font-size:16px;}
 .has-size-2 {font-size:1.25rem;}

@@ -15,7 +15,7 @@
  */
 
 .TitleLogo {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 38px;
   font-weight: bold;
   font-style: normal;
@@ -27,9 +27,9 @@
 }
 
 .Title-Subhead {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
@@ -39,9 +39,9 @@
 }
 
 h1 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
@@ -51,7 +51,7 @@ h1 {
 }
 
 h2 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 10px;
   font-weight: 500;
   font-style: normal;
@@ -63,7 +63,7 @@ h2 {
 }
 
 h3 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 12px;
   font-weight: 500;
   font-style: normal;
@@ -75,9 +75,9 @@ h3 {
 }
 
 body {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
@@ -87,7 +87,7 @@ body {
 }
 
 h4 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 11px;
   font-weight: 600;
   font-style: normal;
@@ -99,9 +99,9 @@ h4 {
 }
 
 .caption1 {
-  font-family: Montserrat;
-  font-size: 10px;
-  font-weight: 500;
+  /* font-family: Montserrat; */
+  font-size: 12px;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;
@@ -111,7 +111,7 @@ h4 {
 }
 
 h6 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 26px;
   font-weight: 600;
   font-style: normal;
@@ -123,9 +123,9 @@ h6 {
 }
 
 .caption2 {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 9px;
-  font-weight: 500;
+  font-weight: 400;
   font-style: normal;
   font-stretch: normal;
   line-height: normal;

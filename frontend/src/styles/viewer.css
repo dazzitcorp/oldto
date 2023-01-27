@@ -1,3 +1,4 @@
+/*
 @font-face {
   font-family: 'Montserrat';
 }
@@ -13,8 +14,12 @@
   font-family: 'Montserrat';
   font-weight: 600;
 }
+*/
 
 html, body {
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* font-size:16px; */
+  font-weight: 400;
   width: 100%;
   height: 100%;
   overflow: hidden; /* disable the bounce scroll effect on OSX */
@@ -72,8 +77,8 @@ h2 a {
 
 div.exit {
   position: absolute;
-  top: 25px;
-  right: 25px;
+  top: 15px;
+  right: 15px;
   width: 25px;
   height: 25px;
   font-size: 25px;
@@ -150,7 +155,7 @@ div.exit:hover {
 
 #expanded .header {
   background: transparent;
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
 }
 #expanded .logo {
   display: inline-block;
@@ -166,12 +171,12 @@ div.exit:hover {
 }
 #filtered-slideshow {
   position: absolute;
-  left: 190px;
-  top: 10px;
+  left: 55px;
+  top: 20px;
   color: white;
   font-size: 1.4em;
-  height: 35px;
-  line-height: 35px;
+  /* height: 35px; */
+  /* line-height: 35px; */
 }
 a#slideshow-all, a#slideshow-all:visited {
   color: white;
@@ -210,8 +215,8 @@ a#slideshow-all, a#slideshow-all:visited {
 }
 
 .description{
-  font-family: Montserrat;
-  font-weight: 600;
+  /* font-family: Montserrat; */
+  font-weight: 500;
   font-size: 18px;
 }
 
@@ -273,37 +278,35 @@ a#slideshow-all, a#slideshow-all:visited {
 }
 
 .copy-link {
-  padding: 3px 5px;
-  background: #eee;
-  background: linear-gradient(to bottom, #fff 0%, #eee 100%); /* W3C */
-  border-radius: 3px;
+  padding: 6px 12px;
+  background-color: #1272ce;
+  color: white;
   font-size: 0.8em;
-  font-weight: bold;
+  font-weight: 400;
   display: inline-block;
-  border: 1px solid #bbb;
   text-align: center;
+  text-transform: uppercase;
   cursor: pointer;
   line-height: 0.8em;
+  line-height: 1;
 }
 .copy-link:hover {
-  background: #d7d7d7;
-  background: linear-gradient(to bottom, #f7f7f7 0%, #e7e7e7 100%); /* W3C */
+
 }
+
 .copy-link .email-share {
-  color: #333;
+  color: white;
 }
 .copy-link .octicon {
   font-size: 12px;
 }
 .copy-link.clicked {
-  background: #dddddd;
   cursor: default;
 }
 
 .og-details .copy-link {
   display: inline-block;
   vertical-align: top;
-  height: 20px;
   overflow: hidden;  /* this hides the "Like" flyout */
 }
 
@@ -406,6 +409,10 @@ span.ui-slider-handle {
   overflow: hidden;
 }
 
+.nav-contents hr {
+  margin: 22px 0;
+}
+
 input#location-search {
   font-size: 10px;
   height: 38px;
@@ -423,7 +430,7 @@ input#location-search {
 }
 
 .feedback-about a {
-  background: #000000aa;  /* TODO(danvk): this should be a multiply blend */
+  background: #1272ce;
   color: white;
   text-transform: uppercase;
   padding: 6px 11px;
@@ -482,21 +489,21 @@ div#time-slider {
 }
 
 .details .label {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-weight: 600;
   font-size: 12px;
 }
 
 .details .value {
-  font-family: Montserrat;
-  font-weight: 500;
+  /* font-family: Montserrat; */
+  font-weight: 400;
   font-size: 12px;
   line-height: 1em;
   margin-bottom: 1em;
 }
 
 .details .title {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-weight: 600;
   font-size: 18px;
   margin: 20px auto;
@@ -517,7 +524,7 @@ div#time-slider {
   right: 5px;
   top: 5px;
   color: white;
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-weight: bold;
   font-size: 14px;
   border-color: #60B8FF;
@@ -527,7 +534,7 @@ div#time-slider {
 }
 
 .popup .title {
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 10px;
   padding: 5px;
 }
@@ -576,6 +583,9 @@ div#time-slider {
   box-shadow: 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12), 0 2px 4px -1px rgba(0,0,0,.2);
 }
 
+.time-range-ui {
+  padding-top: 12px;
+}
 
 .time-range-ui img {
   /* text-align: center; */
@@ -633,7 +643,7 @@ h1 {
   text-align: center;
   width: 100px;
   margin-left: -50px;
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   color: #0072CE;
   font-weight: 600;
   font-size: 16px;
@@ -643,7 +653,7 @@ h1 {
 .popup.no-images {
   padding: 5px;
   width: 125px;
-  font-family: Montserrat;
+  /* font-family: Montserrat; */
   font-size: 10px;
 }
 
@@ -669,7 +679,7 @@ iframe.hide {
 }
 
 #clear-filters {
-  color: #60B8FF;
+  color: #0072CE;
   cursor: pointer;
   text-align: right;
   margin-bottom: 8px;
@@ -681,10 +691,12 @@ iframe.hide {
 }
 
 .legal {
+  background-color: #ffffff6f;
+  font-weight: 500;
+  padding: 2px 4px;
   position: absolute;
   bottom: 0px;
-  left: 100px;
-  opacity: 0.7;
+  left: 0px;
 }
 .short-copyright {
   display: none;
@@ -712,12 +724,14 @@ iframe.hide {
     color: white;
     z-index: 0;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.24);
-    padding: 5px 10px;
+    padding: 6px 11px;
   }
   .mobile-logo .TitleLogo {
     display: inline-block;
     vertical-align: middle;
-    font-size: 19px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
   }
 
   .expanded-panel {
@@ -815,9 +829,7 @@ iframe.hide {
   }
 
   .legal {
-    bottom: 16px;
-    left: auto;
-    right: 48px;
+    display: none;
   }
   .long-copyright {
     display: none;

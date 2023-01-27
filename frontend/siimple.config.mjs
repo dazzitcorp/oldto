@@ -32,14 +32,17 @@ export default {
   ...base,
   colors: {
       ...base.colors,
-      primary: colors.blue["500"],
-      primaryDarker: colors.blue["600"],
+      // primaryLighter: "#38b7d3",
+      primary: "#1272ce",  // Match Maps
+      // primaryDarker: "#075aa9",
+      // secondaryLighter: colors.pink["400"],
       secondary: colors.pink["500"],
-      secondaryDarker: colors.pink["600"],
-      highlight: colors.blue["300"],
+      // secondaryDarker: colors.pink["600"],
+      highlight: "#38b7d3",  // primaryLighter
       muted: colors.neutral["300"],
   },
   fontWeights: {
+    body: "400",
     heading: "900",
   },
   links: {
@@ -53,9 +56,9 @@ export default {
   },
   text: {
     link: {
-      color: "secondary",
+      color: "primary",
       "&:hover": {
-        color: "secondaryDarker",
+        color: "secondary",
       },
     },
   },
