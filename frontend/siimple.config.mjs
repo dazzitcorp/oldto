@@ -19,7 +19,7 @@ export default {
     label: false,
     menu: false,
     modal: false,
-    // navlink: false,
+    navlink: false,
     progress: false,
     radio: false,
     scrim: false,
@@ -45,15 +45,6 @@ export default {
     body: "400",
     heading: "900",
   },
-  links: {
-    nav: {
-      color: "text",
-      "&:hover": {
-        color: "primary",
-      },
-      fontWeight: "medium",
-    },
-  },
   text: {
     link: {
       color: "primary",
@@ -63,6 +54,19 @@ export default {
     },
   },
   styles: {
+    ".button-link": {
+      backgroundColor: "primary",
+      color: "white",
+      fontSize: "10px",
+      fontWeight: "600",
+      lineHeight: "1",
+      padding: "6px 12px",
+      textDecoration: "none",
+      textTransform: "uppercase",
+      "&:hover": {
+        color: "white",
+      },
+    },
     ".has-gap-1": {
       gap: "1rem",
     },
