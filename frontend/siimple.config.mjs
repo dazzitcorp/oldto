@@ -53,6 +53,13 @@ export default {
       },
     },
   },
+  layout: {
+    container: {
+      "&.is-readable": {
+        maxWidth: "45rem",  // 45rem * 16px = 720px
+      },
+    },
+  },
   styles: {
     ".button-link": {
       backgroundColor: "primary",
@@ -69,9 +76,6 @@ export default {
     },
     ".has-gap-1": {
       gap: "1rem",
-    },
-    ".is-readable": {
-      maxWidth: "45rem",  // 45rem * 16px = 720px
     },
   },
 };
