@@ -300,9 +300,6 @@ a#slideshow-all, a#slideshow-all:visited {
 .copy-link .email-share {
   color: white;
 }
-.copy-link .octicon {
-  font-size: 12px;
-}
 .copy-link.clicked {
   cursor: default;
 }
