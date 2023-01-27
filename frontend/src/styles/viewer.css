@@ -293,9 +293,9 @@ a#slideshow-all, a#slideshow-all:visited {
   line-height: 0.8em;
   line-height: 1;
 }
-.copy-link:hover {
+/* .copy-link:hover {
 
-}
+} */
 
 .copy-link .email-share {
   color: white;
@@ -336,7 +336,7 @@ a#slideshow-all, a#slideshow-all:visited {
 .feedback .suggest-date button {
   display: inline-block;
 }
-.feedback a.back { style: italic; }
+/* .feedback a.back { style: italic; } */
 
 #about-page {
   position: fixed;
