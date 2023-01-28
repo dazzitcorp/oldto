@@ -828,8 +828,7 @@ iframe.hide {
     display: block;
     background: black;
     text-align: right;
-    padding: 5px;
-    padding-bottom: 12px;
+    padding: 13px 3px 9px 3px;
   }
 
   .legal {
