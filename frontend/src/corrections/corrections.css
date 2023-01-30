@@ -44,6 +44,7 @@ body {
 .feedback-about a {
   background: #1272ce;
   color: white;
+  text-transform: uppercase;
   text-decoration: none;
   padding: 6px 11px;
   margin-right: 5px;

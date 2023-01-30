@@ -2307,4 +2307,5 @@ blockquote {border-left:0.25rem solid currentColor;color:currentColor;display:bl
 .is-unselectable {user-select:none !important;}
 .button-link {background-color:#1272ce;color:#fff;font-size:10px;font-weight:600;line-height:1;padding:6px 12px;text-decoration:none;text-transform:uppercase;}
 .button-link:hover {color:#fff;}
+.button-link.is-mixedcase {text-transform:none;}
 .has-gap-1 {gap:1rem;}

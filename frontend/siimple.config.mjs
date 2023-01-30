@@ -73,6 +73,9 @@ export default {
       "&:hover": {
         color: "white",
       },
+      "&.is-mixedcase": {
+        textTransform: "none",
+      },
     },
     ".has-gap-1": {
       gap: "1rem",

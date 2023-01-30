@@ -83,17 +83,17 @@ label {
 }
 
 @media only screen and (max-width: 736px) {
-  .left-nav {
+  /* .left-nav {
     display: block;
-  }
+  } */
 
   .legal {
     display: none;
   }
 
-  #search, .feedback-about, .mdl-card__title, hr, .satellite-control {
+  /* #search, .feedback-about, .mdl-card__title, hr, .satellite-control {
     display: none;
-  }
+  } */
 
   .mdl-card {
     min-height: 0;
