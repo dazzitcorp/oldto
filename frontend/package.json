@@ -8,12 +8,12 @@
     "staticPath": "src/static"
   },
   "scripts": {
-    "build": "parcel build --dist-dir dist",
+    "build": "parcel build --dist-dir dist src/index.html src/404.html",
     "lint": "eslint src/js/*.js",
     "siimple": "npx siimple -c ./siimple.config.mjs -o ./src/styles/main.css",
-    "start": "parcel --dist-dir tmp --port 8080",
+    "start": "parcel --dist-dir tmp --port 8080 src/index.html src/404.html",
     "test": "npm run lint",
-    "watch": "parcel watch --dist-dir tmp"
+    "watch": "parcel watch --dist-dir tmp src/index.html src/404.html"
   },
   "devDependencies": {
     "@plasmohq/parcel-transformer-inject-env": "^0.2.3",
