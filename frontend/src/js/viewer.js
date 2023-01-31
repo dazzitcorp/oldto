@@ -406,7 +406,8 @@ export function fillPopularImagesPanel() {
         .attr('border', '0')  // For IE8
         .attr('data-src', row.image.thumb_url)
         .attr('height', height)
-        .attr('width', width);
+        .attr('width', width)
+        .attr('loading', 'lazy');
     $panel.find('.desc').text(row.title);
     if (row.date) $panel.find('.date').text(' (' + row.date + ')');
     return $panel.get(0);
