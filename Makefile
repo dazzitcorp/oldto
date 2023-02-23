@@ -85,13 +85,11 @@ requirements.txt: backend/requirements.txt pipeline/requirements.txt
 	$(VENV_PIP_SYNC) "$@"
 
 .PHONY: rsync
-# Go "bottom-up" so that "children" are on the server before "parents."
 rsync:
 	$(MAKE) backend-rsync
 	$(MAKE) frontend-rsync
 
 .PHONY: rsync-with-delete
-# Go "bottom-up" so that "children" are on the server before "parents."
 rsync-with-delete:
 	$(MAKE) backend-rsync-with-delete
 	$(MAKE) frontend-rsync-with-delete

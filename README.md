@@ -94,9 +94,7 @@ which, when combined into a single directory, can be served statically.
 
 ## Generating new geocodes
 
-First, add your [Google Maps API key][api key] to the file `pipeline/src/settings.py`.
-
-Next, you'll first want to download cached geocodes from [here][cached-geocodes].
+First, you'll first want to download cached geocodes from [here][cached-geocodes].
 Unzip this file into `cache/maps.googleapis.com`. This will make the geocoding
 pipeline run faster and more consistently than geocoding from scratch.
 
