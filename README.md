@@ -34,13 +34,12 @@ There are three basic parts to this:
 
 When you first get going, create a `.env` file (or, even better, separate
 `.env.development` and `.env.production` files) in the `frontend` directory
-with the following keys and values:
+with the following key and value:
 
     GOOGLE_MAPS_API_KEY=...
-    MAPBOX_API_KEY=...
 
-and a `.env` file in the `pipeline` directory with the following keys
-and values:
+and a `.env` file in the `pipeline` directory with the following key
+and value:
 
     GOOGLE_MAPS_API_KEY=...
 
@@ -57,8 +56,6 @@ Here's my current understanding:
     * Can be restricted to Maps JavaScript API
       * `corrections.js`, a tool for internal use, also requires the
         Places API — but it isn't currently working
-  * MAPBOX_API_KEY
-    * Can be restricted by HTTP referer
 * pipeline
   * GOOGLE_MAPS_API_KEY
     * Can be restricted by IP

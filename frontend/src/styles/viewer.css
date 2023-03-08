@@ -701,12 +701,6 @@ iframe.hide {
   display: none;
 }
 
-.aerials-link {
-  position: absolute;
-  bottom: 16px;
-  right: 58px;
-}
-
 /* Responsive UI for mobile */
 
 @media only screen and (max-width: 736px) {
