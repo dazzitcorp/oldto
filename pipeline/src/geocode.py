@@ -551,7 +551,7 @@ if __name__ == "__main__":
         gmaps_client = None
     else:
         load_dotenv()
-        gmaps_client = googlemaps.Client(key=os.environ["GMAPS_API_KEY"])
+        gmaps_client = googlemaps.Client(key=os.environ["GOOGLE_MAPS_API_KEY"])
     main(
         args.input,
         args.street_names,
